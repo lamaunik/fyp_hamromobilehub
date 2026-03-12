@@ -1,154 +1,120 @@
+const P = {
+  navy: "#001B48", royal: "#02457A", ocean: "#018ABE",
+  sky: "#97CADB", mist: "#D6E8EE", white: "#ffffff", muted: "#6b99b5",
+  font: "'Helvetica Neue', Helvetica, Arial, 'Segoe UI', sans-serif",
+};
+
 export default function Hero() {
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 overflow-hidden flex items-center pt-20">
-      {/* Background decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 rounded-full bg-blue-600/20 blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-blue-800/20" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-blue-700/10" />
-        {/* Grid lines */}
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(99,179,237,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(99,179,237,0.3) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
+    <section style={{
+      position: "relative", minHeight: "100vh",
+      background: `linear-gradient(135deg, ${P.navy} 0%, ${P.royal} 55%, #013d6e 100%)`,
+      overflow: "hidden", display: "flex", alignItems: "center", paddingTop: 80,
+      fontFamily: P.font,
+    }}>
+      <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
+        <div style={{ position: "absolute", top: 80, left: 40, width: 288, height: 288, borderRadius: "50%", background: "rgba(1,138,190,0.18)", filter: "blur(64px)" }} />
+        <div style={{ position: "absolute", bottom: 80, right: 40, width: 384, height: 384, borderRadius: "50%", background: "rgba(151,202,219,0.1)", filter: "blur(64px)" }} />
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 800, height: 800, borderRadius: "50%", border: "1px solid rgba(1,138,190,0.12)" }} />
+        <div style={{ position: "absolute", inset: 0, opacity: 0.04, backgroundImage: `linear-gradient(rgba(151,202,219,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(151,202,219,0.4) 1px, transparent 1px)`, backgroundSize: "60px 60px" }} />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-16 items-center relative">
-        {/* Left Content */}
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "80px 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", position: "relative", width: "100%" }}>
         <div>
-          <div className="inline-flex items-center gap-2 bg-blue-600/20 border border-blue-500/30 rounded-full px-4 py-1.5 mb-6">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-            <span className="text-cyan-300 text-xs font-bold tracking-widest uppercase">
-              #1 Mobile Reseller Platform
-            </span>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(1,138,190,0.18)", border: "1px solid rgba(1,138,190,0.35)", borderRadius: 999, padding: "6px 16px", marginBottom: 24 }}>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: P.sky, display: "inline-block" }} />
+            <span style={{ color: P.sky, fontSize: 11, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase" }}>#1 Mobile Reseller Platform</span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] mb-6">
-            Buy & Sell{" "}
-            <span className="relative">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
-                Mobiles
-              </span>
-              <svg
-                className="absolute -bottom-2 left-0 w-full"
-                viewBox="0 0 200 10"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M2 8 Q100 2 198 8"
-                  stroke="url(#underlineGrad)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
-                <defs>
-                  <linearGradient id="underlineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#60a5fa" />
-                    <stop offset="100%" stopColor="#22d3ee" />
-                  </linearGradient>
-                </defs>
+          <h1 style={{ fontSize: 60, fontWeight: 900, color: P.white, lineHeight: 1.05, margin: "0 0 24px", letterSpacing: "-0.02em" }}>
+            Buy &amp; Sell{" "}
+            <span style={{ position: "relative", display: "inline-block" }}>
+              <span style={{ background: `linear-gradient(to right, ${P.sky}, ${P.mist})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Mobiles</span>
+              <svg style={{ position: "absolute", bottom: -6, left: 0, width: "100%" }} viewBox="0 0 200 10" fill="none">
+                <path d="M2 8 Q100 2 198 8" stroke={P.sky} strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
               </svg>
             </span>{" "}
-            <br />
-            With Confidence
+            <br />With Confidence
           </h1>
 
-          <p className="text-blue-200/70 text-lg leading-relaxed mb-10 max-w-md">
+          <p style={{ color: "rgba(151,202,219,0.75)", fontSize: 17, lineHeight: 1.7, margin: "0 0 40px", maxWidth: 440 }}>
             The ultimate marketplace for buying, selling, and trading smartphones. Connect with verified vendors and get the best deals — fast and secure.
           </p>
 
-          <div className="flex flex-wrap gap-4">
-            <a
-              href="#"
-              className="group flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5 transition-all duration-200"
+          <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+            <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: `linear-gradient(135deg, ${P.ocean}, #0aa8e0)`, color: P.white, fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 999, textDecoration: "none", boxShadow: "0 8px 28px rgba(1,138,190,0.4)", transition: "transform 0.15s" }}
+              onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
+              onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
             >
               Browse Products
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </a>
-            <a
-              href="#"
-              className="flex items-center gap-2 bg-white/10 border border-white/20 text-white font-bold px-8 py-4 rounded-full hover:bg-white/15 transition-all duration-200"
-            >
-              Become a Vendor
-            </a>
+            <a href="#" style={{ display: "inline-flex", alignItems: "center", background: "rgba(255,255,255,0.1)", border: "2px solid rgba(255,255,255,0.2)", color: P.white, fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 999, textDecoration: "none", transition: "background 0.2s" }}
+              onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.16)"}
+              onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+            >Become a Vendor</a>
           </div>
 
-          {/* Trust badges */}
-          <div className="flex items-center gap-6 mt-12">
+          <div style={{ display: "flex", alignItems: "center", gap: 24, marginTop: 48 }}>
             {[
-              { label: "Verified Sellers", icon: "✓" },
-              { label: "Secure Payments", icon: "🔒" },
-              { label: "Easy Returns", icon: "↩" },
-            ].map((b) => (
-              <div key={b.label} className="flex items-center gap-1.5">
-                <span className="text-cyan-400 text-sm font-bold">{b.icon}</span>
-                <span className="text-blue-200/60 text-xs font-semibold">{b.label}</span>
+              { label: "Verified Sellers", icon: <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke={P.sky} strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg> },
+              { label: "Secure Payments", icon: <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke={P.sky} strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg> },
+              { label: "Easy Returns", icon: <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke={P.sky} strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg> },
+            ].map(b => (
+              <div key={b.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                {b.icon}
+                <span style={{ color: "rgba(151,202,219,0.7)", fontSize: 12, fontWeight: 600 }}>{b.label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Right — Phone Mockup Stack */}
-        <div className="relative flex justify-center items-center">
-          {/* Glow */}
-          <div className="absolute w-80 h-80 rounded-full bg-blue-500/20 blur-3xl" />
-
-          {/* Main phone */}
-          <div className="relative z-10 w-56 bg-gradient-to-b from-gray-800 to-gray-900 rounded-[2.5rem] border-4 border-gray-700 shadow-2xl shadow-blue-900/50 overflow-hidden">
-            <div className="absolute top-3 left-1/2 -translate-x-1/2 w-20 h-5 bg-black rounded-full z-10" />
-            <div className="bg-gradient-to-br from-blue-600 to-cyan-400 h-72 flex flex-col items-center justify-center pt-8">
-              <div className="bg-white/20 backdrop-blur rounded-2xl p-4 mb-3">
-                <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
+        <div style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <div style={{ position: "absolute", width: 320, height: 320, borderRadius: "50%", background: "rgba(1,138,190,0.18)", filter: "blur(48px)" }} />
+          <div style={{ position: "relative", zIndex: 10, width: 220, background: "linear-gradient(180deg, #1a2332, #0f1520)", borderRadius: 40, border: "4px solid #2a3444", boxShadow: "0 32px 80px rgba(0,0,0,0.5)", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)", width: 80, height: 20, background: "#000", borderRadius: 999, zIndex: 10 }} />
+            <div style={{ background: `linear-gradient(135deg, ${P.royal}, ${P.ocean})`, height: 280, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", paddingTop: 32 }}>
+              <div style={{ background: "rgba(255,255,255,0.2)", backdropFilter: "blur(8px)", borderRadius: 16, padding: 16, marginBottom: 12 }}>
+                <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
               </div>
-              <span className="text-white font-black text-xl">MobiHub</span>
-              <span className="text-white/70 text-xs mt-1">Your Marketplace</span>
+              <span style={{ color: P.white, fontWeight: 900, fontSize: 20 }}>MobiHub</span>
+              <span style={{ color: "rgba(255,255,255,0.65)", fontSize: 12, marginTop: 4 }}>Your Marketplace</span>
             </div>
-            <div className="p-4 space-y-2">
-              {["iPhone 15 Pro", "Samsung S24", "Pixel 8 Pro"].map((phone) => (
-                <div key={phone} className="flex items-center justify-between bg-gray-800 rounded-xl px-3 py-2">
-                  <span className="text-white text-xs font-semibold">{phone}</span>
-                  <span className="text-cyan-400 text-xs font-bold">View →</span>
+            <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 8 }}>
+              {["iPhone 15 Pro", "Samsung S24", "Pixel 8 Pro"].map(phone => (
+                <div key={phone} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#1a2332", borderRadius: 12, padding: "8px 12px" }}>
+                  <span style={{ color: P.white, fontSize: 12, fontWeight: 600 }}>{phone}</span>
+                  <span style={{ color: P.sky, fontSize: 12, fontWeight: 700 }}>View</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Floating cards */}
-          <div className="absolute top-10 -left-6 bg-white rounded-2xl p-3 shadow-xl w-36 z-20">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center">
-                <span className="text-green-600 text-xs">✓</span>
+          <div style={{ position: "absolute", top: 40, left: -24, zIndex: 20, background: P.white, borderRadius: 16, padding: "12px 14px", boxShadow: "0 8px 32px rgba(0,27,72,0.18)", width: 144 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(34,197,94,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="#16a34a" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
               </div>
-              <span className="text-gray-800 text-xs font-bold">Sale Complete</span>
+              <span style={{ color: P.navy, fontSize: 12, fontWeight: 700 }}>Sale Complete</span>
             </div>
-            <p className="text-gray-500 text-xs">iPhone 14 Pro</p>
-            <p className="text-green-600 font-black text-sm mt-0.5">+$849</p>
+            <p style={{ color: P.muted, fontSize: 11, margin: 0 }}>iPhone 14 Pro</p>
+            <p style={{ color: "#16a34a", fontWeight: 900, fontSize: 14, margin: "2px 0 0" }}>+$849</p>
           </div>
 
-          <div className="absolute bottom-10 -right-6 bg-white rounded-2xl p-3 shadow-xl w-40 z-20">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
-                <span className="text-blue-600 text-xs">★</span>
+          <div style={{ position: "absolute", bottom: 40, right: -24, zIndex: 20, background: P.white, borderRadius: 16, padding: "12px 14px", boxShadow: "0 8px 32px rgba(0,27,72,0.18)", width: 160 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(1,138,190,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke={P.ocean} strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
               </div>
-              <span className="text-gray-800 text-xs font-bold">New Listing</span>
+              <span style={{ color: P.navy, fontSize: 12, fontWeight: 700 }}>New Listing</span>
             </div>
-            <p className="text-gray-500 text-xs">Samsung S24 Ultra</p>
-            <p className="text-blue-600 font-black text-sm mt-0.5">$1,199</p>
+            <p style={{ color: P.muted, fontSize: 11, margin: 0 }}>Samsung S24 Ultra</p>
+            <p style={{ color: P.ocean, fontWeight: 900, fontSize: 14, margin: "2px 0 0" }}>$1,199</p>
           </div>
         </div>
       </div>
 
-      {/* Wave bottom */}
-      <div className="absolute bottom-0 left-0 right-0">
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}>
         <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M0 60L1440 60L1440 20Q1080 60 720 20Q360 -20 0 20L0 60Z" fill="white" />
         </svg>

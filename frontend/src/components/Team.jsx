@@ -1,83 +1,53 @@
+const P = {
+  navy:"#001B48",royal:"#02457A",ocean:"#018ABE",
+  sky:"#97CADB",mist:"#D6E8EE",white:"#ffffff",
+  muted:"#6b99b5",mistBg:"#f0f6f9",font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
+};
+
 const team = [
-  {
-    name: "Richard Smith",
-    role: "Founder & CEO",
-    bio: "Serial entrepreneur with 10+ years in mobile tech and e-commerce platforms.",
-    color: "from-blue-400 to-blue-600",
-    initials: "RS",
-  },
-  {
-    name: "Samara Kane",
-    role: "CTO",
-    bio: "Full-stack engineer passionate about building scalable marketplace infrastructure.",
-    color: "from-violet-400 to-purple-600",
-    initials: "SK",
-  },
-  {
-    name: "Elizabeth Monroe",
-    role: "Head of Vendors",
-    bio: "Specialist in vendor relations and marketplace growth strategies.",
-    color: "from-cyan-400 to-teal-600",
-    initials: "EM",
-  },
-  {
-    name: "James Tate",
-    role: "Lead Designer",
-    bio: "UI/UX designer crafting seamless buying and selling experiences.",
-    color: "from-pink-400 to-rose-600",
-    initials: "JT",
-  },
+  { name:"Richard Smith",    role:"Founder & CEO",   bio:"Serial entrepreneur with 10+ years in mobile tech and e-commerce platforms.",         initials:"RS" },
+  { name:"Samara Kane",      role:"CTO",              bio:"Full-stack engineer passionate about building scalable marketplace infrastructure.",    initials:"SK" },
+  { name:"Elizabeth Monroe", role:"Head of Vendors",  bio:"Specialist in vendor relations and marketplace growth strategies.",                    initials:"EM" },
+  { name:"James Tate",       role:"Lead Designer",    bio:"UI/UX designer crafting seamless buying and selling experiences.",                    initials:"JT" },
 ];
 
 export default function Team() {
   return (
-    <section className="bg-gray-50 py-24 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <span className="inline-block bg-blue-50 text-blue-600 text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-4">
-            👥 Meet Our Team
+    <section style={{ background:P.mistBg,padding:"96px 24px",fontFamily:P.font }}>
+      <div style={{ maxWidth:1280,margin:"0 auto" }}>
+        <div style={{ textAlign:"center",marginBottom:64 }}>
+          <span style={{ display:"inline-block",background:"rgba(1,138,190,0.08)",color:P.ocean,fontSize:11,fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",padding:"6px 16px",borderRadius:999,border:`1px solid ${P.sky}`,marginBottom:16 }}>
+            Meet Our Team
           </span>
-          <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
+          <h2 style={{ fontSize:42,fontWeight:900,color:P.navy,margin:"0 0 16px",letterSpacing:"-0.02em" }}>
             The People Behind{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
-              MobiHub
-            </span>
+            <span style={{ background:`linear-gradient(to right,${P.royal},${P.ocean})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>MobiHub</span>
           </h2>
-          <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            Passionate experts building the future of mobile commerce in your hands.
-          </p>
+          <p style={{ color:P.muted,fontSize:17,maxWidth:440,margin:"0 auto",lineHeight:1.7 }}>Passionate experts building the future of mobile commerce.</p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {team.map((member, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-3xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+        <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:24 }}>
+          {team.map((member,i)=>(
+            <div key={i} style={{ background:P.white,borderRadius:20,overflow:"hidden",border:`1px solid ${P.mist}`,transition:"all 0.2s",boxShadow:"0 2px 12px rgba(0,27,72,0.06)" }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 16px 48px rgba(1,138,190,0.14)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 2px 12px rgba(0,27,72,0.06)"; }}
             >
-              {/* Avatar area */}
-              <div className={`h-40 bg-gradient-to-br ${member.color} flex items-center justify-center relative overflow-hidden`}>
-                <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 70% 20%, white 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
-                <div className="w-20 h-20 rounded-full bg-white/25 backdrop-blur border-2 border-white/40 flex items-center justify-center">
-                  <span className="text-white font-black text-2xl">{member.initials}</span>
+              <div style={{ height:160,background:`linear-gradient(135deg,${P.royal},${P.ocean})`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative",overflow:"hidden" }}>
+                <div style={{ position:"absolute",inset:0,opacity:0.15,backgroundImage:"radial-gradient(circle at 70% 20%, white 1px, transparent 1px)",backgroundSize:"20px 20px" }}/>
+                <div style={{ width:80,height:80,borderRadius:"50%",background:"rgba(255,255,255,0.22)",backdropFilter:"blur(8px)",border:"2px solid rgba(255,255,255,0.4)",display:"flex",alignItems:"center",justifyContent:"center" }}>
+                  <span style={{ color:P.white,fontWeight:900,fontSize:26 }}>{member.initials}</span>
                 </div>
               </div>
-
-              {/* Info */}
-              <div className="p-6">
-                <h3 className="text-gray-900 font-black text-lg mb-0.5">{member.name}</h3>
-                <p className="text-blue-600 text-xs font-bold tracking-wide uppercase mb-3">{member.role}</p>
-                <p className="text-gray-500 text-sm leading-relaxed">{member.bio}</p>
-
-                {/* Social links */}
-                <div className="flex gap-2 mt-4">
-                  {["in", "tw", "gh"].map((s) => (
-                    <a
-                      key={s}
-                      href="#"
-                      className="w-7 h-7 rounded-full bg-gray-100 hover:bg-blue-600 flex items-center justify-center text-gray-500 hover:text-white transition-all text-xs font-bold"
-                    >
-                      {s}
-                    </a>
+              <div style={{ padding:24 }}>
+                <h3 style={{ color:P.navy,fontWeight:800,fontSize:16,margin:"0 0 2px" }}>{member.name}</h3>
+                <p style={{ color:P.ocean,fontSize:11,fontWeight:700,letterSpacing:"0.07em",textTransform:"uppercase",margin:"0 0 12px" }}>{member.role}</p>
+                <p style={{ color:P.muted,fontSize:13,lineHeight:1.7,margin:"0 0 16px" }}>{member.bio}</p>
+                <div style={{ display:"flex",gap:8 }}>
+                  {["in","tw","gh"].map(s=>(
+                    <a key={s} href="#" style={{ width:28,height:28,borderRadius:"50%",background:P.mistBg,display:"flex",alignItems:"center",justifyContent:"center",color:P.muted,fontSize:11,fontWeight:700,textDecoration:"none",transition:"all 0.2s" }}
+                      onMouseEnter={e=>{ e.currentTarget.style.background=P.ocean;e.currentTarget.style.color=P.white; }}
+                      onMouseLeave={e=>{ e.currentTarget.style.background=P.mistBg;e.currentTarget.style.color=P.muted; }}
+                    >{s}</a>
                   ))}
                 </div>
               </div>

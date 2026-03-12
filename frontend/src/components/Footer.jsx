@@ -1,50 +1,51 @@
+const P = {
+  navy:"#001B48",royal:"#02457A",ocean:"#018ABE",
+  sky:"#97CADB",mist:"#D6E8EE",white:"#ffffff",
+  muted:"#6b99b5",font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
+};
+
 const links = {
-  Company: ["About Us", "Careers", "Press", "Blog"],
-  Support: ["Help Center", "How It Works", "Privacy Policy", "Terms of Service"],
-  Marketplace: ["Browse Phones", "Sell a Phone", "Vendor Portal", "Admin Login"],
+  Company:     ["About Us","Careers","Press","Blog"],
+  Support:     ["Help Center","How It Works","Privacy Policy","Terms of Service"],
+  Marketplace: ["Browse Phones","Sell a Phone","Vendor Portal","Admin Login"],
 };
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-950 text-white px-6 pt-16 pb-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          {/* Brand */}
+    <footer style={{ background:P.navy,color:P.white,padding:"64px 24px 32px",fontFamily:P.font }}>
+      <div style={{ maxWidth:1280,margin:"0 auto" }}>
+        <div style={{ display:"grid",gridTemplateColumns:"1.5fr 1fr 1fr 1fr",gap:48,marginBottom:48 }}>
           <div>
-            <div className="flex items-center gap-2 mb-5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-400 flex items-center justify-center">
-                <span className="text-white font-black text-lg">M</span>
+            <div style={{ display:"flex",alignItems:"center",gap:10,marginBottom:20 }}>
+              <div style={{ width:36,height:36,borderRadius:10,background:`linear-gradient(135deg,${P.royal},${P.ocean})`,display:"flex",alignItems:"center",justifyContent:"center" }}>
+                <span style={{ color:P.white,fontWeight:900,fontSize:16 }}>M</span>
               </div>
-              <span className="text-xl font-black">
-                HamroMobile<span className="text-blue-400">Hub</span>
+              <span style={{ fontSize:18,fontWeight:900,color:P.white }}>
+                HamroMobile<span style={{ color:P.sky }}>Hub</span>
               </span>
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              The trusted marketplace for buying, selling, and trading smartphones. Join thousands of happy customers today.
+            <p style={{ color:"rgba(151,202,219,0.6)",fontSize:14,lineHeight:1.7,margin:"0 0 24px",maxWidth:260 }}>
+              The trusted marketplace for buying, selling, and trading smartphones. Join thousands of happy customers.
             </p>
-            <div className="flex gap-3">
-              {["f", "t", "in", "yt"].map((s) => (
-                <a
-                  key={s}
-                  href="#"
-                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-blue-600 flex items-center justify-center text-gray-300 hover:text-white transition-all text-xs font-bold"
-                >
-                  {s}
-                </a>
+            <div style={{ display:"flex",gap:10 }}>
+              {["f","t","in","yt"].map(s=>(
+                <a key={s} href="#" style={{ width:34,height:34,borderRadius:"50%",background:"rgba(1,138,190,0.18)",display:"flex",alignItems:"center",justifyContent:"center",color:P.sky,fontSize:11,fontWeight:700,textDecoration:"none",transition:"all 0.2s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background=P.ocean;e.currentTarget.style.color=P.white; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="rgba(1,138,190,0.18)";e.currentTarget.style.color=P.sky; }}
+                >{s}</a>
               ))}
             </div>
           </div>
 
-          {/* Link columns */}
-          {Object.entries(links).map(([title, items]) => (
+          {Object.entries(links).map(([title,items])=>(
             <div key={title}>
-              <h4 className="text-white font-black text-sm uppercase tracking-widest mb-5">{title}</h4>
-              <ul className="space-y-3">
-                {items.map((item) => (
+              <h4 style={{ color:P.mist,fontWeight:800,fontSize:12,letterSpacing:"0.08em",textTransform:"uppercase",margin:"0 0 20px" }}>{title}</h4>
+              <ul style={{ listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:12 }}>
+                {items.map(item=>(
                   <li key={item}>
-                    <a href="#" className="text-gray-400 text-sm hover:text-blue-400 transition-colors">
-                      {item}
-                    </a>
+                    <a href="#" style={{ color:"rgba(151,202,219,0.6)",fontSize:14,textDecoration:"none",transition:"color 0.2s" }}
+                      onMouseEnter={e=>e.target.style.color=P.sky} onMouseLeave={e=>e.target.style.color="rgba(151,202,219,0.6)"}
+                    >{item}</a>
                   </li>
                 ))}
               </ul>
@@ -52,14 +53,11 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Bottom bar */}
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} MobiHub. All rights reserved.
-          </p>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-gray-500 text-xs">All systems operational</span>
+        <div style={{ borderTop:`1px solid rgba(1,138,190,0.2)`,paddingTop:28,display:"flex",alignItems:"center",justifyContent:"space-between" }}>
+          <p style={{ color:"rgba(151,202,219,0.5)",fontSize:13,margin:0 }}>© {new Date().getFullYear()} MobiHub. All rights reserved.</p>
+          <div style={{ display:"flex",alignItems:"center",gap:8 }}>
+            <div style={{ width:8,height:8,borderRadius:"50%",background:"#22c55e" }}/>
+            <span style={{ color:"rgba(151,202,219,0.5)",fontSize:12 }}>All systems operational</span>
           </div>
         </div>
       </div>

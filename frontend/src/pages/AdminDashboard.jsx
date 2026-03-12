@@ -280,7 +280,7 @@ function UsersTable({ users, showActions = false }) {
                 <button style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background:"rgba(1,138,190,0.1)", border:`1px solid rgba(1,138,190,0.25)`, color:P.sky, cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.background="rgba(1,138,190,0.2)"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.background="rgba(1,138,190,0.1)"; }}>
-                  Edit
+                  EDIT
                 </button>
                 <button style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background:"rgba(220,38,38,0.08)", border:"1px solid rgba(220,38,38,0.2)", color:"#f87171", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.background="rgba(220,38,38,0.15)"; }}

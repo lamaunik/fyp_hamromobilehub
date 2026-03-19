@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -16,7 +16,7 @@ const STATS = [
     icon:<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg> },
   { label:"Total Products", value:"—",  color:"#0ea5e9",
     icon:<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg> },
-  { label:"Total Revenue",  value:"$—", color:P.sky,
+  { label:"Total Revenue",  value:"Rs. —", color:P.sky,
     icon:<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> },
 ];
 
@@ -59,7 +59,88 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const [activeNav, setActiveNav] = useState("overview");
 
+  const [users, setUsers] = useState([]);
+  const [stats, setStats] = useState({ users: 0, vendors: 0, products: 0, revenue: 0 });
+  
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        const { api } = await import("../utils/api");
+        // Parallel fetch for overview numbers
+        const [usersRes, productsRes, ordersRes] = await Promise.all([
+          api.get("/users"),
+          api.get("/products"),
+          api.get("/orders")
+        ]);
+
+        if (usersRes.success && usersRes.data) {
+          const mapped = usersRes.data.map(u => ({
+            id: u._id,
+            name: u.name,
+            email: u.email,
+            role: u.role,
+            isApproved: u.isApproved,
+            status: u.isDeactivated ? "Suspended" : "Active",
+            joined: new Date(u.createdAt).toLocaleDateString()
+          }));
+          setUsers(mapped);
+          
+          const vendorsCount = mapped.filter(u => u.role === "vendor").length;
+          setStats(prev => ({ ...prev, users: mapped.length, vendors: vendorsCount }));
+        }
+
+        if (productsRes.success && productsRes.data) {
+          setStats(prev => ({ ...prev, products: productsRes.data.length }));
+        }
+
+        if (ordersRes.success && ordersRes.data) {
+          const rev = ordersRes.data.reduce((sum, o) => sum + (o.totalPrice || 0), 0);
+          setStats(prev => ({ ...prev, revenue: rev }));
+        }
+
+      } catch (err) {
+        console.error("Failed to fetch admin stats", err);
+      }
+    };
+    fetchAllData();
+  }, []);
+
   const handleLogout = () => { logout(); navigate("/signin"); };
+
+  const handleToggleBan = async (userId, currentStatus) => {
+    try {
+      const { api } = await import("../utils/api");
+      const res = await api.put(`/users/${userId}`, { isDeactivated: currentStatus === "Active" });
+      if (res.success) {
+        setUsers(users.map(u => u.id === userId ? { ...u, status: currentStatus === "Active" ? "Suspended" : "Active" } : u));
+      }
+    } catch (err) {
+      console.error("Failed to toggle ban", err);
+    }
+  };
+
+  const handleToggleApprove = async (userId, isCurrentlyApproved) => {
+    try {
+      const { api } = await import("../utils/api");
+      const res = await api.put(`/users/${userId}`, { isApproved: !isCurrentlyApproved });
+      if (res.success) {
+        setUsers(users.map(u => u.id === userId ? { ...u, isApproved: !isCurrentlyApproved } : u));
+      }
+    } catch (err) {
+      console.error("Failed to toggle approval", err);
+    }
+  };
+
+  const dynamicStats = [
+    { label:"Total Users",    value: stats.users,  color:P.ocean,
+      icon:<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg> },
+    { label:"Total Vendors",  value: stats.vendors,  color:P.royal,
+      icon:<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg> },
+    { label:"Total Products", value: stats.products,  color:"#0ea5e9",
+      icon:<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg> },
+    { label:"Total Revenue",  value: `Rs. ${stats.revenue.toLocaleString()}`, color:P.sky,
+      icon:<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> },
+  ];
 
   return (
     <div style={{ minHeight:"100vh", display:"flex", background:`linear-gradient(160deg,${P.navy} 0%,${P.royal} 100%)`, fontFamily:P.font }}>
@@ -158,7 +239,7 @@ export default function AdminDashboard() {
                     <span style={{ fontSize:10, fontWeight:800, letterSpacing:"0.12em", color:P.sky }}>ADMIN DASHBOARD</span>
                   </span>
                   <h2 style={{ color:P.white, fontWeight:900, fontSize:28, margin:"0 0 6px", letterSpacing:"-0.02em" }}>
-                    Welcome back, {user?.name?.split(" ")[0]}
+                    Welcome back, {user?.name?.split(" ")[0] || "Admin"}
                   </h2>
                   <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>You have full administrative access to HamroHub platform.</p>
                 </div>
@@ -166,7 +247,7 @@ export default function AdminDashboard() {
 
               {/* Stats grid */}
               <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16 }}>
-                {STATS.map((s,i)=>(
+                {dynamicStats.map((s,i)=>(
                   <div key={i} style={{ padding:"20px", borderRadius:16, display:"flex", alignItems:"center", gap:16, background:`rgba(0,15,40,0.6)`, border:`1px solid rgba(1,138,190,0.15)`, backdropFilter:"blur(8px)" }}>
                     <div style={{ width:44, height:44, borderRadius:12, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, color:P.white, boxShadow:"0 4px 14px rgba(1,138,190,0.25)" }}>
                       {s.icon}
@@ -182,7 +263,7 @@ export default function AdminDashboard() {
               {/* Recent users */}
               <div>
                 <h2 style={{ color:P.white, fontWeight:900, fontSize:15, margin:"0 0 16px" }}>Recent Users</h2>
-                <UsersTable users={MOCK_USERS} />
+                <UsersTable users={users.slice(0, 5)} onToggleBan={handleToggleBan} onToggleApprove={handleToggleApprove} />
               </div>
             </div>
           )}
@@ -199,7 +280,7 @@ export default function AdminDashboard() {
                   + Invite User
                 </button>
               </div>
-              <UsersTable users={MOCK_USERS} showActions />
+              <UsersTable users={users} showActions onToggleBan={handleToggleBan} onToggleApprove={handleToggleApprove} />
             </div>
           )}
 
@@ -212,18 +293,91 @@ export default function AdminDashboard() {
                   <p style={{ color:P.muted, fontSize:12, margin:"4px 0 0" }}>Approve, suspend or manage vendor accounts</p>
                 </div>
               </div>
-              <UsersTable users={MOCK_USERS.filter(u=>u.role==="vendor")} showActions />
+              <UsersTable users={users.filter(u=>u.role==="vendor")} showActions onToggleBan={handleToggleBan} onToggleApprove={handleToggleApprove} />
             </div>
           )}
 
           {/* ── PLACEHOLDER TABS ── */}
-          {["products","orders","settings"].includes(activeNav) && (
+          {["products","orders"].includes(activeNav) && (
             <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", minHeight:"40vh", textAlign:"center" }}>
               <div style={{ width:64, height:64, borderRadius:18, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:20, boxShadow:"0 8px 24px rgba(1,138,190,0.3)", color:P.white }}>
                 {NAV.find(n=>n.id===activeNav)?.icon}
               </div>
               <h2 style={{ color:P.white, fontWeight:900, fontSize:20, margin:"0 0 8px" }}>{NAV.find(n=>n.id===activeNav)?.label}</h2>
               <p style={{ color:P.muted, fontSize:14, margin:0 }}>This section is coming soon.</p>
+            </div>
+          )}
+
+          {/* ── SETTINGS ── */}
+          {activeNav === "settings" && (
+            <div style={{ display:"flex", flexDirection:"column", gap:24, maxWidth: 800 }}>
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+                <div>
+                  <h2 style={{ color:P.white, fontWeight:900, fontSize:24, margin:"0 0 8px" }}>Settings</h2>
+                  <p style={{ color:P.muted, fontSize:14, margin:0 }}>Manage your platform preferences and admin account details.</p>
+                </div>
+                <button
+                  style={{
+                    display:"inline-flex", alignItems:"center", gap:8,
+                    background:`linear-gradient(135deg, ${P.royal}, ${P.ocean})`,
+                    color:P.white, fontWeight:700, fontSize:14, fontFamily:P.font,
+                    padding:"12px 24px", borderRadius:12, border:"none", cursor:"pointer",
+                    boxShadow:"0 4px 16px rgba(1,138,190,0.3)", transition:"all 0.2s",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 6px 20px rgba(1,138,190,0.4)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 4px 16px rgba(1,138,190,0.3)"; }}
+                >
+                  Save Changes
+                </button>
+              </div>
+
+              <div style={{ background:"rgba(0,15,40,0.6)", border:`1px solid rgba(1,138,190,0.15)`, borderRadius:16, padding:24, backdropFilter:"blur(8px)" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24, paddingBottom:16, borderBottom:`1px solid rgba(1,138,190,0.1)` }}>
+                  <div style={{ width:40, height:40, borderRadius:10, background:"rgba(1,138,190,0.1)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke={P.ocean} strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                  </div>
+                  <div>
+                    <h3 style={{ color:P.white, fontWeight:800, fontSize:16, margin:0 }}>Admin Profile</h3>
+                    <p style={{ color:P.muted, fontSize:13, margin:0 }}>Update your administrative details.</p>
+                  </div>
+                </div>
+                
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                  <div style={{ marginBottom: 16 }}>
+                    <label style={{ display:"block", color:P.sky, fontSize:13, fontWeight:700, marginBottom:8 }}>Full Name</label>
+                    <input defaultValue={user?.name || ""} placeholder="Admin Name" style={{ width:"100%", padding:"12px 16px", borderRadius:12, border:`1px solid rgba(1,138,190,0.3)`, background:"rgba(0,15,40,0.5)", color:P.white, fontSize:14, outline:"none", boxSizing:"border-box" }} />
+                  </div>
+                  <div style={{ marginBottom: 16 }}>
+                    <label style={{ display:"block", color:P.sky, fontSize:13, fontWeight:700, marginBottom:8 }}>Email Address</label>
+                    <input defaultValue={user?.email || ""} placeholder="admin@example.com" type="email" style={{ width:"100%", padding:"12px 16px", borderRadius:12, border:`1px solid rgba(1,138,190,0.3)`, background:"rgba(0,15,40,0.5)", color:P.white, fontSize:14, outline:"none", boxSizing:"border-box" }} />
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ background:"rgba(0,15,40,0.6)", border:`1px solid rgba(1,138,190,0.15)`, borderRadius:16, padding:24, backdropFilter:"blur(8px)" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16, paddingBottom:16, borderBottom:`1px solid rgba(1,138,190,0.1)` }}>
+                  <div style={{ width:40, height:40, borderRadius:10, background:"rgba(1,138,190,0.1)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke={P.ocean} strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                  </div>
+                  <div>
+                    <h3 style={{ color:P.white, fontWeight:800, fontSize:16, margin:0 }}>Platform Notifications</h3>
+                    <p style={{ color:P.muted, fontSize:13, margin:0 }}>Control your administrative alerts.</p>
+                  </div>
+                </div>
+
+                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"16px 0", borderBottom:`1px solid rgba(1,138,190,0.1)` }}>
+                  <div>
+                    <span style={{ display:"block", color:P.white, fontSize:14, fontWeight:700, marginBottom:4 }}>New Vendor Approvals</span>
+                    <span style={{ display:"block", color:P.muted, fontSize:13 }}>Get notified when a new vendor applies for an account.</span>
+                  </div>
+                  <label style={{ position:"relative", display:"inline-block", width:44, height:24, flexShrink:0 }}>
+                    <input type="checkbox" defaultChecked style={{ opacity:0, width:0, height:0 }} />
+                    <span style={{ position:"absolute", cursor:"pointer", top:0, left:0, right:0, bottom:0, backgroundColor:P.ocean, borderRadius:34 }}>
+                      <span style={{ position:"absolute", height:18, width:18, left:3, bottom:3, backgroundColor:"white", borderRadius:"50%", transform:"translateX(20px)", transition:".3s" }} />
+                    </span>
+                  </label>
+                </div>
+              </div>
             </div>
           )}
 
@@ -234,8 +388,8 @@ export default function AdminDashboard() {
 }
 
 // ─── Users Table ─────────────────────────────────────────────────────────────
-function UsersTable({ users, showActions = false }) {
-  const cols = showActions ? "2fr 2fr 1fr 1fr 1.5fr 1fr" : "2fr 2fr 1fr 1fr 1.5fr";
+function UsersTable({ users, showActions = false, onToggleBan, onToggleApprove }) {
+  const cols = showActions ? "2fr 2fr 1fr 1fr 1.5fr 1.5fr" : "2fr 2fr 1fr 1fr 1.5fr";
   return (
     <div style={{ borderRadius:16, overflow:"hidden", background:"rgba(0,15,40,0.6)", border:"1px solid rgba(1,138,190,0.15)", backdropFilter:"blur(8px)" }}>
       {/* Header row */}
@@ -251,6 +405,21 @@ function UsersTable({ users, showActions = false }) {
       {users.map((u,i)=>{
         const rs = ROLE_STYLE[u.role];
         const ss = STATUS_STYLE[u.status];
+        
+        let customStatusUI = (
+          <span style={{ fontSize:11, fontWeight:700, padding:"3px 8px", borderRadius:999, display:"inline-block", background:ss.bg, border:`1px solid ${ss.border}`, color:ss.text }}>
+            {u.status}
+          </span>
+        );
+        
+        if (u.role === "vendor" && !u.isApproved) {
+            customStatusUI = (
+                <span style={{ fontSize:11, fontWeight:700, padding:"3px 8px", borderRadius:999, display:"inline-block", background:"rgba(234, 179, 8, 0.1)", border:"1px solid rgba(234, 179, 8, 0.25)", color:"#facc15" }}>
+                  Pending
+                </span>
+            );
+        }
+
         return (
           <div key={i} style={{ display:"grid", gridTemplateColumns:cols, alignItems:"center", padding:"12px 20px", borderBottom: i < users.length-1 ? "1px solid rgba(1,138,190,0.07)" : "none", transition:"background 0.15s" }}
             onMouseEnter={e=>e.currentTarget.style.background="rgba(1,138,190,0.05)"}
@@ -269,23 +438,23 @@ function UsersTable({ users, showActions = false }) {
               {u.role}
             </span>
 
-            <span style={{ fontSize:11, fontWeight:700, padding:"3px 8px", borderRadius:999, display:"inline-block", background:ss.bg, border:`1px solid ${ss.border}`, color:ss.text }}>
-              {u.status}
-            </span>
+            {customStatusUI}
 
             <span style={{ color:"rgba(151,202,219,0.4)", fontSize:12 }}>{u.joined}</span>
 
             {showActions && (
               <div style={{ display:"flex", gap:6 }}>
-                <button style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background:"rgba(1,138,190,0.1)", border:`1px solid rgba(1,138,190,0.25)`, color:P.sky, cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="rgba(1,138,190,0.2)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="rgba(1,138,190,0.1)"; }}>
-                  EDIT
-                </button>
-                <button style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background:"rgba(220,38,38,0.08)", border:"1px solid rgba(220,38,38,0.2)", color:"#f87171", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}
+                {u.role === "vendor" && (
+                  <button onClick={() => onToggleApprove(u.id, u.isApproved)}
+                    style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background: u.isApproved ? "rgba(220,38,38,0.08)" : "rgba(34,197,94,0.08)", border: u.isApproved ? "1px solid rgba(220,38,38,0.2)" : "1px solid rgba(34,197,94,0.2)", color: u.isApproved ? "#f87171" : "#4ade80", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}>
+                    {u.isApproved ? "Revoke" : "Approve"}
+                  </button>
+                )}
+                <button onClick={() => onToggleBan(u.id, u.status)}
+                  style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background:"rgba(220,38,38,0.08)", border:"1px solid rgba(220,38,38,0.2)", color:"#f87171", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.background="rgba(220,38,38,0.15)"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.background="rgba(220,38,38,0.08)"; }}>
-                  Ban
+                  {u.status === "Active" ? "Ban" : "Unban"}
                 </button>
               </div>
             )}

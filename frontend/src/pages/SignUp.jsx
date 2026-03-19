@@ -43,6 +43,14 @@ export default function SignUp() {
     setLoading(true);
     try {
       const user = await register(form.name, form.email, form.password, role);
+      
+      if (user?.pendingApproval) {
+        // Just show an alert and navigate to login
+        alert("Registration successful! Please wait for an Admin to approve your Vendor account before logging in.");
+        navigate("/signin");
+        return;
+      }
+
       if (user.role==="admin") navigate("/admin/dashboard");
       else if (user.role==="vendor") navigate("/vendor/dashboard");
       else navigate("/dashboard");

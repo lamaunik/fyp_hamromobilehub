@@ -1,0 +1,59 @@
+[
+  {
+    "vendor": { "$oid": "64ca81b672f0521e1495babc" },
+    "name": "iPhone 14 Pro Max",
+    "description": "The ultimate iPhone with a massive 6.7-inch Super Retina XDR display, A16 Bionic chip, and a pro camera system.",
+    "price": 1099,
+    "discountPrice": 1049,
+    "category": "Smartphones",
+    "stock": 15,
+    "images": [
+      "https://images.unsplash.com/photo-1678652197831-2d180705cd2c?q=80&w=1000&auto=format&fit=crop"
+    ]
+  },
+  {
+    "vendor": { "$oid": "64ca81b672f0521e1495babc" },
+    "name": "Samsung Galaxy S23 Ultra",
+    "description": "Premium Android smartphone with 200MP camera, built-in S Pen, and Snapdragon 8 Gen 2 processor.",
+    "price": 1199,
+    "category": "Smartphones",
+    "stock": 22,
+    "images": [
+      "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?q=80&w=1000&auto=format&fit=crop"
+    ]
+  },
+  {
+    "vendor": { "$oid": "64ca81b672f0521e1495babc" },
+    "name": "MacBook Pro 14-inch (M2 Pro)",
+    "description": "Supercharged by M2 Pro, featuring up to 12-core CPU and 19-core GPU, with amazing battery life.",
+    "price": 1999,
+    "category": "Laptops",
+    "stock": 8,
+    "images": [
+      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1000&auto=format&fit=crop"
+    ]
+  },
+  {
+    "vendor": { "$oid": "64ca81b672f0521e1495babc" },
+    "name": "Sony WH-1000XM5",
+    "description": "Industry-leading noise canceling wireless headphones with up to 30 hours of battery.",
+    "price": 398,
+    "discountPrice": 348,
+    "category": "Accessories",
+    "stock": 50,
+    "images": [
+      "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=1000&auto=format&fit=crop"
+    ]
+  },
+  {
+    "vendor": { "$oid": "64ca81b672f0521e1495babc" },
+    "name": "Apple Watch Series 8",
+    "description": "Advanced health sensors and apps, featuring an Always-On Retina display and crack-resistant front crystal.",
+    "price": 399,
+    "category": "Wearables",
+    "stock": 35,
+    "images": [
+      "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?q=80&w=1000&auto=format&fit=crop"
+    ]
+  }
+]

@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 
 const NAV = [
   { id: "overview",  label: "Overview" },
-  { id: "products",  label: "My Products" },
+  { id: "listings",  label: "My Products" },
   { id: "orders",    label: "Orders" },
   { id: "analytics", label: "Analytics" },
   { id: "reviews",   label: "Reviews" },
@@ -172,7 +172,9 @@ export default function VendorSidebar({ tab, setTab, open, setOpen }) {
       {/* Add Product CTA */}
       {open && (
         <div style={{ padding: "0 12px 8px" }}>
-          <button style={{
+          <button 
+            onClick={() => setTab("add-product")}
+            style={{
             width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
             background: `linear-gradient(135deg, ${P.royal}, ${P.ocean})`,
             color: P.white, fontSize: 13, fontWeight: 700, fontFamily: P.font,

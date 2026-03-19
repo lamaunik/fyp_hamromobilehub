@@ -31,6 +31,40 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    profilePicture: {
+      type: String,
+      default: "",
+    },
+    phone: {
+      type: String,
+      default: "",
+    },
+    address: {
+      type: String,
+      default: "",
+    },
+    isApproved: {
+      type: Boolean,
+      default: true,
+    },
+    isDeactivated: {
+      type: Boolean,
+      default: false,
+    },
+    bio: {
+      type: String,
+      default: "",
+    },
+    storeName: {
+      type: String,
+      default: "",
+    },
+    wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
   },
   { timestamps: true }
 );

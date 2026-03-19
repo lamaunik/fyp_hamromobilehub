@@ -1,4 +1,3 @@
-// src/pages/VendorDashboard.jsx
 import { useState } from "react";
 import VendorSidebar   from "../components/vendor/VendorSidebar";
 import VendorTopbar    from "../components/vendor/VendorTopbar";
@@ -6,6 +5,9 @@ import VendorOverview  from "../components/vendor/VendorOverview";
 import VendorListings  from "../components/vendor/VendorListings";
 import VendorOrders    from "../components/vendor/VendorOrders";
 import VendorAnalytics from "../components/vendor/VendorAnalytics";
+import VendorSettings  from "../components/vendor/VendorSettings";
+import VendorReviews   from "../components/vendor/VendorReviews";
+import VendorAddProduct from "../components/vendor/VendorAddProduct";
 
 function ComingSoon({ label }) {
   return (
@@ -37,11 +39,12 @@ export default function VendorDashboard() {
     switch (tab) {
       case "overview":   return <VendorOverview   setTab={setTab} />;
       case "listings":   return <VendorListings   setTab={setTab} />;
+      case "add-product":return <VendorAddProduct setTab={setTab} />;
       case "orders":     return <VendorOrders />;
       case "analytics":  return <VendorAnalytics />;
       case "payouts":    return <ComingSoon label="Payouts" />;
-      case "reviews":    return <ComingSoon label="Reviews" />;
-      case "settings":   return <ComingSoon label="Settings" />;
+      case "reviews":    return <VendorReviews />;
+      case "settings":   return <VendorSettings />;
       default:           return <VendorOverview   setTab={setTab} />;
     }
   };

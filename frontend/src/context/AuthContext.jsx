@@ -1,8 +1,9 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { api } from "../utils/api";
 
 const AuthContext = createContext();
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "http://127.0.0.1:5000/api";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -25,13 +26,12 @@ export function AuthProvider({ children }) {
 
   const register = async (name, email, password, role) => {
     try {
-      const res = await fetch(`${API_URL}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, role }),
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message);
+      const data = await api.post("/auth/register", { name, email, password, role });
+      
+      if (data.pendingApproval) {
+        return { pendingApproval: true };
+      }
+
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
@@ -43,13 +43,7 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message);
+      const data = await api.post("/auth/login", { email, password });
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
@@ -57,6 +51,14 @@ export function AuthProvider({ children }) {
     } catch (err) {
       throw new Error(err.message);
     }
+  };
+
+  const updateUser = (newUserData) => {
+    setUser(prev => {
+      const updated = { ...prev, ...newUserData };
+      localStorage.setItem("user", JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const logout = () => {
@@ -68,7 +70,7 @@ export function AuthProvider({ children }) {
   const getToken = () => localStorage.getItem("token");
 
   return (
-    <AuthContext.Provider value={{ user, loading, register, login, logout, getToken }}>
+    <AuthContext.Provider value={{ user, loading, register, login, logout, getToken, updateUser }}>
       {!loading && children}
     </AuthContext.Provider>
   );

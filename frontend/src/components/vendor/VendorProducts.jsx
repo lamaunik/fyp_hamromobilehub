@@ -1,9 +1,9 @@
 // src/components/vendor/VendorProducts.jsx
 
 const SAMPLE = [
-  { name: "iPhone 14 Pro",      price: "$899",  status: "Active",  stock: 3, views: 120 },
-  { name: "Samsung Galaxy S23", price: "$749",  status: "Active",  stock: 5, views: 88  },
-  { name: "Google Pixel 7",     price: "$549",  status: "Paused",  stock: 0, views: 45  },
+  { name: "iPhone 14 Pro",      price: "Rs. 899",  status: "Active",  stock: 3, views: 120 },
+  { name: "Samsung Galaxy S23", price: "Rs. 749",  status: "Active",  stock: 5, views: 88  },
+  { name: "Google Pixel 7",     price: "Rs. 549",  status: "Paused",  stock: 0, views: 45  },
 ];
 
 const STATUS_COLOR = {

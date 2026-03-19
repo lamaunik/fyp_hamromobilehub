@@ -30,7 +30,7 @@ export default function VendorAnalytics() {
         {[
           { label:"Page Views",  value:"0",  sub:"0% this week"   },
           { label:"Conversion",  value:"0%", sub:"+0% last month" },
-          { label:"Avg Order",   value:"$0", sub:"From 0 orders"  },
+          { label:"Avg Order",   value:"Rs. 0", sub:"From 0 orders"  },
           { label:"Return Rate", value:"0%", sub:"No returns"     },
         ].map((k,i)=>(
           <div key={i} style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:16, padding:20, cursor:"pointer", transition:"all 0.2s", display:"flex", flexDirection:"column", gap:12 }}
@@ -57,7 +57,7 @@ export default function VendorAnalytics() {
         <div style={{ display:"flex", alignItems:"flex-end", gap:10, height:160 }}>
           {MONTHS.map((m,i)=>(
             <div key={m} style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", gap:6, height:"100%" }}>
-              {REVENUE[i] > 0 && <p style={{ color:P.ocean, fontSize:10, fontWeight:700, margin:0 }}>${REVENUE[i]}</p>}
+              {REVENUE[i] > 0 && <p style={{ color:P.ocean, fontSize:10, fontWeight:700, margin:0 }}>Rs. ${REVENUE[i]}</p>}
               <div style={{ width:"100%", borderRadius:"6px 6px 0 0", transition:"all 0.3s", marginTop:"auto",
                 height:`${Math.max((REVENUE[i]/MAX_R)*100,5)}%`,
                 background: REVENUE[i]>0 ? `linear-gradient(to top,${P.royal},${P.ocean})` : P.mist,
@@ -73,9 +73,9 @@ export default function VendorAnalytics() {
         <h3 style={{ color:P.navy, fontWeight:800, fontSize:15, margin:"0 0 16px" }}>Top Listings Performance</h3>
         <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
           {[
-            { name:"Unknown", views:0, sales:0, revenue:"$0" },
-            { name:"Unknown", views:0, sales:0, revenue:"$0" },
-            { name:"Unknown", views:0, sales:0, revenue:"$0" },
+            { name:"Unknown", views:0, sales:0, revenue:"Rs. 0" },
+            { name:"Unknown", views:0, sales:0, revenue:"Rs. 0" },
+            { name:"Unknown", views:0, sales:0, revenue:"Rs. 0" },
           ].map((p,i)=>(
             <div key={i} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 16px", background:P.mistBg, borderRadius:12, border:`1px solid ${P.mist}`, transition:"all 0.15s" }}
               onMouseEnter={e=>{ e.currentTarget.style.background=`rgba(1,138,190,0.06)`; e.currentTarget.style.borderColor=P.sky; }}

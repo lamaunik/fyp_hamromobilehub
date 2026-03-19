@@ -1,0 +1,18 @@
+
+> frontend@0.0.0 build
+> vite build
+
+[36mvite v8.0.0-beta.15 [32mbuilding client environment for production...[36m[39m
+[2Ktransforming...✓ 60 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.45 kB │ gzip:   0.29 kB
+dist/assets/index-lCjc5-Mu.css   28.55 kB │ gzip:   5.76 kB
+dist/assets/index-B7jgVAfq.js   493.99 kB │ gzip: 128.86 kB
+
+[33m[33m[PLUGIN_TIMINGS] Warning:[0m Your build spent significant time in plugins. Here is a breakdown:
+  - vite:react-babel (90%)
+  - @tailwindcss/vite:generate:build (9%)
+See https://rolldown.rs/options/checks#plugintimings for more details.
+[39m
+[32m✓ built in 6.36s[39m

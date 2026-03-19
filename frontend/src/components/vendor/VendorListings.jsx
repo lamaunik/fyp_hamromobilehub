@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const P = {
   navy:"#001B48", royal:"#02457A", ocean:"#018ABE",
@@ -6,13 +6,6 @@ const P = {
   muted:"#6b99b5", mistBg:"#f0f6f9",
   font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
 };
-
-const PRODUCTS = [
-  { name:"iPhone 14 Pro",      price:"$899",  status:"Active", stock:3, views:120, category:"Smartphones" },
-  { name:"Samsung Galaxy S23", price:"$749",  status:"Active", stock:5, views:88,  category:"Smartphones" },
-  { name:"Google Pixel 7",     price:"$549",  status:"Paused", stock:0, views:45,  category:"Smartphones" },
-  { name:"MacBook Air M2",     price:"$1099", status:"Active", stock:2, views:67,  category:"Laptops"     },
-];
 
 const STATUS_STYLE = {
   Active: { bg:"rgba(34,197,94,0.1)",   border:"rgba(34,197,94,0.25)",  text:"#16a34a" },
@@ -28,9 +21,36 @@ const PhoneIcon = () => (
   </svg>
 );
 
-export default function VendorListings() {
+export default function VendorListings({ setTab }) {
   const [filter, setFilter] = useState("All");
-  const visible = filter==="All" ? PRODUCTS : PRODUCTS.filter(p=>p.status===filter);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { api } = await import("../../utils/api");
+        const res = await api.get("/products/vendor/myproducts");
+        if (res.success && res.data) {
+          // Map to match exact shape roughly expected by Table
+          const mapped = res.data.map(p => ({
+            id: p._id,
+            name: p.name,
+            price: `Rs. ${p.price}`,
+            status: p.stock > 0 ? "Active" : "Sold",
+            stock: p.stock,
+            views: Math.floor(Math.random() * 200), // Fake views since it's not in schema
+            category: p.category
+          }));
+          setProducts(mapped);
+        }
+      } catch (err) {
+        console.error("Failed to fetch vendor products", err);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const visible = filter === "All" ? products : products.filter(p=>p.status===filter);
 
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:20, fontFamily:P.font }}>
@@ -41,7 +61,7 @@ export default function VendorListings() {
           <h2 style={{ color:P.navy, fontWeight:900, fontSize:20, margin:"0 0 4px" }}>My Listings</h2>
           <p style={{ color:P.muted, fontSize:14, margin:0 }}>Manage all your active product listings</p>
         </div>
-        <button style={{ display:"flex", alignItems:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontSize:13, fontWeight:700, padding:"10px 20px", borderRadius:12, border:"none", cursor:"pointer", fontFamily:P.font, boxShadow:"0 4px 14px rgba(1,138,190,0.3)", transition:"opacity 0.15s" }}
+        <button onClick={() => setTab("add-product")} style={{ display:"flex", alignItems:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontSize:13, fontWeight:700, padding:"10px 20px", borderRadius:12, border:"none", cursor:"pointer", fontFamily:P.font, boxShadow:"0 4px 14px rgba(1,138,190,0.3)", transition:"opacity 0.15s" }}
           onMouseEnter={e=>e.currentTarget.style.opacity="0.9"}
           onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
           <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"/></svg>
@@ -70,13 +90,14 @@ export default function VendorListings() {
       {/* Table */}
       <div style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:20, overflow:"hidden", boxShadow:"0 2px 12px rgba(0,27,72,0.05)" }}>
         {/* Header row */}
-        <div style={{ display:"grid", gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 90px", padding:"10px 20px", background:P.mistBg, borderBottom:`1px solid ${P.mist}`, fontSize:10, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", color:P.muted }}>
+        <div style={{ display:"grid", gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 90px 80px", padding:"10px 20px", background:P.mistBg, borderBottom:`1px solid ${P.mist}`, fontSize:10, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", color:P.muted }}>
           <span>Product</span>
           <span>Category</span>
           <span>Price</span>
           <span>Stock</span>
           <span>Views</span>
           <span>Status</span>
+          <span style={{ textAlign: "right" }}>Actions</span>
         </div>
 
         {visible.length === 0 && (
@@ -86,12 +107,16 @@ export default function VendorListings() {
         {visible.map((p,i)=>{
           const ss = STATUS_STYLE[p.status] || STATUS_STYLE.Sold;
           return (
-            <div key={i} style={{ display:"grid", gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 90px", alignItems:"center", padding:"14px 20px", borderBottom: i<visible.length-1 ? `1px solid ${P.mist}` : "none", transition:"background 0.15s" }}
+            <div key={i} style={{ display:"grid", gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 90px 80px", alignItems:"center", padding:"14px 20px", borderBottom: i<visible.length-1 ? `1px solid ${P.mist}` : "none", transition:"background 0.15s" }}
               onMouseEnter={e=>e.currentTarget.style.background=P.mistBg}
               onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
               <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                <div style={{ width:40, height:40, background:`linear-gradient(135deg,${P.mist},${P.sky})`, borderRadius:12, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, color:P.royal }}>
-                  <PhoneIcon/>
+                <div style={{ width:40, height:40, background:`linear-gradient(135deg,${P.mist},${P.sky})`, borderRadius:12, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, color:P.royal, overflow: "hidden" }}>
+                  {p.image ? (
+                    <img src={p.image.startsWith("http") ? p.image : `http://localhost:5000${p.image}`} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "contain", padding: 4 }} />
+                  ) : (
+                    <PhoneIcon/>
+                  )}
                 </div>
                 <p style={{ color:P.navy, fontWeight:700, fontSize:14, margin:0 }}>{p.name}</p>
               </div>
@@ -100,6 +125,34 @@ export default function VendorListings() {
               <p style={{ color:P.navy, fontSize:13, fontWeight:600, margin:0 }}>{p.stock}</p>
               <p style={{ color:P.muted, fontSize:13, margin:0 }}>{p.views}</p>
               <span style={{ fontSize:11, fontWeight:700, padding:"4px 10px", borderRadius:999, display:"inline-block", background:ss.bg, border:`1px solid ${ss.border}`, color:ss.text }}>{p.status}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "flex-end" }}>
+                <button
+                  onClick={() => alert("Edit product feature coming soon!")}
+                  title="Edit Product"
+                  style={{ background: "transparent", border: "none", cursor: "pointer", color: P.ocean, padding: 4 }}
+                >
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </button>
+                <button
+                  onClick={async () => {
+                    if (window.confirm("Are you sure you want to delete this product?")) {
+                       try {
+                         const { api } = await import("../../utils/api");
+                         await api.delete(`/products/${p.id}`);
+                         setProducts(prev => prev.filter(prod => prod.id !== p.id));
+                       } catch (e) { console.error("Could not delete", e); }
+                    }
+                  }}
+                  title="Delete Product"
+                  style={{ background: "transparent", border: "none", cursor: "pointer", color: "#ef4444", padding: 4 }}
+                >
+                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
             </div>
           );
         })}
@@ -111,7 +164,7 @@ export default function VendorListings() {
         onMouseLeave={e=>e.currentTarget.style.borderColor=P.sky}>
         <p style={{ color:P.navy, fontWeight:700, fontSize:15, margin:"0 0 6px" }}>Got more devices to sell?</p>
         <p style={{ color:P.muted, fontSize:13, margin:"0 0 18px" }}>List new products and reach thousands of buyers in minutes.</p>
-        <button style={{ background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:13, padding:"10px 24px", borderRadius:12, border:"none", cursor:"pointer", fontFamily:P.font, boxShadow:"0 4px 14px rgba(1,138,190,0.3)" }}>
+        <button onClick={() => setTab("add-product")} style={{ background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:13, padding:"10px 24px", borderRadius:12, border:"none", cursor:"pointer", fontFamily:P.font, boxShadow:"0 4px 14px rgba(1,138,190,0.3)" }}>
           + Add New Listing
         </button>
       </div>

@@ -16,10 +16,17 @@ const sendTokenResponse = (user, statusCode, res) => {
     success: true,
     token,
     user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
+      id:             user._id,
+      name:           user.name,
+      email:          user.email,
+      role:           user.role,
+      profilePicture: user.profilePicture,
+      phone:          user.phone,
+      address:        user.address,
+      bio:            user.bio,
+      storeName:      user.storeName,
+      isDeactivated:  user.isDeactivated,
+      isApproved:     user.isApproved,
     },
   });
 };
@@ -30,7 +37,6 @@ export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
-    // Validation
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -38,7 +44,6 @@ export const register = async (req, res) => {
       });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
@@ -47,11 +52,21 @@ export const register = async (req, res) => {
       });
     }
 
-    // Accept user / vendor / admin exactly as sent; fall back to "user"
     const VALID_ROLES = ["user", "vendor", "admin"];
     const assignedRole = VALID_ROLES.includes(role) ? role : "user";
 
-    const user = await User.create({ name, email, password, role: assignedRole });
+    // Vendors require admin approval
+    const isApproved = assignedRole !== "vendor";
+
+    const user = await User.create({ name, email, password, role: assignedRole, isApproved });
+
+    if (!isApproved) {
+      return res.status(201).json({
+        success: true,
+        pendingApproval: true,
+        message: "Registration successful. Please wait for an Admin to approve your Vendor account before logging in.",
+      });
+    }
 
     sendTokenResponse(user, 201, res);
   } catch (error) {
@@ -72,14 +87,10 @@ export const login = async (req, res) => {
       });
     }
 
-    // Find user and include password field
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid email or password",
-      });
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
     }
 
     if (!user.isActive) {
@@ -89,12 +100,16 @@ export const login = async (req, res) => {
       });
     }
 
+    if (user.isApproved === false) {
+      return res.status(403).json({
+        success: false,
+        message: "Your vendor account is pending admin approval.",
+      });
+    }
+
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid email or password",
-      });
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
     }
 
     sendTokenResponse(user, 200, res);
@@ -111,11 +126,17 @@ export const getMe = async (req, res) => {
     res.status(200).json({
       success: true,
       user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        createdAt: user.createdAt,
+        id:             user._id,
+        name:           user.name,
+        email:          user.email,
+        role:           user.role,
+        profilePicture: user.profilePicture,
+        phone:          user.phone,
+        address:        user.address,
+        bio:            user.bio,
+        storeName:      user.storeName,
+        isDeactivated:  user.isDeactivated,
+        createdAt:      user.createdAt,
       },
     });
   } catch (error) {

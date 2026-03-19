@@ -1,14 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 
-import Navbar     from "./components/Navbar";
-import Hero       from "./components/Hero";
-import Features   from "./components/Features";
-import HowItWorks from "./components/HowItWorks";
-import Stats      from "./components/Stats";
-import Team       from "./components/Team";
-import CTABanner  from "./components/CTABanner";
-import Footer     from "./components/Footer";
+import LandingPage from "./pages/LandingPage";
 
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -17,22 +10,8 @@ import Dashboard       from "./pages/Dashboard";
 import VendorDashboard from "./pages/VendorDashboard";
 import AdminDashboard  from "./pages/AdminDashboard";
 
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
-function LandingPage() {
-  return (
-    <div className="font-sans antialiased">
-      <Navbar />
-      <Hero />
-      <Features />
-      <Stats />
-      <HowItWorks />
-      <Team />
-      <CTABanner />
-      <Footer />
-    </div>
-  );
-}
 
 export default function App() {
   return (

@@ -87,7 +87,6 @@ export default function VendorTopbar({ tab, onMenu }) {
           }} />
         </button>
 
-        {/* Avatar */}
         <div style={{
           width: 36, height: 36, borderRadius: "50%",
           background: `linear-gradient(135deg, ${P.royal}, ${P.ocean})`,
@@ -95,8 +94,13 @@ export default function VendorTopbar({ tab, onMenu }) {
           color: P.white, fontWeight: 900, fontSize: 14,
           border: `2px solid ${P.mist}`,
           boxShadow: "0 2px 8px rgba(1,138,190,0.2)",
+          overflow: "hidden",
         }}>
-          {user?.name?.charAt(0).toUpperCase() || "V"}
+          {user?.profilePicture ? (
+            <img src={user.profilePicture.startsWith("http") ? user.profilePicture : `http://localhost:5000${user.profilePicture}`} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          ) : (
+            user?.name?.charAt(0).toUpperCase() || "V"
+          )}
         </div>
 
         {/* Browse Phones */}

@@ -169,8 +169,12 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
           onMouseEnter={(e) => { e.currentTarget.style.borderColor = P.sky; e.currentTarget.style.background = P.white; }}
           onMouseLeave={(e) => { e.currentTarget.style.borderColor = P.mist; e.currentTarget.style.background = P.mistBg; }}
         >
-          <div style={{ width: 32, height: 32, borderRadius: "50%", background: `linear-gradient(135deg,${P.royal},${P.ocean})`, display: "flex", alignItems: "center", justifyContent: "center", border: `2px solid ${P.white}`, boxShadow: "0 2px 8px rgba(1,138,190,.28)" }}>
-            <span style={{ color: P.white, fontWeight: 900, fontSize: 12 }}>{user?.name?.charAt(0)?.toUpperCase() || "U"}</span>
+          <div style={{ width: 32, height: 32, borderRadius: "50%", background: `linear-gradient(135deg,${P.royal},${P.ocean})`, display: "flex", alignItems: "center", justifyContent: "center", border: `2px solid ${P.white}`, boxShadow: "0 2px 8px rgba(1,138,190,.28)", overflow: "hidden" }}>
+            {user?.profilePicture ? (
+              <img src={user.profilePicture.startsWith("http") ? user.profilePicture : `http://localhost:5000${user.profilePicture}`} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            ) : (
+              <span style={{ color: P.white, fontWeight: 900, fontSize: 12 }}>{user?.name?.charAt(0)?.toUpperCase() || "U"}</span>
+            )}
           </div>
           <div>
             <p style={{ color: P.navy, fontWeight: 700, fontSize: 13, margin: 0, lineHeight: 1.2 }}>{user?.name?.split(" ")[0]}</p>

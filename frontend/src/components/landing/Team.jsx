@@ -21,7 +21,7 @@ export default function Team() {
           </span>
           <h2 style={{ fontSize:42,fontWeight:900,color:P.navy,margin:"0 0 16px",letterSpacing:"-0.02em" }}>
             The People Behind{" "}
-            <span style={{ background:`linear-gradient(to right,${P.royal},${P.ocean})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>MobiHub</span>
+            <span style={{ background:`linear-gradient(to right,${P.royal},${P.ocean})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>HamroMobileHub</span>
           </h2>
           <p style={{ color:P.muted,fontSize:17,maxWidth:440,margin:"0 auto",lineHeight:1.7 }}>Passionate experts building the future of mobile commerce.</p>
         </div>

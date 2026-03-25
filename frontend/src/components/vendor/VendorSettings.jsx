@@ -63,6 +63,8 @@ export default function VendorSettings() {
             phone:          res.data.phone || "",
             address:        res.data.address || "",
             profilePicture: res.data.profilePicture || "",
+            bio:            res.data.bio || "Passionate vendor on HamroMobileHub.",
+            storeName:      res.data.storeName || "My Store",
           }));
         }
       } catch (err) { console.error("Profile fetch failed", err); }
@@ -92,11 +94,7 @@ export default function VendorSettings() {
   const saveInfo = async () => {
     try {
       const { api } = await import("../../utils/api");
-      const res = await api.put("/users/profile", {
-        name: form.name, email: form.email,
-        phone: form.phone, address: form.address,
-        profilePicture: form.profilePicture,
-      });
+      const res = await api.put("/users/profile", form);
       if (res.success) {
         updateUser(form);
         setSaved(true);

@@ -23,15 +23,8 @@ export default function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
 
-          {/* User dashboard — only role "user" */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={["user"]}>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
+          {/* User dashboard / Public browsing */}
+          <Route path="/dashboard" element={<Dashboard />} />
 
           {/* Vendor dashboard — only role "vendor" */}
           <Route

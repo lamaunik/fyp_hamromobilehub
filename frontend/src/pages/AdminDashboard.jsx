@@ -161,18 +161,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* User chip */}
-        <div style={{ padding:"12px 12px", borderBottom:"1px solid rgba(1,138,190,0.08)" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:10, padding:"10px 12px", borderRadius:12, background:"rgba(1,138,190,0.1)", border:`1px solid rgba(1,138,190,0.2)` }}>
-            <div style={{ width:32, height:32, borderRadius:"50%", background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900, fontSize:14, color:P.white, flexShrink:0 }}>
-              {user?.name?.charAt(0).toUpperCase() || "A"}
-            </div>
-            <div style={{ minWidth:0 }}>
-              <p style={{ color:P.white, fontWeight:700, fontSize:12, margin:0, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{user?.name}</p>
-              <span style={{ display:"inline-block", background:"rgba(1,138,190,0.2)", color:P.sky, fontSize:9, fontWeight:800, letterSpacing:"0.08em", padding:"2px 6px", borderRadius:4, marginTop:3 }}>ADMINISTRATOR</span>
-            </div>
-          </div>
-        </div>
+
 
         {/* Nav */}
         <nav style={{ flex:1, padding:"12px", display:"flex", flexDirection:"column", gap:2, overflowY:"auto" }}>

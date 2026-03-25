@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const P = {
   navy: "#001B48", royal: "#02457A", ocean: "#018ABE",
   sky: "#97CADB", mist: "#D6E8EE", white: "#ffffff", muted: "#6b99b5",
@@ -42,17 +44,17 @@ export default function Hero() {
           </p>
 
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: `linear-gradient(135deg, ${P.ocean}, #0aa8e0)`, color: P.white, fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 999, textDecoration: "none", boxShadow: "0 8px 28px rgba(1,138,190,0.4)", transition: "transform 0.15s" }}
+            <Link to="/dashboard" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: `linear-gradient(135deg, ${P.ocean}, #0aa8e0)`, color: P.white, fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 999, textDecoration: "none", boxShadow: "0 8px 28px rgba(1,138,190,0.4)", transition: "transform 0.15s" }}
               onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
               onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
             >
               Browse Products
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-            </a>
-            <a href="#" style={{ display: "inline-flex", alignItems: "center", background: "rgba(255,255,255,0.1)", border: "2px solid rgba(255,255,255,0.2)", color: P.white, fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 999, textDecoration: "none", transition: "background 0.2s" }}
+            </Link>
+            <Link to="/signup" style={{ display: "inline-flex", alignItems: "center", background: "rgba(255,255,255,0.1)", border: "2px solid rgba(255,255,255,0.2)", color: P.white, fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 999, textDecoration: "none", transition: "background 0.2s" }}
               onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.16)"}
               onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
-            >Become a Vendor</a>
+            >Become a Vendor</Link>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 24, marginTop: 48 }}>
@@ -77,7 +79,7 @@ export default function Hero() {
               <div style={{ background: "rgba(255,255,255,0.2)", backdropFilter: "blur(8px)", borderRadius: 16, padding: 16, marginBottom: 12 }}>
                 <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
               </div>
-              <span style={{ color: P.white, fontWeight: 900, fontSize: 20 }}>MobiHub</span>
+              <span style={{ color: P.white, fontWeight: 900, fontSize: 20 }}>HMH</span>
               <span style={{ color: "rgba(255,255,255,0.65)", fontSize: 12, marginTop: 4 }}>Your Marketplace</span>
             </div>
             <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 8 }}>

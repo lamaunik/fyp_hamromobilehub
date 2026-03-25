@@ -106,38 +106,7 @@ export default function VendorSidebar({ tab, setTab, open, setOpen }) {
         )}
       </div>
 
-      {/* User card */}
-      <div style={{ padding: "14px 16px", borderBottom: `1px solid ${P.mist}` }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, justifyContent: open ? "flex-start" : "center" }}>
-          <div style={{
-            width: 38, height: 38, borderRadius: "50%", flexShrink: 0,
-            background: `linear-gradient(135deg, ${P.royal}, ${P.ocean})`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            color: P.white, fontWeight: 900, fontSize: 15,
-            boxShadow: "0 4px 10px rgba(1,138,190,0.2)",
-          }}>
-            {user?.name?.charAt(0).toUpperCase() || "V"}
-          </div>
-          {open && (
-            <div style={{ minWidth: 0 }}>
-              <p style={{ color: P.navy, fontWeight: 700, fontSize: 13, margin: 0, fontFamily: P.font, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {user?.name || "Vendor"}
-              </p>
-              <p style={{ color: P.muted, fontSize: 11, margin: "2px 0 0", fontFamily: P.font, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {user?.email || ""}
-              </p>
-              <span style={{
-                display: "inline-block", marginTop: 4,
-                background: "rgba(1,138,190,0.1)", border: `1px solid ${P.sky}`,
-                color: P.ocean, fontSize: 10, fontWeight: 700,
-                padding: "2px 8px", borderRadius: 999, fontFamily: P.font,
-              }}>
-                Vendor
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
+
 
       {/* Nav */}
       <nav style={{ flex: 1, padding: "12px", overflowY: "auto" }}>

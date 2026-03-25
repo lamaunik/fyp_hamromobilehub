@@ -17,25 +17,94 @@ const inputStyle = {
 };
 
 export default function SignIn() {
+  const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { login, verifyEmail, resendVerification, forgotPassword, resetPassword } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleLoginSubmit = async () => {
     setError("");
+    setMessage("");
     if (!email || !password) { setError("Please fill in all fields."); return; }
     setLoading(true);
     try {
       const user = await login(email, password);
+      // login can return an object with requiresEmailVerification if previously caught
+      if (user?.requiresEmailVerification) {
+        setStep(2);
+        return;
+      }
       if (user.role === "admin") navigate("/admin/dashboard");
       else if (user.role === "vendor") navigate("/vendor/dashboard");
       else navigate("/dashboard");
     } catch (err) { setError(err.message); }
+    finally { setLoading(false); }
+  };
+
+  const handleVerify = async () => {
+    setError("");
+    setMessage("");
+    if (!otp || otp.length !== 6) { setError("Please enter a valid 6-digit code."); return; }
+    setLoading(true);
+    try {
+      const user = await verifyEmail(email, otp);
+      if (user?.pendingApproval) {
+        alert("Email verified! Please wait for an Admin to approve your Vendor account before logging in.");
+        setStep(1);
+        return;
+      }
+      if (user.role === "admin") navigate("/admin/dashboard");
+      else if (user.role === "vendor") navigate("/vendor/dashboard");
+      else navigate("/dashboard");
+    } catch(err) { setError(err.message); }
+    finally { setLoading(false); }
+  };
+
+  const handleResend = async () => {
+    setError("");
+    setMessage("");
+    setLoading(true);
+    try {
+      await resendVerification(email);
+      setMessage("Verification code resent! Check your email.");
+    } catch(err) { setError(err.message); }
+    finally { setLoading(false); }
+  };
+
+  const handleForgotPasswordRequest = async () => {
+    setError("");
+    setMessage("");
+    if (!email) { setError("Please provide your email address."); return; }
+    setLoading(true);
+    try {
+      await forgotPassword(email);
+      setMessage("Password reset code sent! Check your email.");
+      setStep(4);
+    } catch(err) { setError(err.message); }
+    finally { setLoading(false); }
+  };
+
+  const handleResetPassword = async () => {
+    setError("");
+    setMessage("");
+    if (!otp || otp.length !== 6) { setError("Please enter a valid 6-digit code."); return; }
+    if (!newPassword || newPassword.length < 8) { setError("Password must be at least 8 characters."); return; }
+    
+    setLoading(true);
+    try {
+      const user = await resetPassword(email, otp, newPassword);
+      if (user.role === "admin") navigate("/admin/dashboard");
+      else if (user.role === "vendor") navigate("/vendor/dashboard");
+      else navigate("/dashboard");
+    } catch(err) { setError(err.message); }
     finally { setLoading(false); }
   };
 
@@ -52,13 +121,24 @@ export default function SignIn() {
       <div style={{ width:"100%", maxWidth:440, position:"relative" }}>
         {/* Back button */}
         <div style={{ marginBottom:24 }}>
-          <Link to="/" style={{ display:"inline-flex", alignItems:"center", gap:8, color:"rgba(151,202,219,0.6)", textDecoration:"none", fontSize:14, fontWeight:600, transition:"color 0.2s" }}
-            onMouseEnter={e=>e.currentTarget.style.color=P.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(151,202,219,0.6)"}>
-            <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(151,202,219,0.2)", display:"flex", alignItems:"center", justifyContent:"center" }}>
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7"/></svg>
-            </div>
-            Back
-          </Link>
+          {step === 1 ? (
+            <Link to="/" style={{ display:"inline-flex", alignItems:"center", gap:8, color:"rgba(151,202,219,0.6)", textDecoration:"none", fontSize:14, fontWeight:600, transition:"color 0.2s" }}
+              onMouseEnter={e=>e.currentTarget.style.color=P.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(151,202,219,0.6)"}>
+              <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(151,202,219,0.2)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7"/></svg>
+              </div>
+              Back
+            </Link>
+          ) : (
+            <button onClick={()=>{setStep(1); setError(""); setMessage(""); setOtp(""); setNewPassword("");}} 
+              style={{ display:"inline-flex", alignItems:"center", gap:8, color:"rgba(151,202,219,0.6)", background:"none", border:"none", cursor:"pointer", fontSize:14, fontWeight:600, padding:0, fontFamily:P.font, transition:"color 0.2s" }}
+              onMouseEnter={e=>e.currentTarget.style.color=P.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(151,202,219,0.6)"}>
+              <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(151,202,219,0.2)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7"/></svg>
+              </div>
+              Back to Login
+            </button>
+          )}
         </div>
 
         {/* Logo */}
@@ -74,117 +154,269 @@ export default function SignIn() {
         {/* Card */}
         <div style={{ background:"rgba(0,27,72,0.5)", backdropFilter:"blur(20px)", border:"1px solid rgba(151,202,219,0.15)", borderRadius:24, padding:32, boxShadow:"0 24px 64px rgba(0,0,0,0.35)" }}>
 
-          {/* Header */}
-          <div style={{ textAlign:"center", marginBottom:32 }}>
-            <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
-              <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
-              <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Welcome Back</span>
-            </div>
-            <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Sign In</h1>
-            <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
-              Don't have an account?{" "}
-              <Link to="/signup" style={{ color:P.sky, fontWeight:700, textDecoration:"none" }}
-                onMouseEnter={e=>e.target.style.color=P.mist} onMouseLeave={e=>e.target.style.color=P.sky}>Get Started</Link>
-            </p>
-          </div>
-
-          {/* Error */}
-          {error && (
-            <div style={{ display:"flex", alignItems:"center", gap:8, background:"rgba(220,38,38,0.12)", border:"1px solid rgba(220,38,38,0.3)", color:"#fca5a5", fontSize:13, fontWeight:600, padding:"10px 14px", borderRadius:12, marginBottom:20 }}>
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ flexShrink:0 }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              {error}
-            </div>
-          )}
-
-          {/* Google */}
-          <button style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:10, background:"rgba(255,255,255,0.07)", border:"1px solid rgba(151,202,219,0.2)", color:P.white, fontWeight:600, fontSize:14, padding:"11px 0", borderRadius:14, cursor:"pointer", marginBottom:24, transition:"background 0.2s", fontFamily:P.font }}
-            onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,0.12)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,0.07)"}>
-            <svg width="18" height="18" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            Continue with Google
-          </button>
-
-          {/* Divider */}
-          <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24 }}>
-            <div style={{ flex:1, height:1, background:"rgba(151,202,219,0.15)" }}/>
-            <span style={{ color:"rgba(151,202,219,0.4)", fontSize:12, fontWeight:700 }}>OR</span>
-            <div style={{ flex:1, height:1, background:"rgba(151,202,219,0.15)" }}/>
-          </div>
-
-          <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
-            {/* Email */}
-            <div>
-              <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Email Address</label>
-              <div style={{ position:"relative" }}>
-                <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+          {step === 1 && (
+            <>
+              {/* Header */}
+              <div style={{ textAlign:"center", marginBottom:32 }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                  <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
+                  <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Welcome Back</span>
                 </div>
-                <input type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="you@example.com"
-                  style={inputStyle}
-                  onFocus={e=>{ e.target.style.borderColor=`rgba(1,138,190,0.6)`; e.target.style.background="rgba(1,138,190,0.1)"; }}
-                  onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
-                />
+                <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Sign In</h1>
+                <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
+                  Don't have an account?{" "}
+                  <Link to="/signup" style={{ color:P.sky, fontWeight:700, textDecoration:"none" }}
+                    onMouseEnter={e=>e.target.style.color=P.mist} onMouseLeave={e=>e.target.style.color=P.sky}>Get Started</Link>
+                </p>
               </div>
-            </div>
 
-            {/* Password */}
-            <div>
-              <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Password</label>
-              <div style={{ position:"relative" }}>
-                <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              {/* Error/Message */}
+              {error && (
+                <div style={{ display:"flex", alignItems:"center", gap:8, background:"rgba(220,38,38,0.12)", border:"1px solid rgba(220,38,38,0.3)", color:"#fca5a5", fontSize:13, fontWeight:600, padding:"10px 14px", borderRadius:12, marginBottom:20 }}>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ flexShrink:0 }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  {error}
                 </div>
-                <input type={showPassword?"text":"password"} value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="Enter your password"
-                  style={{ ...inputStyle, paddingRight:44 }}
-                  onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
-                  onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
-                />
-                <button onClick={()=>setShowPassword(!showPassword)} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", color:P.muted, padding:0 }}>
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    {showPassword
-                      ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-                      : <><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></>
-                    }
-                  </svg>
+              )}
+              {message && (
+                <div style={{ display:"flex", alignItems:"center", gap:8, background:"rgba(16,185,129,0.12)", border:"1px solid rgba(16,185,129,0.3)", color:"#a7f3d0", fontSize:13, fontWeight:600, padding:"10px 14px", borderRadius:12, marginBottom:20 }}>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ flexShrink:0 }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
+                  {message}
+                </div>
+              )}
+
+              <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+                {/* Email */}
+                <div>
+                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Email Address</label>
+                  <div style={{ position:"relative" }}>
+                    <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
+                      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+                    </div>
+                    <input type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleLoginSubmit()} placeholder="you@example.com"
+                      style={inputStyle}
+                      onFocus={e=>{ e.target.style.borderColor=`rgba(1,138,190,0.6)`; e.target.style.background="rgba(1,138,190,0.1)"; }}
+                      onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                    />
+                  </div>
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Password</label>
+                  <div style={{ position:"relative" }}>
+                    <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
+                      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    </div>
+                    <input type={showPassword?"text":"password"} value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleLoginSubmit()} placeholder="Enter your password"
+                      style={{ ...inputStyle, paddingRight:44 }}
+                      onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
+                      onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                    />
+                    <button onClick={()=>setShowPassword(!showPassword)} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", color:P.muted, padding:0 }}>
+                      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        {showPassword
+                          ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                          : <><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></>
+                        }
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Remember & Forgot */}
+                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+                  <label style={{ display:"flex", alignItems:"center", gap:8, cursor:"pointer" }}>
+                    <div style={{ width:16, height:16, borderRadius:4, border:`1px solid rgba(151,202,219,0.3)`, background:"rgba(0,27,72,0.4)" }}/>
+                    <span style={{ color:"rgba(151,202,219,0.55)", fontSize:12, fontWeight:600 }}>Remember me</span>
+                  </label>
+                  <button onClick={()=>{setStep(3); setError(""); setMessage("");}} style={{ color:P.sky, fontSize:12, fontWeight:700, background:"none", border:"none", cursor:"pointer", padding:0, fontFamily:P.font, transition:"color 0.2s" }}
+                    onMouseEnter={e=>e.currentTarget.style.color=P.mist} onMouseLeave={e=>e.currentTarget.style.color=P.sky}>Forgot password?</button>
+                </div>
+
+                {/* Submit */}
+                <button onClick={handleLoginSubmit} disabled={loading}
+                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(1,138,190,0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
+                  onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
+                  onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
+                  {loading ? (
+                    <>
+                      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style={{ animation:"spin 1s linear infinite" }}>
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"/>
+                        <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" opacity="0.75"/>
+                      </svg>
+                      Signing In...
+                    </>
+                  ) : "Sign In"}
                 </button>
               </div>
-            </div>
+            </>
+          )}
 
-            {/* Remember & Forgot */}
-            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-              <label style={{ display:"flex", alignItems:"center", gap:8, cursor:"pointer" }}>
-                <div style={{ width:16, height:16, borderRadius:4, border:`1px solid rgba(151,202,219,0.3)`, background:"rgba(0,27,72,0.4)" }}/>
-                <span style={{ color:"rgba(151,202,219,0.55)", fontSize:12, fontWeight:600 }}>Remember me</span>
-              </label>
-              <a href="#" style={{ color:P.sky, fontSize:12, fontWeight:700, textDecoration:"none" }}
-                onMouseEnter={e=>e.target.style.color=P.mist} onMouseLeave={e=>e.target.style.color=P.sky}>Forgot password?</a>
-            </div>
+          {step === 2 && (
+            <>
+              <div style={{ textAlign:"center", marginBottom:28 }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                  <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
+                  <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Action Required</span>
+                </div>
+                <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Verify Your Email</h1>
+                <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
+                  We've sent a 6-digit verification code to <strong>{email}</strong>.
+                </p>
+              </div>
 
-            {/* Submit */}
-            <button onClick={handleSubmit} disabled={loading}
-              style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(1,138,190,0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
-              onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
-              onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
-              {loading ? (
-                <>
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style={{ animation:"spin 1s linear infinite" }}>
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"/>
-                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" opacity="0.75"/>
-                  </svg>
-                  Signing In...
-                </>
-              ) : (
-                <>
-                  Sign In
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                </>
+              {error && (
+                <div style={{ display:"flex", alignItems:"center", gap:8, background:"rgba(220,38,38,0.12)", border:"1px solid rgba(220,38,38,0.3)", color:"#fca5a5", fontSize:13, fontWeight:600, padding:"10px 14px", borderRadius:12, marginBottom:20 }}>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ flexShrink:0 }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  {error}
+                </div>
               )}
-            </button>
-          </div>
+              {message && (
+                <div style={{ display:"flex", alignItems:"center", gap:8, background:"rgba(16,185,129,0.12)", border:"1px solid rgba(16,185,129,0.3)", color:"#a7f3d0", fontSize:13, fontWeight:600, padding:"10px 14px", borderRadius:12, marginBottom:20 }}>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ flexShrink:0 }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
+                  {message}
+                </div>
+              )}
+
+              <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+                <div>
+                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Verification Code</label>
+                  <input type="text" value={otp} onChange={e=>setOtp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleVerify()} placeholder="Enter 6-digit code" maxLength={6}
+                    style={{ ...inputStyle, textAlign:"center", fontSize:20, letterSpacing:"0.2em", paddingLeft:16 }}
+                    onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
+                    onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                  />
+                </div>
+
+                <button onClick={handleVerify} disabled={loading}
+                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(1,138,190,0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
+                  onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
+                  onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
+                  {loading ? "Verifying..." : "Verify"}
+                </button>
+
+                <div style={{ textAlign:"center", marginTop:12 }}>
+                  <button onClick={handleResend} disabled={loading} style={{ background:"none", border:"none", color:P.sky, fontSize:14, fontWeight:600, cursor:loading?"not-allowed":"pointer", textDecoration:"underline", fontFamily:P.font }}>
+                    Resend Code
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {step === 3 && (
+            <>
+              <div style={{ textAlign:"center", marginBottom:28 }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                  <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
+                  <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Reset Password</span>
+                </div>
+                <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Forgot Password</h1>
+                <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
+                  Enter your registered email address to receive a password reset code.
+                </p>
+              </div>
+
+              {error && (
+                <div style={{ display:"flex", alignItems:"center", gap:8, background:"rgba(220,38,38,0.12)", border:"1px solid rgba(220,38,38,0.3)", color:"#fca5a5", fontSize:13, fontWeight:600, padding:"10px 14px", borderRadius:12, marginBottom:20 }}>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ flexShrink:0 }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  {error}
+                </div>
+              )}
+
+              <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+                <div>
+                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Email Address</label>
+                  <div style={{ position:"relative" }}>
+                    <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
+                      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+                    </div>
+                    <input type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleForgotPasswordRequest()} placeholder="you@example.com"
+                      style={inputStyle}
+                      onFocus={e=>{ e.target.style.borderColor=`rgba(1,138,190,0.6)`; e.target.style.background="rgba(1,138,190,0.1)"; }}
+                      onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                    />
+                  </div>
+                </div>
+
+                <button onClick={handleForgotPasswordRequest} disabled={loading}
+                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(1,138,190,0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
+                  onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
+                  onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
+                  {loading ? "Sending..." : "Send Reset Code"}
+                </button>
+              </div>
+            </>
+          )}
+
+          {step === 4 && (
+            <>
+              <div style={{ textAlign:"center", marginBottom:28 }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                  <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
+                  <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Set New Password</span>
+                </div>
+                <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Reset Password</h1>
+                <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
+                  Enter the code sent to <strong>{email}</strong> and your new password.
+                </p>
+              </div>
+
+              {error && (
+                <div style={{ display:"flex", alignItems:"center", gap:8, background:"rgba(220,38,38,0.12)", border:"1px solid rgba(220,38,38,0.3)", color:"#fca5a5", fontSize:13, fontWeight:600, padding:"10px 14px", borderRadius:12, marginBottom:20 }}>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ flexShrink:0 }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  {error}
+                </div>
+              )}
+              {message && (
+                <div style={{ display:"flex", alignItems:"center", gap:8, background:"rgba(16,185,129,0.12)", border:"1px solid rgba(16,185,129,0.3)", color:"#a7f3d0", fontSize:13, fontWeight:600, padding:"10px 14px", borderRadius:12, marginBottom:20 }}>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ flexShrink:0 }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
+                  {message}
+                </div>
+              )}
+
+              <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+                <div>
+                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Reset Code</label>
+                  <input type="text" value={otp} onChange={e=>setOtp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleResetPassword()} placeholder="Enter 6-digit code" maxLength={6}
+                    style={{ ...inputStyle, textAlign:"center", fontSize:20, letterSpacing:"0.2em", paddingLeft:16 }}
+                    onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
+                    onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>New Password</label>
+                  <div style={{ position:"relative" }}>
+                    <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
+                      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    </div>
+                    <input type={showPassword?"text":"password"} value={newPassword} onChange={e=>setNewPassword(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleResetPassword()} placeholder="New password (min 8 char)"
+                      style={{ ...inputStyle, paddingRight:44 }}
+                      onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
+                      onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                    />
+                    <button onClick={()=>setShowPassword(!showPassword)} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", color:P.muted, padding:0 }}>
+                      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        {showPassword
+                          ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                          : <><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></>
+                        }
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <button onClick={handleResetPassword} disabled={loading}
+                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(1,138,190,0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
+                  onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
+                  onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
+                  {loading ? "Resetting..." : "Reset Password"}
+                </button>
+              </div>
+            </>
+          )}
+
         </div>
 
         {/* Trust badges */}
@@ -201,12 +433,6 @@ export default function SignIn() {
           ))}
         </div>
 
-        <div style={{ textAlign:"center", marginTop:16 }}>
-          <Link to="/" style={{ color:"rgba(151,202,219,0.4)", fontSize:12, fontWeight:600, textDecoration:"none" }}
-            onMouseEnter={e=>e.target.style.color=P.sky} onMouseLeave={e=>e.target.style.color="rgba(151,202,219,0.4)"}>
-            Back to Home
-          </Link>
-        </div>
       </div>
 
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>

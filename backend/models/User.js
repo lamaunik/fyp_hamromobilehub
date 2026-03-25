@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 
 const userSchema = new mongoose.Schema(
   {
@@ -65,6 +66,12 @@ const userSchema = new mongoose.Schema(
         ref: "Product",
       },
     ],
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    emailVerificationToken: String,
+    emailVerificationExpire: Date,
   },
   { timestamps: true }
 );
@@ -87,6 +94,19 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   } catch (err) {
     throw new Error(err);
   }
+};
+
+userSchema.methods.getEmailVerificationOTP = function () {
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  this.emailVerificationToken = crypto
+    .createHash("sha256")
+    .update(otp)
+    .digest("hex");
+
+  this.emailVerificationExpire = Date.now() + 10 * 60 * 1000;
+
+  return otp;
 };
 
 const User = mongoose.model("User", userSchema);

@@ -62,21 +62,7 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
         </div>
       </div>
 
-      {/* User card */}
-      <div style={{ padding: "12px 14px", borderBottom: `1px solid ${P.mist}`, flexShrink: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, background: P.mistBg, borderRadius: 14, padding: "10px 12px", border: `1px solid ${P.mist}` }}>
-          <div style={{ position: "relative", flexShrink: 0 }}>
-            <div style={{ width: 38, height: 38, borderRadius: "50%", background: `linear-gradient(135deg,${P.royal},${P.ocean})`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 3px 10px rgba(1,138,190,.3)" }}>
-              <span style={{ color: P.white, fontWeight: 900, fontSize: 15 }}>{user?.name?.charAt(0)?.toUpperCase() || "U"}</span>
-            </div>
-            <span style={{ position: "absolute", bottom: 1, right: 1, width: 9, height: 9, background: P.green, borderRadius: "50%", border: `2px solid ${P.white}` }} />
-          </div>
-          <div style={{ minWidth: 0 }}>
-            <p style={{ color: P.navy, fontWeight: 700, fontSize: 13, margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.name || "User"}</p>
-            <p style={{ color: P.muted, fontSize: 11, margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.email || ""}</p>
-          </div>
-        </div>
-      </div>
+
 
       {/* Nav */}
       <nav style={{ flex: 1, padding: "10px", display: "flex", flexDirection: "column", gap: 2, overflowY: "auto" }}>
@@ -155,15 +141,26 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
         })}
       </nav>
 
-      {/* Logout */}
+      {/* Auth action */}
       <div style={{ padding: "10px", borderTop: `1px solid ${P.mist}`, flexShrink: 0 }}>
-        <button
-          className="nav-item"
-          onClick={() => { logout(); navigate("/"); }}
-          style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 12, fontSize: 13, fontWeight: 600, cursor: "pointer", background: "transparent", border: "none", color: "#dc2626", fontFamily: P.font }}
-        >
-          {Icon.logout}<span>Sign Out</span>
-        </button>
+        {user ? (
+          <button
+            className="nav-item"
+            onClick={() => { logout(); navigate("/"); }}
+            style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 12, fontSize: 13, fontWeight: 600, cursor: "pointer", background: "transparent", border: "none", color: "#dc2626", fontFamily: P.font }}
+          >
+            {Icon.logout}<span>Sign Out</span>
+          </button>
+        ) : (
+          <button
+            className="nav-item"
+            onClick={() => navigate("/signin")}
+            style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 12, fontSize: 13, fontWeight: 600, cursor: "pointer", background: "transparent", border: "none", color: P.ocean, fontFamily: P.font }}
+          >
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
+            <span>Sign In</span>
+          </button>
+        )}
       </div>
     </aside>
   );

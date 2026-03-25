@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import { sendEmail } from "../utils/sendEmail.js";
+import crypto from "crypto";
 
 // Generate JWT token
 const generateToken = (id) => {
@@ -60,17 +62,105 @@ export const register = async (req, res) => {
 
     const user = await User.create({ name, email, password, role: assignedRole, isApproved });
 
-    if (!isApproved) {
+    // Generate OTP
+    const otp = user.getEmailVerificationOTP();
+    await user.save({ validateBeforeSave: false });
+
+    // Send Verification Email
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: "HamroMobileHub - Verify your email",
+        message: "Please use the following 6-digit code to verify your email address.",
+        otp,
+      });
+
       return res.status(201).json({
         success: true,
+        requiresEmailVerification: true,
+        email: user.email,
+        message: "Registration successful. Please check your email for the verification code.",
+      });
+    } catch (err) {
+      user.emailVerificationToken = undefined;
+      user.emailVerificationExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+      return res.status(500).json({ success: false, message: "Email could not be sent" });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @route   POST /api/auth/verify-email
+// @access  Public
+export const verifyEmail = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ success: false, message: "Please provide email and verification code" });
+    }
+
+    const hashedOTP = crypto.createHash("sha256").update(otp).digest("hex");
+
+    const user = await User.findOne({
+      email,
+      emailVerificationToken: hashedOTP,
+      emailVerificationExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Invalid or expired verification code" });
+    }
+
+    user.isEmailVerified = true;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    if (!user.isApproved) {
+      return res.status(200).json({
+        success: true,
         pendingApproval: true,
-        message: "Registration successful. Please wait for an Admin to approve your Vendor account before logging in.",
+        message: "Email verified successfully. Please wait for an Admin to approve your Vendor account.",
       });
     }
 
-    sendTokenResponse(user, 201, res);
+    sendTokenResponse(user, 200, res);
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @route   POST /api/auth/resend-verification
+// @access  Public
+export const resendVerification = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    if (user.isEmailVerified) {
+      return res.status(400).json({ success: false, message: "Email is already verified" });
+    }
+
+    const otp = user.getEmailVerificationOTP();
+    await user.save({ validateBeforeSave: false });
+
+    await sendEmail({
+      email: user.email,
+      subject: "HamroMobileHub - Verify your email",
+      message: "Please use the following 6-digit code to verify your email address. It will expire in 10 minutes.",
+      otp,
+    });
+
+    res.status(200).json({ success: true, message: "Verification code sent successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Email could not be sent" });
   }
 };
 
@@ -112,11 +202,89 @@ export const login = async (req, res) => {
       return res.status(401).json({ success: false, message: "Invalid email or password" });
     }
 
+    if (!user.isEmailVerified) {
+      const otp = user.getEmailVerificationOTP();
+      await user.save({ validateBeforeSave: false });
+      
+      try {
+        await sendEmail({
+          email: user.email,
+          subject: "HamroMobileHub - Verify your email",
+          message: "Please use the following 6-digit code to verify your email address.",
+          otp,
+        });
+        return res.status(403).json({
+          success: false,
+          requiresEmailVerification: true,
+          email: user.email,
+          message: "Email not verified. A new verification code has been sent.",
+        });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: "Error sending verification email" });
+      }
+    }
+
     sendTokenResponse(user, 200, res);
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// @route   POST /api/auth/forgotpassword
+// @access  Public
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const otp = user.getEmailVerificationOTP();
+    await user.save({ validateBeforeSave: false });
+
+    await sendEmail({
+      email: user.email,
+      subject: "HamroMobileHub - Password Reset Code",
+      message: "Please use the following 6-digit code to reset your password.",
+      otp,
+    });
+
+    res.status(200).json({ success: true, message: "Reset code sent" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Email could not be sent" });
+  }
+};
+
+// @route   PUT /api/auth/resetpassword
+// @access  Public
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, password } = req.body;
+    const hashedOTP = crypto.createHash("sha256").update(otp).digest("hex");
+
+    const user = await User.findOne({
+      email,
+      emailVerificationToken: hashedOTP,
+      emailVerificationExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Invalid or expired reset code" });
+    }
+
+    user.password = password;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpire = undefined;
+    await user.save();
+
+    sendTokenResponse(user, 200, res);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 
 // @route   GET /api/auth/me
 // @access  Private

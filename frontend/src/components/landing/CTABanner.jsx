@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const P = {
   navy:"#001B48",royal:"#02457A",ocean:"#018ABE",
   sky:"#97CADB",mist:"#D6E8EE",white:"#ffffff",
@@ -21,15 +23,15 @@ export default function CTABanner() {
             {" "}100% Sure And Safe
           </h2>
           <p style={{ color:"rgba(151,202,219,0.65)",fontSize:16,lineHeight:1.7,margin:"0 0 36px",maxWidth:440 }}>
-            Whether you're a buyer looking for the best deal or a vendor growing your business, MobiHub is the platform that gets you there — safely and reliably.
+            Whether you're a buyer looking for the best deal or a vendor growing your business, HamroMobile Hub is the platform that gets you there — safely and reliably.
           </p>
           <div style={{ display:"flex",gap:16,flexWrap:"wrap" }}>
-            <a href="#" style={{ display:"inline-flex",alignItems:"center",gap:8,background:`linear-gradient(135deg,${P.ocean},#0aa8e0)`,color:P.white,fontWeight:700,fontSize:15,padding:"14px 32px",borderRadius:999,textDecoration:"none",boxShadow:"0 8px 28px rgba(1,138,190,0.4)",transition:"transform 0.15s" }}
+            <Link to="/signup" style={{ display:"inline-flex",alignItems:"center",gap:8,background:`linear-gradient(135deg,${P.ocean},#0aa8e0)`,color:P.white,fontWeight:700,fontSize:15,padding:"14px 32px",borderRadius:999,textDecoration:"none",boxShadow:"0 8px 28px rgba(1,138,190,0.4)",transition:"transform 0.15s" }}
               onMouseEnter={e=>e.currentTarget.style.transform="translateY(-2px)"} onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
               Start for Free
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            </a>
-            <a href="#" style={{ display:"inline-flex",alignItems:"center",border:"2px solid rgba(255,255,255,0.2)",color:P.white,fontWeight:700,fontSize:15,padding:"14px 32px",borderRadius:999,textDecoration:"none",transition:"background 0.2s" }}
+            </Link>
+            <a href="#about" style={{ display:"inline-flex",alignItems:"center",border:"2px solid rgba(255,255,255,0.2)",color:P.white,fontWeight:700,fontSize:15,padding:"14px 32px",borderRadius:999,textDecoration:"none",transition:"background 0.2s" }}
               onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,0.08)"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
               Learn More
             </a>

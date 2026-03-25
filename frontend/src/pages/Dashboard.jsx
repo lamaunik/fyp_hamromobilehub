@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { api } from "../utils/api";
 import { CSS, P } from "../components/dashboard/DashboardConstants";
 import DashboardSidebar       from "../components/dashboard/DashboardSidebar";
@@ -18,6 +20,8 @@ const readLS  = (key, fallback) => { try { const v = localStorage.getItem(key); 
 const writeLS = (key, value)    => { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} };
 
 export default function Dashboard() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [tab,             setTab]            = useState("home");
   const [sidebarOpen,     setSidebarOpen]    = useState(true);
   const [selectedProduct, setSelectedProduct]= useState(null);
@@ -71,16 +75,30 @@ export default function Dashboard() {
     if (tab === "orders") fetchOrders();
   }, [tab]);
 
-  const switchTab   = (t) => { setTab(t); setSelectedProduct(null); setPageKey(k => k + 1); };
+  const switchTab   = (t) => { 
+    if (!user && ["orders", "profile", "cart", "wishlist", "sell"].includes(t)) {
+      alert("Please sign in or create an account to access this feature.");
+      navigate("/signup");
+      return;
+    }
+    setTab(t); setSelectedProduct(null); setPageKey(k => k + 1); 
+  };
   const viewProduct = (p) => { setSelectedProduct(p); setTab("detail"); setPageKey(k => k + 1); };
 
   // Cart helpers
-  const addToCart = (p) => setCart(prev => {
-    const pId = p._id || p.id;
-    const ex  = prev.find(x => (x._id || x.id) === pId);
-    if (ex) return prev.map(x => (x._id || x.id) === pId ? { ...x, qty: x.qty + 1 } : x);
-    return [...prev, { ...p, qty: 1 }];
-  });
+  const addToCart = (p) => {
+    if (!user) {
+      alert("Please sign up first to add items to your cart.");
+      navigate("/signup");
+      return;
+    }
+    setCart(prev => {
+      const pId = p._id || p.id;
+      const ex  = prev.find(x => (x._id || x.id) === pId);
+      if (ex) return prev.map(x => (x._id || x.id) === pId ? { ...x, qty: x.qty + 1 } : x);
+      return [...prev, { ...p, qty: 1 }];
+    });
+  };
   const removeFromCart = (id)       => setCart(prev => prev.filter(p => (p._id || p.id) !== id));
   const updateQty      = (id, qty)  => { if (qty < 1) return removeFromCart(id); setCart(prev => prev.map(p => (p._id || p.id) === id ? { ...p, qty } : p)); };
   const clearCart      = ()         => { setCart([]); writeLS("hmh_cart", []); };
@@ -90,7 +108,14 @@ export default function Dashboard() {
   const removeOrder = (orderId)  => setOrders(prev => prev.filter(o => o._id !== orderId));
   const updateOrder = (orderId, patch) => setOrders(prev => prev.map(o => o._id === orderId ? { ...o, ...patch } : o));
 
-  const toggleWish = (id) => setWishlist(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  const toggleWish = (id) => {
+    if (!user) {
+      alert("Please sign up first to add items to your wishlist.");
+      navigate("/signup");
+      return;
+    }
+    setWishlist(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
   const addNotif   = (n)  => setNotifs(prev => [n, ...prev]);
 
   const cartCount  = cart.reduce((s, p) => s + p.qty, 0);

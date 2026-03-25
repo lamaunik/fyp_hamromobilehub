@@ -28,6 +28,46 @@ export function AuthProvider({ children }) {
     try {
       const data = await api.post("/auth/register", { name, email, password, role });
       
+      if (data.requiresEmailVerification) {
+        return { requiresEmailVerification: true, email: data.email };
+      }
+
+      if (data.pendingApproval) {
+        return { pendingApproval: true };
+      }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setUser(data.user);
+      return data.user;
+    } catch (err) {
+      if (err.data?.requiresEmailVerification) {
+        return { requiresEmailVerification: true, email: err.data.email };
+      }
+      throw new Error(err.message);
+    }
+  };
+
+  const login = async (email, password) => {
+    try {
+      const data = await api.post("/auth/login", { email, password });
+      
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setUser(data.user);
+      return data.user;
+    } catch (err) {
+      if (err.data?.requiresEmailVerification) {
+        return { requiresEmailVerification: true, email: err.data.email };
+      }
+      throw new Error(err.message);
+    }
+  };
+
+  const verifyEmail = async (email, otp) => {
+    try {
+      const data = await api.post("/auth/verify-email", { email, otp });
+
       if (data.pendingApproval) {
         return { pendingApproval: true };
       }
@@ -41,9 +81,25 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const login = async (email, password) => {
+  const resendVerification = async (email) => {
     try {
-      const data = await api.post("/auth/login", { email, password });
+      return await api.post("/auth/resend-verification", { email });
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  };
+
+  const forgotPassword = async (email) => {
+    try {
+      return await api.post("/auth/forgotpassword", { email });
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  };
+
+  const resetPassword = async (email, otp, password) => {
+    try {
+      const data = await api.put("/auth/resetpassword", { email, otp, password });
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
@@ -70,7 +126,7 @@ export function AuthProvider({ children }) {
   const getToken = () => localStorage.getItem("token");
 
   return (
-    <AuthContext.Provider value={{ user, loading, register, login, logout, getToken, updateUser }}>
+    <AuthContext.Provider value={{ user, loading, register, login, logout, getToken, updateUser, verifyEmail, resendVerification, forgotPassword, resetPassword }}>
       {!loading && children}
     </AuthContext.Provider>
   );

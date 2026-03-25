@@ -19,7 +19,6 @@ const inputStyle = {
 const roles = [
   { id:"user",   label:"User",   icon:<svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> },
   { id:"vendor", label:"Vendor", icon:<svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg> },
-  { id:"admin",  label:"Admin",  icon:<svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg> },
 ];
 
 export default function SignUp() {
@@ -29,8 +28,12 @@ export default function SignUp() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState(1);
+  const [otp, setOtp] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [policyModal, setPolicyModal] = useState(null);
 
-  const { register } = useAuth();
+  const { register, verifyEmail, resendVerification } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = field => e => setForm(prev=>({ ...prev, [field]:e.target.value }));
@@ -40,10 +43,16 @@ export default function SignUp() {
     if (!form.name||!form.email||!form.password||!form.confirm) { setError("Please fill in all fields."); return; }
     if (form.password !== form.confirm) { setError("Passwords do not match."); return; }
     if (form.password.length < 8) { setError("Password must be at least 8 characters."); return; }
+    if (!acceptedTerms) { setError("You must agree to the Terms of Service and Privacy Policy."); return; }
     setLoading(true);
     try {
       const user = await register(form.name, form.email, form.password, role);
       
+      if (user?.requiresEmailVerification) {
+        setStep(2);
+        return;
+      }
+
       if (user?.pendingApproval) {
         // Just show an alert and navigate to login
         alert("Registration successful! Please wait for an Admin to approve your Vendor account before logging in.");
@@ -54,6 +63,34 @@ export default function SignUp() {
       if (user.role==="admin") navigate("/admin/dashboard");
       else if (user.role==="vendor") navigate("/vendor/dashboard");
       else navigate("/dashboard");
+    } catch(err) { setError(err.message); }
+    finally { setLoading(false); }
+  };
+
+  const handleVerify = async () => {
+    setError("");
+    if (!otp || otp.length !== 6) { setError("Please enter a valid 6-digit code."); return; }
+    setLoading(true);
+    try {
+      const user = await verifyEmail(form.email, otp);
+      if (user?.pendingApproval) {
+        alert("Email verified! Please wait for an Admin to approve your Vendor account before logging in.");
+        navigate("/signin");
+        return;
+      }
+      if (user.role==="admin") navigate("/admin/dashboard");
+      else if (user.role==="vendor") navigate("/vendor/dashboard");
+      else navigate("/dashboard");
+    } catch(err) { setError(err.message); }
+    finally { setLoading(false); }
+  };
+
+  const handleResend = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      await resendVerification(form.email);
+      alert("Verification code resent! Check your email.");
     } catch(err) { setError(err.message); }
     finally { setLoading(false); }
   };
@@ -95,13 +132,15 @@ export default function SignUp() {
         {/* Card */}
         <div style={{ background:"rgba(0,27,72,0.5)", backdropFilter:"blur(20px)", border:"1px solid rgba(151,202,219,0.15)", borderRadius:24, padding:32, boxShadow:"0 24px 64px rgba(0,0,0,0.35)" }}>
 
-          {/* Header */}
-          <div style={{ textAlign:"center", marginBottom:28 }}>
-            <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
-              <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
-              <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Join HMH</span>
-            </div>
-            <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Create Account</h1>
+          {step === 1 ? (
+            <>
+              {/* Header */}
+              <div style={{ textAlign:"center", marginBottom:28 }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                  <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
+                  <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Join HMH</span>
+                </div>
+                <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Create Account</h1>
             <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
               Already have an account?{" "}
               <Link to="/signin" style={{ color:P.sky, fontWeight:700, textDecoration:"none" }}
@@ -141,7 +180,7 @@ export default function SignUp() {
             {/* Role Selector */}
             <div>
               <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>I Am A</label>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:8 }}>
                 {roles.map(r=>(
                   <button key={r.id} onClick={()=>setRole(r.id)} style={{
                     display:"flex", flexDirection:"column", alignItems:"center", gap:6, padding:"12px 0", borderRadius:14,
@@ -244,12 +283,22 @@ export default function SignUp() {
 
             {/* Terms */}
             <div style={{ display:"flex", alignItems:"flex-start", gap:10 }}>
-              <div style={{ width:16, height:16, borderRadius:4, border:"1px solid rgba(151,202,219,0.3)", background:"rgba(0,27,72,0.4)", flexShrink:0, marginTop:2 }}/>
+              <button 
+                type="button"
+                onClick={() => setAcceptedTerms(!acceptedTerms)}
+                style={{ 
+                  width:18, height:18, borderRadius:4, border: acceptedTerms ? `1px solid ${P.sky}` : "1px solid rgba(151,202,219,0.3)",
+                  background: acceptedTerms ? P.sky : "rgba(0,27,72,0.4)", 
+                  flexShrink:0, marginTop:2, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", padding:0 
+                }}
+              >
+                {acceptedTerms && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={P.navy} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>}
+              </button>
               <span style={{ color:"rgba(151,202,219,0.5)", fontSize:12, lineHeight:1.6 }}>
                 By creating an account, you agree to our{" "}
-                <a href="#" style={{ color:P.sky, fontWeight:700, textDecoration:"none" }}>Terms of Service</a>
+                <button type="button" onClick={() => setPolicyModal('terms')} style={{ background:'none', border:'none', padding:0, color:P.sky, fontWeight:700, cursor:"pointer", fontFamily:P.font }}>Terms of Service</button>
                 {" "}and{" "}
-                <a href="#" style={{ color:P.sky, fontWeight:700, textDecoration:"none" }}>Privacy Policy</a>
+                <button type="button" onClick={() => setPolicyModal('privacy')} style={{ background:'none', border:'none', padding:0, color:P.sky, fontWeight:700, cursor:"pointer", fontFamily:P.font }}>Privacy Policy</button>
               </span>
             </div>
 
@@ -274,6 +323,61 @@ export default function SignUp() {
               )}
             </button>
           </div>
+            </>
+          ) : (
+            <>
+              <div style={{ textAlign:"center", marginBottom:28 }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                  <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
+                  <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Step 4: Verify Your Email</span>
+                </div>
+                <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Verify Email</h1>
+                <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
+                  We've sent a 6-digit code to <strong>{form.email}</strong>.
+                </p>
+              </div>
+
+              {error && (
+                <div style={{ display:"flex", alignItems:"center", gap:8, background:"rgba(220,38,38,0.12)", border:"1px solid rgba(220,38,38,0.3)", color:"#fca5a5", fontSize:13, fontWeight:600, padding:"10px 14px", borderRadius:12, marginBottom:20 }}>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ flexShrink:0 }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  {error}
+                </div>
+              )}
+
+              <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+                <div>
+                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Verification Code</label>
+                  <input type="text" value={otp} onChange={e=>setOtp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleVerify()} placeholder="Enter 6-digit code" maxLength={6}
+                    style={{ ...inputStyle, textAlign:"center", fontSize:20, letterSpacing:"0.2em", paddingLeft:16 }}
+                    onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
+                    onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                  />
+                </div>
+
+                <button onClick={handleVerify} disabled={loading}
+                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(1,138,190,0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
+                  onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
+                  onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
+                  {loading ? (
+                    <>
+                      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style={{ animation:"spin 1s linear infinite" }}>
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"/>
+                        <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" opacity="0.75"/>
+                      </svg>
+                      Verifying...
+                    </>
+                  ) : "Verify Email"}
+                </button>
+
+                <div style={{ textAlign:"center", marginTop:12 }}>
+                  <button onClick={handleResend} disabled={loading} style={{ background:"none", border:"none", color:P.sky, fontSize:14, fontWeight:600, cursor:loading?"not-allowed":"pointer", textDecoration:"underline", fontFamily:P.font }}>
+                    Resend Code
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+
         </div>
 
         <div style={{ textAlign:"center", marginTop:16 }}>
@@ -283,6 +387,44 @@ export default function SignUp() {
           </Link>
         </div>
       </div>
+
+      {/* Policy Modal */}
+      {policyModal && (
+        <div style={{ position:"fixed", inset:0, zIndex:999, background:"rgba(0,11,28,0.8)", backdropFilter:"blur(5px)", display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+          <div style={{ background:P.navy, border:"1px solid rgba(151,202,219,0.2)", borderRadius:16, width:"100%", maxWidth:500, maxHeight:"80vh", display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 20px 40px rgba(0,0,0,0.5)" }}>
+            <div style={{ padding:"20px 24px", borderBottom:"1px solid rgba(151,202,219,0.1)", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+              <h2 style={{ margin:0, color:P.white, fontSize:18, fontWeight:700, fontFamily:P.font }}>
+                {policyModal === 'terms' ? 'Terms of Service' : 'Privacy Policy'}
+              </h2>
+              <button type="button" onClick={() => setPolicyModal(null)} style={{ background:"none", border:"none", color:P.muted, cursor:"pointer", padding:4 }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <div style={{ padding:"24px", overflowY:"auto", color:"rgba(151,202,219,0.8)", fontSize:14, lineHeight:1.6, fontFamily:P.font }}>
+              {policyModal === 'terms' ? (
+                <>
+                  <p><strong>1. Acceptance of Terms:</strong> By accessing and using HamroMobileHub, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                  <p><strong>2. Description of Service:</strong> HamroMobileHub provides users with access to a rich collection of resources, including various communications tools, forums, shopping services, and personalized content.</p>
+                  <p><strong>3. User Conduct:</strong> You agree to not use the Service to upload, post, email, transmit or otherwise make available any content that is unlawful, harmful, threatening, abusive, harassing, tortious, defamatory, vulgar, obscene, libelous, invasive of another's privacy, hateful, or racially, ethnically or otherwise objectionable.</p>
+                  <p><strong>4. Vendor Responsibilities:</strong> Vendors must ensure all listings are accurate and up-to-date. Misrepresentation of products may lead to account suspension.</p>
+                </>
+              ) : (
+                <>
+                  <p><strong>1. Information Collection:</strong> We collect information from you when you register on our site, place an order, subscribe to our newsletter or fill out a form.</p>
+                  <p><strong>2. Information Usage:</strong> Any of the information we collect from you may be used in one of the following ways: To personalize your experience, to improve our website, to improve customer service, to process transactions, or to send periodic emails.</p>
+                  <p><strong>3. Information Protection:</strong> We implement a variety of security measures to maintain the safety of your personal information when you place an order or enter, submit, or access your personal information.</p>
+                  <p><strong>4. Cookies:</strong> We use cookies to help us remember and process the items in your shopping cart, understand and save your preferences for future visits and compile aggregate data about site traffic and site interaction.</p>
+                </>
+              )}
+            </div>
+            <div style={{ padding:"16px 24px", borderTop:"1px solid rgba(151,202,219,0.1)", textAlign:"right", background:"rgba(0,0,0,0.1)" }}>
+              <button type="button" onClick={() => { setPolicyModal(null); setAcceptedTerms(true); }} style={{ background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, border:"none", padding:"10px 24px", borderRadius:8, fontWeight:700, cursor:"pointer", fontFamily:P.font }}>
+                I Understand & Agree
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>

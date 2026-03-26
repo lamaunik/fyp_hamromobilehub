@@ -53,56 +53,58 @@ function HeroSlider({ setTab }) {
   const slide = SLIDES[current];
 
   return (
-    <div style={{ position: "relative", minHeight: 220, overflow: "hidden", borderRadius: 24, boxShadow: "0 12px 40px rgba(40, 43, 74, .28)", transition: "background 0.5s ease" }}>
+    <div style={{ position: "relative", minHeight: 380, overflow: "hidden", background: P.mistBg, borderRadius: 24, boxShadow: "0 4px 20px rgba(0,0,0,0.03)", border: `1px solid ${P.mist}`, transition: "background 0.5s ease" }}>
       {SLIDES.map((s, i) => (
         <div key={i} style={{ 
           position: i === current ? "relative" : "absolute", top: 0, left: 0, right: 0, bottom: 0,
-          background: s.gradient, 
-          padding: "36px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", 
+          background: P.royal, 
+          padding: "50px 60px", display: "flex", alignItems: "center", justifyContent: "space-between", 
           opacity: i === current ? 1 : 0,
           visibility: i === current ? "visible" : "hidden",
-          transition: "opacity 0.6s ease-in-out, visibility 0.6s",
+          transition: "opacity 0.6s ease, visibility 0.6s",
           zIndex: i === current ? 1 : 0
         }}>
           {/* Background Decorative Elements */}
-          <div style={{ position: "absolute", top: -50, right: 140, width: 250, height: 250, borderRadius: "50%", background: "rgba(40, 43, 74, .15)", filter: "blur(55px)", pointerEvents: "none" }} />
-          <div style={{ position: "absolute", inset: 0, opacity: .04, backgroundImage: `linear-gradient(rgba(212, 210, 195, 1) 1px,transparent 1px),linear-gradient(90deg,rgba(212, 210, 195, 1) 1px,transparent 1px)`, backgroundSize: "40px 40px", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", right: -50, top: -50, width: 400, height: 400, background: "rgba(255,255,255,0.03)", transform: "rotate(45deg)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", left: '30%', top: 0, bottom: 0, width: 1, background: "rgba(255,255,255,0.05)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", left: '60%', top: 0, bottom: 0, width: 1, background: "rgba(255,255,255,0.05)", pointerEvents: "none" }} />
           
           <div style={{ position: "relative", zIndex: 1, transform: i === current ? "translateX(0)" : "translateX(-20px)", transition: "transform 0.6s ease", transitionDelay: "0.1s" }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(40, 43, 74, .22)", border: "1px solid rgba(40, 43, 74, .4)", borderRadius: 999, padding: "5px 14px", marginBottom: 16 }}>
-              <svg width="11" height="11" fill={P.sky} viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg>
-              <span style={{ color: P.sky, fontSize: 10, fontWeight: 800, letterSpacing: ".12em" }}>{s.badge}</span>
+            <div style={{ display: "inline-block", background: "rgba(255,255,255,0.1)", color: P.white, fontSize: 11, fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase", padding: "6px 14px", borderRadius: 12, marginBottom: 20 }}>
+              {s.badge}
             </div>
-            <h2 style={{ color: P.white, fontWeight: 900, fontSize: 30, margin: "0 0 10px", letterSpacing: "-.03em", lineHeight: 1.15 }}>{s.title}</h2>
-            <p style={{ color: "rgba(212, 210, 195, .72)", fontSize: 14, margin: "0 0 24px", lineHeight: 1.6, maxWidth: 380 }}>{s.subtitle}</p>
-            <div style={{ display: "flex", gap: 12 }}>
-              <Btn onClick={() => setTab(s.primaryAction)} style={{ background: P.white, color: P.royal, fontWeight: 800, fontSize: 13, padding: "12px 26px", borderRadius: 12, boxShadow: "0 4px 16px rgba(40, 43, 74, .2)" }}>{s.primaryBtn}</Btn>
-              <Btn onClick={() => setTab("orders")} style={{ background: "transparent", color: P.sky, fontWeight: 700, fontSize: 13, padding: "11px 20px", borderRadius: 12, border: "1px solid rgba(212, 210, 195, .35)" }}>My Orders</Btn>
+            <h2 style={{ color: P.white, fontFamily: P.fontHeading, fontWeight: 800, fontSize: 48, margin: "0 0 16px", letterSpacing: "0.5px", lineHeight: 1 }}>{s.title}</h2>
+            <p style={{ color: "rgba(255, 255, 255, .7)", fontSize: 15, margin: "0 0 32px", lineHeight: 1.5, maxWidth: 400 }}>{s.subtitle}</p>
+            <div style={{ display: "flex", gap: 14 }}>
+              <Btn onClick={() => setTab(s.primaryAction)} style={{ background: P.white, color: P.navy, fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.5px", padding: "14px 28px", borderRadius: 12, border: "none" }}>{s.primaryBtn}</Btn>
+              <Btn onClick={() => setTab("orders")} style={{ background: "transparent", color: P.white, fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.5px", padding: "14px 28px", borderRadius: 12, border: `1.5px solid rgba(255,255,255,0.4)` }}>My Orders</Btn>
             </div>
           </div>
-          <div style={{ position: "relative", zIndex: 1, flexShrink: 0, width: 130, height: 130, borderRadius: 28, background: "rgba(40, 43, 74, .18)", border: "1px solid rgba(212, 210, 195, .22)", display: "flex", alignItems: "center", justifyContent: "center", color: P.sky, transform: i === current ? "translateX(0)" : "translateX(20px)", transition: "transform 0.6s ease", transitionDelay: "0.1s" }}>
-            {s.icon}
-            <div style={{ position: "absolute", top: -12, right: -16, background: P.white, borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 16px rgba(40, 43, 74, .12)", display: "flex", alignItems: "center", gap: 5 }}>
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: P.green, display: "inline-block" }} />
-              <span style={{ fontSize: 11, color: P.navy, fontWeight: 700 }}>{s.feature1}</span>
+          <div style={{ position: "relative", zIndex: 1, flexShrink: 0, color: P.white, transform: i === current ? "translateX(0)" : "translateX(20px)", transition: "transform 0.6s ease", transitionDelay: "0.1s" }}>
+            <div style={{ transform: "scale(2)", opacity: 0.9 }}>
+              {s.icon}
             </div>
-            <div style={{ position: "absolute", bottom: -12, left: -16, background: P.white, borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 16px rgba(40, 43, 74, .12)", display: "flex", alignItems: "center", gap: 5 }}>
-              {Icon.star}<span style={{ fontSize: 11, color: P.navy, fontWeight: 700 }}>{s.feature2}</span>
+            
+            <div style={{ position: "absolute", top: -30, right: -30, background: P.white, color: P.navy, padding: "8px 12px", borderRadius: 10, display: "flex", alignItems: "center", gap: 6, fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.5px", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+               {s.feature1}
+            </div>
+            <div style={{ position: "absolute", bottom: -30, left: -40, background: P.accent, color: P.white, padding: "8px 12px", borderRadius: 10, display: "flex", alignItems: "center", gap: 6, fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.5px", boxShadow: "0 8px 24px rgba(244, 63, 94, 0.4)" }}>
+               {s.feature2}
             </div>
           </div>
         </div>
       ))}
 
       {/* Slider Controls */}
-      <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 6, zIndex: 2 }}>
+      <div style={{ position: "absolute", bottom: 24, left: 50, display: "flex", gap: 10, zIndex: 2 }}>
         {SLIDES.map((_, i) => (
           <button 
             key={i} 
             onClick={() => setCurrent(i)}
             style={{ 
-               width: 30, height: 4, borderRadius: 2, 
+               width: i === current ? 40 : 12, height: 4, 
                background: i === current ? P.white : "rgba(255,255,255,0.3)", 
-               border: "none", cursor: "pointer", transition: "background 0.3s" 
+               border: "none", cursor: "pointer", transition: "all 0.3s ease", padding: 0
             }} 
           />
         ))}
@@ -145,38 +147,34 @@ export default function DashboardHome({ setTab, viewProduct, addToCart, wishlist
       <HeroSlider setTab={setTab} />
 
       {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", background: P.white, border: `1px solid ${P.mist}`, borderRadius: 16, boxShadow: "0 2px 10px rgba(0,0,0,0.02)" }}>
         {[
           { label: "Products",  val: counts[0], suf: "+" },
           { label: "Sellers",   val: counts[1], suf: "+" },
           { label: "Orders",    val: counts[2] > 999 ? Math.floor(counts[2] / 1000) + "k+" : counts[2], suf: "" },
           { label: "Customers", val: counts[3] > 999 ? Math.floor(counts[3] / 1000) + "k+" : counts[3], suf: "" },
         ].map((s, i) => (
-          <div key={i} className="card fadeUp" style={{ background: P.white, border: `1px solid ${P.mist}`, borderRadius: 16, padding: "16px 18px", display: "flex", alignItems: "center", gap: 14, animationDelay: `${i * .07}s` }}>
-            <div style={{ width: 42, height: 42, borderRadius: 12, background: `linear-gradient(135deg,${P.royal},${P.ocean})`, display: "flex", alignItems: "center", justifyContent: "center", color: P.white, flexShrink: 0, boxShadow: "0 4px 12px rgba(40, 43, 74, .28)" }}>
-              {[Icon.phone, Icon.shield, Icon.truck, Icon.map][i]}
-            </div>
-            <div>
-              <p style={{ color: P.navy, fontWeight: 900, fontSize: 20, margin: 0, letterSpacing: "-.02em" }}>
-                {typeof s.val === "string" ? s.val : s.val.toLocaleString()}{typeof s.val === "number" ? s.suf : ""}
-              </p>
-              <p style={{ color: P.muted, fontSize: 11, margin: "2px 0 0" }}>{s.label}</p>
-            </div>
+          <div key={i} className="fadeUp" style={{ padding: "26px 24px", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 6, borderRight: i < 3 ? `1px solid ${P.mist}` : "none", animationDelay: `${i * .07}s` }}>
+            <p style={{ color: P.navy, fontFamily: P.fontHeading, fontWeight: 800, fontSize: 32, margin: 0, letterSpacing: "0.5px", lineHeight: 1 }}>
+              {typeof s.val === "string" ? s.val : s.val.toLocaleString()}{typeof s.val === "number" ? s.suf : ""}
+            </p>
+            <p style={{ color: P.muted, fontSize: 11, margin: 0, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 600 }}>{s.label}</p>
           </div>
         ))}
       </div>
 
       {/* Categories */}
       <div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-          <h3 style={{ color: P.navy, fontWeight: 900, fontSize: 17, margin: 0 }}>Shop by Category</h3>
-          <Btn onClick={() => setTab("products")} style={{ background: "none", border: "none", color: P.ocean, fontSize: 13, fontWeight: 700, padding: 0 }}>View All →</Btn>
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 16 }}>
+          <h3 style={{ color: P.navy, fontFamily: P.fontHeading, fontWeight: 800, fontSize: 22, margin: 0, letterSpacing: "0.5px" }}>Shop by Category</h3>
+          <Btn onClick={() => setTab("products")} style={{ background: "none", border: "none", color: P.navy, fontSize: 13, fontWeight: 700, padding: 0 }}>View All →</Btn>
         </div>
-        <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 4 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
           {cats.map((c) => (
-            <button key={c.label} className="card btn" onClick={() => setTab("products")} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 18, padding: "18px 26px", cursor: "pointer", flexShrink: 0, fontFamily: P.font }}>
-              <div style={{ width: 46, height: 46, borderRadius: 13, background: P.mistBg, display: "flex", alignItems: "center", justifyContent: "center", color: P.ocean, border: `1px solid ${P.mist}` }}>{c.icon}</div>
-              <span style={{ fontSize: 12, fontWeight: 700, color: P.navy, whiteSpace: "nowrap" }}>{c.label}</span>
+            <button key={c.label} className="card" onClick={() => setTab("products")} style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, background: P.white, color: P.navy, border: `1px solid ${P.mist}`, padding: "28px 16px", cursor: "pointer", transition: "all 0.3s ease", fontFamily: P.font, borderRadius: 16 }}
+            >
+              <div style={{ color: P.muted }}>{c.icon}</div>
+              <span style={{ fontSize: 13, fontWeight: 700, color: P.navy }}>{c.label}</span>
             </button>
           ))}
         </div>
@@ -184,11 +182,11 @@ export default function DashboardHome({ setTab, viewProduct, addToCart, wishlist
 
       {/* Featured Products */}
       <div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-          <h3 style={{ color: P.navy, fontWeight: 900, fontSize: 17, margin: 0 }}>Featured Products</h3>
-          <Btn onClick={() => setTab("products")} style={{ background: "none", border: "none", color: P.ocean, fontSize: 13, fontWeight: 700, padding: 0 }}>View All →</Btn>
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 16 }}>
+          <h3 style={{ color: P.navy, fontFamily: P.fontHeading, fontWeight: 800, fontSize: 22, margin: 0, letterSpacing: "0.5px" }}>Featured Products</h3>
+          <Btn onClick={() => setTab("products")} style={{ background: "none", border: "none", color: P.navy, fontSize: 13, fontWeight: 700, padding: 0 }}>View All →</Btn>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(6,1fr)", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(6,1fr)", gap: 16 }}>
           {featured.map((p, i) => {
             const pId = p._id || p.id;
             return <ProductCard key={pId} product={p} onView={() => viewProduct(p)} onAddToCart={() => addToCart(p)} wishlisted={wishlist.includes(pId)} onToggleWish={() => toggleWish(pId)} delay={`${i * .06}s`} />
@@ -199,16 +197,15 @@ export default function DashboardHome({ setTab, viewProduct, addToCart, wishlist
       {/* Promo Banners */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         {[
-          { title: "New Arrivals",     sub: "Latest smartphones just dropped",  btn: "Explore →",   bg: `linear-gradient(135deg,${P.navy},${P.royal})`,  icon: Icon.phone,  txtCol: P.sky,                    btnStyle: { border: "1px solid rgba(212, 210, 195, .4)", color: P.sky } },
-          { title: "Accessories Sale", sub: "Up to 40% off on all accessories", btn: "Shop Now →", bg: `linear-gradient(135deg,${P.royal},${P.ocean})`, icon: Icon.camera, txtCol: "rgba(229, 227, 213, .8)",    btnStyle: { background: "rgba(255,255,255,.18)", border: "1px solid rgba(255,255,255,.3)", color: P.white } },
+          { title: "New Arrivals",     sub: "Latest smartphones just dropped",  btn: "Explore",   bg: P.white,  icon: Icon.phone,  txtCol: P.muted,                    btnStyle: { background: P.navy, color: P.white } },
+          { title: "Accessories Sale", sub: "Up to 40% off on all accessories", btn: "Shop Now", bg: P.mist, icon: Icon.camera, txtCol: P.muted,                     btnStyle: { background: P.white, color: P.navy, border: `1px solid ${P.sky}` } },
         ].map((b, i) => (
-          <div key={i} className="btn" onClick={() => setTab("products")} style={{ background: b.bg, borderRadius: 20, padding: "24px 28px", display: "flex", alignItems: "center", gap: 20, overflow: "hidden", position: "relative", cursor: "pointer" }}>
-            <div className="float" style={{ position: "absolute", top: -30, right: -10, width: 140, height: 140, borderRadius: "50%", background: "rgba(255,255,255,.06)", filter: "blur(30px)", pointerEvents: "none" }} />
-            <div style={{ width: 56, height: 56, borderRadius: 16, background: "rgba(255,255,255,.18)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: P.white }}>{b.icon}</div>
+          <div key={i} className="card btn" onClick={() => setTab("products")} style={{ background: b.bg, padding: "28px 32px", display: "flex", alignItems: "center", gap: 30, overflow: "hidden", position: "relative", cursor: "pointer", transition: "all 0.3s ease" }}>
+            <div style={{ transform: "scale(2)", color: i === 0 ? P.sky : P.white, position: "absolute", right: 28, top: 40, pointerEvents: "none" }}>{b.icon}</div>
             <div style={{ position: "relative" }}>
-              <p style={{ color: P.white, fontWeight: 900, fontSize: 17, margin: "0 0 4px" }}>{b.title}</p>
-              <p style={{ color: b.txtCol, fontSize: 13, margin: "0 0 12px" }}>{b.sub}</p>
-              <span style={{ fontSize: 12, fontWeight: 700, padding: "6px 16px", borderRadius: 8, background: "transparent", ...b.btnStyle, cursor: "pointer" }}>{b.btn}</span>
+              <p style={{ color: P.navy, fontFamily: P.fontHeading, fontWeight: 800, fontSize: 28, margin: "0 0 6px", letterSpacing: "0.5px" }}>{b.title}</p>
+              <p style={{ color: b.txtCol, fontSize: 13, margin: "0 0 20px", maxWidth: 220 }}>{b.sub}</p>
+              <span style={{ fontSize: 12, fontWeight: 700, padding: "10px 20px", borderRadius: 10, ...b.btnStyle, cursor: "pointer" }}>{b.btn}</span>
             </div>
           </div>
         ))}

@@ -39,15 +39,13 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
   return (
     <header
       style={{
-        background: P.white,
-        borderBottom: `1px solid ${P.mist}`,
-        padding: "0 24px",
-        height: 60,
+        background: P.mistBg,
+        padding: "0 28px",
+        height: 80,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         flexShrink: 0,
-        boxShadow: "0 2px 14px rgba(40, 43, 74, .06)",
         fontFamily: P.font,
         zIndex: 20,
       }}
@@ -57,14 +55,13 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
         <button
           className="icon-btn"
           onClick={() => setOpen(!open)}
-          style={{ width: 36, height: 36, borderRadius: 10, border: `1px solid ${P.mist}`, display: "flex", alignItems: "center", justifyContent: "center", color: P.royal, background: P.mistBg }}
+          style={{ width: 36, height: 36, borderRadius: 10, border: `1px solid ${P.mist}`, display: "flex", alignItems: "center", justifyContent: "center", color: P.navy, background: P.white }}
         >
           {open ? Icon.close : Icon.menu}
         </button>
         <div style={{ width: 1, height: 28, background: P.mist }} />
         <div>
-          <div style={{ fontSize: 11, color: P.muted, fontWeight: 500 }}>Dashboard</div>
-          <div style={{ fontSize: 14, color: P.navy, fontWeight: 800, lineHeight: 1.1, letterSpacing: "-.01em" }}>
+          <div style={{ fontSize: 22, color: P.navy, fontWeight: 800, lineHeight: 1, letterSpacing: "0.5px", fontFamily: P.fontHeading }}>
             Welcome back, {user?.name?.split(" ")[0] || "User"}
           </div>
         </div>
@@ -85,12 +82,12 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
             placeholder="Search phones, brands..."
             style={{
               paddingLeft: 34, paddingRight: 14, paddingTop: 8, paddingBottom: 8,
-              border: `1.5px solid ${focused ? P.sky : P.mist}`,
-              borderRadius: 10, fontSize: 13, color: P.navy,
-              background: focused ? P.white : P.mistBg,
+              border: "none", borderBottom: `2px solid ${focused ? P.navy : P.mist}`,
+              borderRadius: 0, fontSize: 13, color: P.navy,
+              background: "transparent",
               width: focused ? 260 : 210,
-              boxShadow: focused ? "0 0 0 3px rgba(212, 210, 195, .2)" : "none",
-              transition: "all .25s cubic-bezier(.4,0,.2,1)",
+              boxShadow: "none",
+              transition: "all .25s ease",
               fontFamily: P.font,
             }}
           />
@@ -180,23 +177,16 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
 
         {/* Avatar → Profile */}
         <div
-          style={{ display: "flex", alignItems: "center", gap: 9, padding: "5px 10px 5px 6px", borderRadius: 12, border: `1px solid ${P.mist}`, background: P.mistBg, cursor: "pointer", transition: "all .18s" }}
+          style={{ display: "flex", alignItems: "center", gap: 9, padding: "6px", cursor: "pointer" }}
           onClick={() => setTab("profile")}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = P.sky; e.currentTarget.style.background = P.white; }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = P.mist; e.currentTarget.style.background = P.mistBg; }}
         >
-          <div style={{ width: 32, height: 32, borderRadius: "50%", background: `linear-gradient(135deg,${P.royal},${P.ocean})`, display: "flex", alignItems: "center", justifyContent: "center", border: `2px solid ${P.white}`, boxShadow: "0 2px 8px rgba(40, 43, 74, .28)", overflow: "hidden" }}>
+          <div style={{ width: 32, height: 32, borderRadius: 0, background: P.navy, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
             {user?.profilePicture ? (
               <img src={user.profilePicture.startsWith("http") ? user.profilePicture : `http://localhost:5000${user.profilePicture}`} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             ) : (
-              <span style={{ color: P.white, fontWeight: 900, fontSize: 12 }}>{user?.name?.charAt(0)?.toUpperCase() || "U"}</span>
+              <span style={{ color: P.white, fontWeight: 900, fontSize: 12, fontFamily: P.fontHeading }}>{user?.name?.charAt(0)?.toUpperCase() || "U"}</span>
             )}
           </div>
-          <div>
-            <p style={{ color: P.navy, fontWeight: 700, fontSize: 13, margin: 0, lineHeight: 1.2 }}>{user?.name?.split(" ")[0]}</p>
-            <p style={{ color: P.muted, fontSize: 10, margin: 0 }}>Customer</p>
-          </div>
-          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke={P.muted} strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
         </div>
       </div>
     </header>

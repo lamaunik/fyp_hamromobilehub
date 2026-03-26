@@ -42,7 +42,6 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
         overflow: "hidden",
         background: P.white,
         borderRight: `1px solid ${P.mist}`,
-        boxShadow: "3px 0 20px rgba(40, 43, 74, .07)",
         transition: "width .32s cubic-bezier(.4,0,.2,1)",
         display: "flex",
         flexDirection: "column",
@@ -50,15 +49,15 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
       }}
     >
       {/* Logo */}
-      <div style={{ padding: "20px 18px 16px", borderBottom: `1px solid ${P.mist}`, display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 12, background: `linear-gradient(135deg,${P.royal},${P.ocean})`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 18px rgba(40, 43, 74, .35)", flexShrink: 0 }}>
-          <span style={{ color: P.white, fontWeight: 900, fontSize: 18 }}>M</span>
+      <div style={{ padding: "30px 24px 24px", borderBottom: `1px solid ${P.mist}`, display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}>
+        <div style={{ width: 44, height: 44, background: P.navy, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 6px 16px rgba(24, 24, 27, 0.12)" }}>
+          <span style={{ color: P.white, fontFamily: P.fontHeading, fontWeight: 900, fontSize: 24, letterSpacing: "0.5px" }}>M</span>
         </div>
         <div>
-          <div style={{ fontSize: 15, fontWeight: 900, color: P.navy, whiteSpace: "nowrap", letterSpacing: "-.02em" }}>
-            HamroMobile<span style={{ color: P.ocean }}>Hub</span>
+          <div style={{ fontFamily: P.fontHeading, fontSize: 20, fontWeight: 800, color: P.navy, whiteSpace: "nowrap", letterSpacing: "0.5px" }}>
+            HamroMobile<span style={{ color: P.accent }}>Hub</span>
           </div>
-          <div style={{ fontSize: 9, fontWeight: 700, color: P.muted, letterSpacing: ".1em", textTransform: "uppercase" }}>User Dashboard</div>
+          <div style={{ fontSize: 10, fontWeight: 700, color: P.muted, letterSpacing: "0.1em", textTransform: "uppercase" }}>User Dashboard</div>
         </div>
       </div>
 
@@ -76,25 +75,22 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
               className={active ? "" : "nav-item"}
               onClick={() => setTab(item.id)}
               style={{
-                width: "100%", display: "flex", alignItems: "center", gap: 10,
-                padding: "10px 12px", borderRadius: 12, fontSize: 13, fontWeight: 600,
+                width: "100%", display: "flex", alignItems: "center", gap: 12,
+                padding: "12px 14px", fontSize: 13, fontWeight: active ? 700 : 600,
                 cursor: "pointer", border: "none", textAlign: "left", fontFamily: P.font,
-                transition: "all .15s", position: "relative",
-                background: active ? `linear-gradient(135deg,${P.royal},${P.ocean})` : "transparent",
-                color: active ? P.white : P.muted,
-                boxShadow: active ? "0 4px 18px rgba(40, 43, 74, .3)" : "none",
+                transition: "all .2s ease", position: "relative",
+                background: active ? P.mist : "transparent",
+                color: active ? P.navy : P.muted,
+                boxShadow: "none", borderRadius: 10,
                 animationName: "fadeUp", animationDuration: ".4s",
-                animationTimingFunction: "cubic-bezier(.4,0,.2,1)",
+                animationTimingFunction: "ease",
                 animationFillMode: "both", animationDelay: `${0.1 + i * 0.04}s`,
               }}
             >
-              {active && (
-                <span style={{ position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)", width: 3, height: "60%", borderRadius: "0 3px 3px 0", background: "rgba(255,255,255,.6)" }} />
-              )}
-              <span style={{ color: active ? P.white : P.sky, flexShrink: 0 }}>{item.icon}</span>
-              <span style={{ whiteSpace: "nowrap", flex: 1 }}>{item.label}</span>
+              <span style={{ color: active ? P.accent : P.muted, flexShrink: 0 }}>{item.icon}</span>
+              <span style={{ whiteSpace: "nowrap", flex: 1, letterSpacing: "0.2px" }}>{item.label}</span>
               {item.badge > 0 && (
-                <span style={{ background: active ? "rgba(255,255,255,.28)" : "#dc2626", color: P.white, fontSize: 10, fontWeight: 900, minWidth: 18, height: 18, borderRadius: 999, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 5px" }}>
+                <span style={{ background: P.accent, color: P.white, fontSize: 10, fontWeight: 800, minWidth: 20, height: 20, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 6px" }}>
                   {item.badge}
                 </span>
               )}
@@ -117,24 +113,19 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
               className={active ? "" : "nav-item"}
               onClick={() => setTab(item.id)}
               style={{
-                width: "100%", display: "flex", alignItems: "center", gap: 10,
-                padding: "10px 12px", borderRadius: 12, cursor: "pointer",
-                border: active ? "none" : `1.5px solid ${P.mist}`,
-                textAlign: "left", fontFamily: P.font, transition: "all .15s",
-                position: "relative",
-                background: active
-                  ? `linear-gradient(135deg,#7c3aed,#a855f7)`   // purple for marketplace
-                  : P.mistBg,
-                boxShadow: active ? "0 4px 18px rgba(124,58,237,.3)" : "none",
+                width: "100%", display: "flex", alignItems: "center", gap: 12,
+                padding: "12px 14px", cursor: "pointer",
+                border: active ? "none" : `1px solid ${P.mist}`,
+                textAlign: "left", fontFamily: P.font, transition: "all .2s ease",
+                position: "relative", borderRadius: 12,
+                background: active ? P.navy : P.white,
+                boxShadow: active ? "0 4px 14px rgba(24, 24, 27, 0.15)" : "0 2px 6px rgba(0,0,0,0.02)",
               }}
             >
-              {active && (
-                <span style={{ position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)", width: 3, height: "60%", borderRadius: "0 3px 3px 0", background: "rgba(255,255,255,.6)" }} />
-              )}
-              <span style={{ color: active ? "white" : "#7c3aed", flexShrink: 0 }}>{item.icon}</span>
+              <span style={{ color: active ? P.white : P.accent, flexShrink: 0 }}>{item.icon}</span>
               <div style={{ minWidth: 0 }}>
-                <p style={{ color: active ? P.white : P.navy, fontWeight: 700, fontSize: 13, margin: 0, whiteSpace: "nowrap" }}>{item.label}</p>
-                <p style={{ color: active ? "rgba(255,255,255,.7)" : P.muted, fontSize: 10, margin: 0 }}>{item.desc}</p>
+                <p style={{ color: active ? P.white : P.navy, fontWeight: 700, fontSize: 13, margin: 0, whiteSpace: "nowrap", letterSpacing: "0.2px" }}>{item.label}</p>
+                {!active && <p style={{ color: P.muted, fontSize: 11, margin: 0 }}>{item.desc}</p>}
               </div>
             </button>
           );
@@ -142,12 +133,12 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
       </nav>
 
       {/* Auth action */}
-      <div style={{ padding: "10px", borderTop: `1px solid ${P.mist}`, flexShrink: 0 }}>
+      <div style={{ padding: "16px", borderTop: `1px solid ${P.mist}`, flexShrink: 0 }}>
         {user ? (
           <button
             className="nav-item"
             onClick={() => { logout(); navigate("/"); }}
-            style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 12, fontSize: 13, fontWeight: 600, cursor: "pointer", background: "transparent", border: "none", color: "#dc2626", fontFamily: P.font }}
+            style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", background: "transparent", border: "none", color: P.accent, fontFamily: P.font }}
           >
             {Icon.logout}<span>Sign Out</span>
           </button>
@@ -155,7 +146,7 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
           <button
             className="nav-item"
             onClick={() => navigate("/signin")}
-            style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 12, fontSize: 13, fontWeight: 600, cursor: "pointer", background: "transparent", border: "none", color: P.ocean, fontFamily: P.font }}
+            style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", background: "transparent", border: "none", color: P.navy, fontFamily: P.font }}
           >
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
             <span>Sign In</span>

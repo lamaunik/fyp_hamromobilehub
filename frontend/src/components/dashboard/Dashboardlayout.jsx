@@ -1,20 +1,7 @@
 // src/components/DashboardLayout.jsx
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardTopbar from "./DashboardTopbar";
-
-const P = {
-  navy:  "#282B4A",
-  royal: "#282B4A",
-  ocean: "#282B4A",
-  sky:   "#D4D2C3",
-  mist:  "#E5E3D5",
-  white: "#FFFFFF",
-  muted: "#7A7C8E",
-  mistBg:"#EEEBDA",
-  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
-  purple:"#282B4A",
-  purpleLight:"#E5E3D5"
-};
+import { P } from "./DashboardConstants";
 
 export default function DashboardLayout({ children, title }) {
   return (

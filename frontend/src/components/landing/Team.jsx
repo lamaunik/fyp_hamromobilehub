@@ -1,15 +1,15 @@
 const P = {
-  navy:  "#282B4A",
-  royal: "#282B4A",
-  ocean: "#282B4A",
-  sky:   "#D4D2C3",
-  mist:  "#E5E3D5",
-  white: "#FFFFFF",
-  muted: "#7A7C8E",
-  mistBg:"#EEEBDA",
-  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
-  purple:"#282B4A",
-  purpleLight:"#E5E3D5"
+  navy:  "#18181b",
+  royal: "#27272a",
+  ocean: "#3f3f46",
+  sky:   "#e4e4e7",
+  mist:  "#f4f4f5",
+  white: "#ffffff",
+  muted: "#71717a",
+  mistBg:"#fafafa",
+  font:  "'DM Sans', 'Inter', sans-serif",
+  fontHeading: "'Barlow Condensed', 'Inter', sans-serif",
+  accent: "#f43f5e"
 };
 
 const team = [
@@ -21,39 +21,38 @@ const team = [
 
 export default function Team() {
   return (
-    <section id="vendors" style={{ background:P.mistBg,padding:"96px 24px",fontFamily:P.font }}>
+    <section id="vendors" style={{ background:P.white,padding:"96px 24px",fontFamily:P.font }}>
       <div style={{ maxWidth:1280,margin:"0 auto" }}>
         <div style={{ textAlign:"center",marginBottom:64 }}>
-          <span style={{ display:"inline-block",background:"rgba(40, 43, 74, 0.08)",color:P.ocean,fontSize:11,fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",padding:"6px 16px",borderRadius:999,border:`1px solid ${P.sky}`,marginBottom:16 }}>
+          <span style={{ display:"inline-block",background:P.white,color:P.navy,fontSize:11,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",padding:"6px 16px",borderRadius:999,border:`1px solid ${P.sky}`,marginBottom:16,boxShadow:"0 2px 8px rgba(0,0,0,0.02)" }}>
             Meet Our Team
           </span>
-          <h2 style={{ fontSize:42,fontWeight:900,color:P.navy,margin:"0 0 16px",letterSpacing:"-0.02em" }}>
+          <h2 style={{ fontFamily:P.fontHeading,fontSize:42,fontWeight:800,color:P.navy,margin:"0 0 16px",letterSpacing:"0.5px" }}>
             The People Behind{" "}
-            <span style={{ background:`linear-gradient(to right,${P.royal},${P.ocean})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>HamroMobileHub</span>
+            <span style={{ color:P.accent }}>HamroMobileHub</span>
           </h2>
           <p style={{ color:P.muted,fontSize:17,maxWidth:440,margin:"0 auto",lineHeight:1.7 }}>Passionate experts building the future of mobile commerce.</p>
         </div>
 
         <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:24 }}>
           {team.map((member,i)=>(
-            <div key={i} style={{ background:P.white,borderRadius:20,overflow:"hidden",border:`1px solid ${P.mist}`,transition:"all 0.2s",boxShadow:"0 2px 12px rgba(40, 43, 74, 0.06)" }}
-              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 16px 48px rgba(40, 43, 74, 0.14)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 2px 12px rgba(40, 43, 74, 0.06)"; }}
+            <div key={i} style={{ background:P.white,borderRadius:20,overflow:"hidden",border:`1px solid ${P.sky}`,transition:"all 0.2s",boxShadow:"0 4px 12px rgba(24, 24, 27, 0.02)" }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 16px 40px rgba(24, 24, 27, 0.08)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 4px 12px rgba(24, 24, 27, 0.02)"; }}
             >
-              <div style={{ height:160,background:`linear-gradient(135deg,${P.royal},${P.ocean})`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative",overflow:"hidden" }}>
-                <div style={{ position:"absolute",inset:0,opacity:0.15,backgroundImage:"radial-gradient(circle at 70% 20%, white 1px, transparent 1px)",backgroundSize:"20px 20px" }}/>
-                <div style={{ width:80,height:80,borderRadius:"50%",background:"rgba(255,255,255,0.22)",backdropFilter:"blur(8px)",border:"2px solid rgba(255,255,255,0.4)",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                  <span style={{ color:P.white,fontWeight:900,fontSize:26 }}>{member.initials}</span>
+              <div style={{ height:160,background:P.mist,display:"flex",alignItems:"center",justifyContent:"center",position:"relative",overflow:"hidden",borderBottom:`1px solid ${P.sky}` }}>
+                <div style={{ width:80,height:80,borderRadius:"50%",background:P.white,border:`1px solid ${P.sky}`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 12px rgba(0,0,0,0.05)" }}>
+                  <span style={{ color:P.navy,fontFamily:P.fontHeading,fontWeight:900,fontSize:26,letterSpacing:"1px" }}>{member.initials}</span>
                 </div>
               </div>
               <div style={{ padding:24 }}>
-                <h3 style={{ color:P.navy,fontWeight:800,fontSize:16,margin:"0 0 2px" }}>{member.name}</h3>
-                <p style={{ color:P.ocean,fontSize:11,fontWeight:700,letterSpacing:"0.07em",textTransform:"uppercase",margin:"0 0 12px" }}>{member.role}</p>
+                <h3 style={{ color:P.navy,fontWeight:700,fontSize:16,margin:"0 0 2px" }}>{member.name}</h3>
+                <p style={{ color:P.accent,fontSize:11,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",margin:"0 0 12px" }}>{member.role}</p>
                 <p style={{ color:P.muted,fontSize:13,lineHeight:1.7,margin:"0 0 16px" }}>{member.bio}</p>
                 <div style={{ display:"flex",gap:8 }}>
                   {["in","tw","gh"].map(s=>(
-                    <a key={s} href="#" style={{ width:28,height:28,borderRadius:"50%",background:P.mistBg,display:"flex",alignItems:"center",justifyContent:"center",color:P.muted,fontSize:11,fontWeight:700,textDecoration:"none",transition:"all 0.2s" }}
-                      onMouseEnter={e=>{ e.currentTarget.style.background=P.ocean;e.currentTarget.style.color=P.white; }}
+                    <a key={s} href="#" style={{ width:28,height:28,borderRadius:"50%",background:P.mistBg,display:"flex",alignItems:"center",justifyContent:"center",color:P.muted,fontSize:11,fontWeight:700,textDecoration:"none",transition:"all 0.2s",border:`1px solid ${P.sky}` }}
+                      onMouseEnter={e=>{ e.currentTarget.style.background=P.navy;e.currentTarget.style.color=P.white; }}
                       onMouseLeave={e=>{ e.currentTarget.style.background=P.mistBg;e.currentTarget.style.color=P.muted; }}
                     >{s}</a>
                   ))}

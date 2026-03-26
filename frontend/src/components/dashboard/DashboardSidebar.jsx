@@ -49,16 +49,8 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
       }}
     >
       {/* Logo */}
-      <div style={{ padding: "30px 24px 24px", borderBottom: `1px solid ${P.mist}`, display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}>
-        <div style={{ width: 44, height: 44, background: P.navy, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 6px 16px rgba(24, 24, 27, 0.12)" }}>
-          <span style={{ color: P.white, fontFamily: P.fontHeading, fontWeight: 900, fontSize: 24, letterSpacing: "0.5px" }}>M</span>
-        </div>
-        <div>
-          <div style={{ fontFamily: P.fontHeading, fontSize: 20, fontWeight: 800, color: P.navy, whiteSpace: "nowrap", letterSpacing: "0.5px" }}>
-            HamroMobile<span style={{ color: P.accent }}>Hub</span>
-          </div>
-          <div style={{ fontSize: 10, fontWeight: 700, color: P.muted, letterSpacing: "0.1em", textTransform: "uppercase" }}>User Dashboard</div>
-        </div>
+      <div style={{ padding: "0 22px", borderBottom: `1px solid ${P.mist}`, display: "flex", alignItems: "center", flexShrink: 0, height: 70, overflow: "hidden" }}>
+        <img src="/logo.png" alt="HamroMobile Hub" style={{ width: 180, height: 180, minWidth: 180, minHeight: 180, objectFit: "contain", marginLeft: -14, filter: "hue-rotate(225deg) saturate(1.6) brightness(1.1)" }} />
       </div>
 
 

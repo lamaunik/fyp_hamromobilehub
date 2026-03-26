@@ -66,7 +66,7 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
             background: `linear-gradient(135deg,${P.mistBg},${P.mist})`,
             borderRadius: 24, padding: 32, height: 450,
             display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 8px 32px rgba(1,138,190,.1)",
+            boxShadow: "0 8px 32px rgba(40, 43, 74, .1)",
             border: `1.5px solid ${P.mist}`
           }}>
             {/* Wishlist Heart */}
@@ -132,14 +132,14 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
             {product.old && product.old > product.price && (
               <>
                 <span style={{ color: P.muted, fontSize: 18, textDecoration: "line-through", marginBottom: 4, fontWeight: 600 }}>Rs. {product.old?.toLocaleString()}</span>
-                <span style={{ background: "rgba(1,138,190,.1)", border: "1px solid rgba(1,138,190,.25)", color: P.ocean, padding: "4px 8px", borderRadius: 8, fontSize: 12, fontWeight: 800, marginBottom: 6 }}>
+                <span style={{ background: "rgba(40, 43, 74, .1)", border: "1px solid rgba(40, 43, 74, .25)", color: P.ocean, padding: "4px 8px", borderRadius: 8, fontSize: 12, fontWeight: 800, marginBottom: 6 }}>
                   Save {pct(product.price, product.old)}%
                 </span>
               </>
             )}
           </div>
 
-          <div style={{ background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 16, padding: "18px 24px", marginBottom: 32, boxShadow: "0 4px 16px rgba(0,27,72,.02)" }}>
+          <div style={{ background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 16, padding: "18px 24px", marginBottom: 32, boxShadow: "0 4px 16px rgba(40, 43, 74, .02)" }}>
             <h3 style={{ color: P.navy, fontWeight: 800, fontSize: 15, margin: "0 0 8px" }}>Description</h3>
             <p style={{ color: P.muted, fontSize: 14, lineHeight: 1.7, margin: 0 }}>
               {product.description || `Experience the ultimate in mobile technology with the ${product.name}. Featuring a stunning display, lightning-fast processor, and an advanced camera system that captures every detail. Designed to keep up with your busy lifestyle while providing premium elegance.`}
@@ -155,7 +155,7 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
             </div>
             
             {/* Add to Cart Button */}
-            <Btn onClick={handleAdd} style={{ flex: 1, height: 52, background: added ? `linear-gradient(135deg,#16a34a,${P.green})` : `linear-gradient(135deg,${P.royal},${P.ocean})`, color: P.white, fontSize: 16, fontWeight: 800, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, boxShadow: added ? "0 8px 24px rgba(34,197,94,.3)" : "0 8px 24px rgba(1,138,190,.25)", transition: "all .3s" }} className="btn">
+            <Btn onClick={handleAdd} style={{ flex: 1, height: 52, background: added ? `linear-gradient(135deg,#16a34a,${P.green})` : `linear-gradient(135deg,${P.royal},${P.ocean})`, color: P.white, fontSize: 16, fontWeight: 800, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, boxShadow: added ? "0 8px 24px rgba(34,197,94,.3)" : "0 8px 24px rgba(40, 43, 74, .25)", transition: "all .3s" }} className="btn">
               {added ? <>{Icon.check} Added to Cart</> : <><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Add to Cart</>}
             </Btn>
           </div>

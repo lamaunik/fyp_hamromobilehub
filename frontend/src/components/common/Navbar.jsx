@@ -2,18 +2,26 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const P = {
-  navy: "#001B48", royal: "#02457A", ocean: "#018ABE",
-  sky: "#97CADB", mist: "#D6E8EE", white: "#ffffff",
-  muted: "#6b99b5", font: "'Helvetica Neue', Helvetica, Arial, 'Segoe UI', sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
-    <nav style={{ position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(255,255,255,0.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${P.mist}`,boxShadow:"0 2px 16px rgba(0,27,72,0.07)",fontFamily:P.font }}>
+    <nav style={{ position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(255,255,255,0.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${P.mist}`,boxShadow:"0 2px 16px rgba(40, 43, 74, 0.07)",fontFamily:P.font }}>
       <div style={{ maxWidth:1280,margin:"0 auto",padding:"0 24px",height:64,display:"flex",alignItems:"center",justifyContent:"space-between" }}>
         <Link to="/" style={{ display:"flex",alignItems:"center",gap:10,textDecoration:"none" }}>
-          <div style={{ width:36,height:36,borderRadius:10,background:`linear-gradient(135deg,${P.royal},${P.ocean})`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 12px rgba(1,138,190,0.3)" }}>
+          <div style={{ width:36,height:36,borderRadius:10,background:`linear-gradient(135deg,${P.royal},${P.ocean})`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 12px rgba(40, 43, 74, 0.3)" }}>
             <span style={{ color:P.white,fontWeight:900,fontSize:16 }}>M</span>
           </div>
           <span style={{ fontSize:18,fontWeight:900,color:P.navy,letterSpacing:"-0.02em" }}>
@@ -33,7 +41,7 @@ export default function Navbar() {
           <Link to="/signin" style={{ fontSize:14,fontWeight:600,color:P.navy,textDecoration:"none",padding:"8px 16px" }}
             onMouseEnter={e=>e.target.style.color=P.ocean} onMouseLeave={e=>e.target.style.color=P.navy}
           >Sign In</Link>
-          <Link to="/signup" style={{ fontSize:14,fontWeight:700,color:P.white,background:`linear-gradient(135deg,${P.royal},${P.ocean})`,textDecoration:"none",padding:"9px 22px",borderRadius:999,boxShadow:"0 4px 14px rgba(1,138,190,0.3)" }}>
+          <Link to="/signup" style={{ fontSize:14,fontWeight:700,color:P.white,background:`linear-gradient(135deg,${P.royal},${P.ocean})`,textDecoration:"none",padding:"9px 22px",borderRadius:999,boxShadow:"0 4px 14px rgba(40, 43, 74, 0.3)" }}>
             Get Started
           </Link>
         </div>

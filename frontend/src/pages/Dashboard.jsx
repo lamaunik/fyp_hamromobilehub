@@ -14,6 +14,7 @@ import DashboardWishlist      from "../components/dashboard/DashboardWishlist";
 import DashboardProfile       from "../components/dashboard/DashboardProfile";
 import MarketplacePage        from "../components/dashboard/MarketplacePage";
 import SellProductPage        from "../components/dashboard/SellProductPage";
+import { socket }             from "../utils/socket";
 
 // Read/write localStorage safely
 const readLS  = (key, fallback) => { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; } };
@@ -40,6 +41,28 @@ export default function Dashboard() {
     { title: "Welcome to HamroMobileHub!", time: "Just now" },
     { title: "Flash Sale: 20% off Samsung devices", time: "2 hours ago" },
   ]);
+  const [unreadChat, setUnreadChat] = useState(false);
+
+  // Global Socket connection for chat notifications
+  useEffect(() => {
+    if (user) {
+      socket.io.opts.query = { userId: user._id || user.id };
+      socket.connect();
+      
+      const handleRecv = (msg) => {
+        if (!window.location.pathname.includes("/messages") && msg.sender !== user._id && msg.sender !== user.id) {
+          setUnreadChat(true);
+          setNotifs(prev => [{ title: "New Chat Message", time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }, ...prev]);
+        }
+      };
+      
+      socket.on("receive_message", handleRecv);
+      return () => {
+        socket.off("receive_message", handleRecv);
+        socket.disconnect();
+      };
+    }
+  }, [user]);
 
   // Persist wishlist & cart to localStorage on every change
   useEffect(() => { writeLS("hmh_wishlist", wishlist); }, [wishlist]);
@@ -133,7 +156,7 @@ export default function Dashboard() {
           orderCount={orderCount}
         />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-          <DashboardTopbar open={sidebarOpen} setOpen={setSidebarOpen} setTab={switchTab} notifs={notifs} setNotifs={setNotifs} products={products} viewProduct={viewProduct} />
+          <DashboardTopbar open={sidebarOpen} setOpen={setSidebarOpen} setTab={switchTab} notifs={notifs} setNotifs={setNotifs} products={products} viewProduct={viewProduct} unreadChat={unreadChat} />
           <main style={{ flex: 1, overflowY: "auto" }}>
             <div key={pageKey} className="page">
               {tab === "home"        && <DashboardHome        setTab={switchTab} viewProduct={viewProduct} addToCart={addToCart} wishlist={wishlist} toggleWish={toggleWish} products={products} />}

@@ -3,12 +3,13 @@ import { P } from "./DashboardConstants";
 import { Icon } from "./DashboardIcons";
 import { Btn, ProductThumb } from "./DashboardUI";
 import { api } from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 
 export default function DashboardCart({ cart, removeFromCart, updateQty, setTab, addNotif, clearCart, addOrder, wishlist = [], removeFromWishlist }) {
   const [promo,    setPromo]   = useState("");
   const [promoOk,  setPromoOk] = useState(false);
   const [checking, setChecking]= useState(false);
-  const [ordered,  setOrdered] = useState(false);
+  const navigate = useNavigate();
 
   const subtotal = cart.reduce((s, p) => s + p.price * p.qty, 0);
   const shipping  = subtotal > 500 ? 0 : 29;
@@ -21,64 +22,17 @@ export default function DashboardCart({ cart, removeFromCart, updateQty, setTab,
     setTimeout(() => { setChecking(false); if (promo.trim().toUpperCase() === "SAVE10") setPromoOk(true); }, 800);
   };
 
-  const checkout = async () => {
-    try {
-      setOrdered(true);
-      // Construct backend order schema mapping
-      const orderData = {
-        orderItems: cart.map(item => ({
-          product: item._id || item.id,
-          name: item.name,
-          qty: item.qty,
-          image: item.images?.[0] || "",
-          price: item.price
-        })),
-        shippingAddress: {
-          fullName: "User Name", // Ideally pulled from context or checkout form
-          address: "123 Street",
-          city: "Metropolis",
-          postalCode: "12345",
-          country: "Country",
-          phone: "555-0000"
-        },
-        paymentMethod: "Credit Card",
-        itemsPrice: subtotal,
-        taxPrice: tax,
-        shippingPrice: shipping,
-        totalPrice: total
-      };
-
-      const res = await api.post("/orders", orderData);
-      
-      if (res.success) {
-        // Remove ordered items from wishlist
-        cart.forEach(item => {
-          const id = item._id || item.id;
-          if (wishlist.includes(id) && removeFromWishlist) removeFromWishlist(id);
-        });
-        // Clear cart immediately so items vanish right away
-        if (clearCart) clearCart();
-        addNotif({ title: "Order placed successfully! 🎉", time: "Just now" });
-        // Brief delay so user sees "Order Placed!" button, then go to orders
-        setTimeout(() => {
-          setOrdered(false);
-          setTab("orders");
-        }, 1200);
-      }
-    } catch (err) {
-      setOrdered(false);
-      addNotif({ title: "Failed to place order.", time: "Just now" });
-      console.error(err);
-    }
+  const handleProceedToCheckout = () => {
+    navigate("/checkout");
   };
 
   /* Empty state */
   if (cart.length === 0) return (
     <div className="page" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "70vh", padding: 40, textAlign: "center", fontFamily: P.font }}>
-      <div className="float" style={{ width: 100, height: 100, borderRadius: 28, background: `linear-gradient(135deg,${P.mist},${P.sky})`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, color: P.royal, boxShadow: "0 12px 36px rgba(1,138,190,.16)" }}>{Icon.cart}</div>
+      <div className="float" style={{ width: 100, height: 100, borderRadius: 28, background: `linear-gradient(135deg,${P.mist},${P.sky})`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, color: P.royal, boxShadow: "0 12px 36px rgba(40, 43, 74, .16)" }}>{Icon.cart}</div>
       <h2 style={{ color: P.navy, fontWeight: 900, fontSize: 24, margin: "0 0 10px" }}>Your cart is empty</h2>
       <p style={{ color: P.muted, fontSize: 14, margin: "0 0 28px", lineHeight: 1.6 }}>Add some great products to get started!</p>
-      <Btn onClick={() => setTab("products")} cls="btn" style={{ background: `linear-gradient(135deg,${P.royal},${P.ocean})`, color: P.white, fontWeight: 800, fontSize: 14, padding: "12px 28px", borderRadius: 12, boxShadow: "0 4px 16px rgba(1,138,190,.3)" }}>Browse Products →</Btn>
+      <Btn onClick={() => setTab("products")} cls="btn" style={{ background: `linear-gradient(135deg,${P.royal},${P.ocean})`, color: P.white, fontWeight: 800, fontSize: 14, padding: "12px 28px", borderRadius: 12, boxShadow: "0 4px 16px rgba(40, 43, 74, .3)" }}>Browse Products →</Btn>
     </div>
   );
 
@@ -149,7 +103,7 @@ export default function DashboardCart({ cart, removeFromCart, updateQty, setTab,
         </div>
 
         {/* Order Summary */}
-        <div className="slideRight" style={{ background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 22, padding: "24px 26px", boxShadow: "0 8px 32px rgba(0,27,72,.08)", position: "sticky", top: 20 }}>
+        <div className="slideRight" style={{ background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 22, padding: "24px 26px", boxShadow: "0 8px 32px rgba(40, 43, 74, .08)", position: "sticky", top: 20 }}>
           <h3 style={{ color: P.navy, fontWeight: 900, fontSize: 17, margin: "0 0 20px" }}>Order Summary</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 13, marginBottom: 18 }}>
             {[
@@ -189,8 +143,8 @@ export default function DashboardCart({ cart, removeFromCart, updateQty, setTab,
           </div>
 
           {/* Checkout */}
-          <Btn onClick={checkout} cls="btn" style={{ width: "100%", padding: "15px 0", background: ordered ? `linear-gradient(135deg,#16a34a,${P.green})` : `linear-gradient(135deg,${P.royal},${P.ocean})`, color: P.white, fontWeight: 900, fontSize: 14, borderRadius: 14, boxShadow: ordered ? "0 6px 20px rgba(22,163,74,.3)" : "0 6px 20px rgba(1,138,190,.3)", transition: "background .4s", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-            {ordered ? <>{Icon.check} Order Placed!</> : <>Proceed to Checkout →</>}
+          <Btn onClick={handleProceedToCheckout} cls="btn" style={{ width: "100%", padding: "15px 0", background: P.royal, color: P.white, fontWeight: 900, fontSize: 14, borderRadius: 14, boxShadow: "0 6px 20px rgba(40, 43, 74, .3)", transition: "background .4s", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+            Proceed to Checkout →
           </Btn>
 
           {/* Trust row */}

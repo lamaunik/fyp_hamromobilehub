@@ -120,9 +120,9 @@ export default function DashboardProfile({ addNotif }) {
 
       {/* Hero header card */}
       <div style={{ background: `linear-gradient(135deg,${P.navy},${P.royal})`, borderRadius: 22, padding: "28px 32px", display: "flex", alignItems: "center", gap: 24, marginBottom: 28, position: "relative", overflow: "hidden" }}>
-        <div className="float" style={{ position: "absolute", top: -30, right: -10, width: 160, height: 160, borderRadius: "50%", background: "rgba(1,138,190,.15)", filter: "blur(40px)", pointerEvents: "none" }} />
+        <div className="float" style={{ position: "absolute", top: -30, right: -10, width: 160, height: 160, borderRadius: "50%", background: "rgba(40, 43, 74, .15)", filter: "blur(40px)", pointerEvents: "none" }} />
         <div style={{ position: "relative" }}>
-          <div style={{ width: 72, height: 72, borderRadius: "50%", background: `linear-gradient(135deg,${P.ocean},${P.sky})`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 20px rgba(1,138,190,.4)", border: "3px solid rgba(255,255,255,.3)", overflow: "hidden" }}>
+          <div style={{ width: 72, height: 72, borderRadius: "50%", background: `linear-gradient(135deg,${P.ocean},${P.sky})`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 20px rgba(40, 43, 74, .4)", border: "3px solid rgba(255,255,255,.3)", overflow: "hidden" }}>
             {form.profilePicture ? (
               <img src={form.profilePicture.startsWith("http") ? form.profilePicture : `http://localhost:5000${form.profilePicture}`} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             ) : (
@@ -139,9 +139,9 @@ export default function DashboardProfile({ addNotif }) {
         </div>
         <div style={{ position: "relative" }}>
           <h2 style={{ color: P.white, fontWeight: 900, fontSize: 22, margin: "0 0 4px" }}>{form.name}</h2>
-          <p style={{ color: "rgba(151,202,219,.8)", fontSize: 14, margin: "0 0 12px" }}>{form.email}</p>
+          <p style={{ color: "rgba(212, 210, 195, .8)", fontSize: 14, margin: "0 0 12px" }}>{form.email}</p>
           <div style={{ display: "flex", gap: 8 }}>
-            <span style={{ background: "rgba(1,138,190,.25)", border: "1px solid rgba(1,138,190,.4)", color: P.sky, fontSize: 11, fontWeight: 700, padding: "3px 12px", borderRadius: 999 }}>Customer</span>
+            <span style={{ background: "rgba(40, 43, 74, .25)", border: "1px solid rgba(40, 43, 74, .4)", color: P.sky, fontSize: 11, fontWeight: 700, padding: "3px 12px", borderRadius: 999 }}>Customer</span>
             <span style={{ background: "rgba(34,197,94,.2)",   border: "1px solid rgba(34,197,94,.3)", color: "#86efac", fontSize: 11, fontWeight: 700, padding: "3px 12px", borderRadius: 999 }}>Verified ✓</span>
           </div>
         </div>
@@ -149,7 +149,7 @@ export default function DashboardProfile({ addNotif }) {
           {stats.map((s, i) => (
             <div key={i} style={{ background: "rgba(255,255,255,.1)", borderRadius: 12, padding: "10px 16px", textAlign: "center", border: "1px solid rgba(255,255,255,.1)" }}>
               <p style={{ color: P.white, fontWeight: 900, fontSize: 18, margin: 0 }}>{s.v}</p>
-              <p style={{ color: "rgba(151,202,219,.7)", fontSize: 11, margin: "2px 0 0" }}>{s.l}</p>
+              <p style={{ color: "rgba(212, 210, 195, .7)", fontSize: 11, margin: "2px 0 0" }}>{s.l}</p>
             </div>
           ))}
         </div>
@@ -158,7 +158,7 @@ export default function DashboardProfile({ addNotif }) {
       {/* Tab pills */}
       <div style={{ display: "flex", gap: 4, marginBottom: 24, background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 14, padding: 5, width: "fit-content" }}>
         {[{ id: "info", l: "Personal Info" }, { id: "address", l: "Addresses" }, { id: "security", l: "Security" }, { id: "preferences", l: "Preferences" }].map((t) => (
-          <button key={t.id} onClick={() => setPTab(t.id)} style={{ padding: "9px 20px", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", border: "none", fontFamily: P.font, background: tab === t.id ? `linear-gradient(135deg,${P.royal},${P.ocean})` : P.white, color: tab === t.id ? P.white : P.muted, boxShadow: tab === t.id ? "0 4px 14px rgba(1,138,190,.25)" : "none", transition: "all .18s" }}>{t.l}</button>
+          <button key={t.id} onClick={() => setPTab(t.id)} style={{ padding: "9px 20px", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", border: "none", fontFamily: P.font, background: tab === t.id ? `linear-gradient(135deg,${P.royal},${P.ocean})` : P.white, color: tab === t.id ? P.white : P.muted, boxShadow: tab === t.id ? "0 4px 14px rgba(40, 43, 74, .25)" : "none", transition: "all .18s" }}>{t.l}</button>
         ))}
       </div>
 
@@ -183,7 +183,7 @@ export default function DashboardProfile({ addNotif }) {
                 <p style={{ fontSize: 11, fontWeight: 800, color: P.muted, letterSpacing: ".1em", textTransform: "uppercase", margin: "0 0 8px" }}>{f.l}</p>
                 <input type={f.type} value={form[f.k]} onChange={(e) => setForm((v) => ({ ...v, [f.k]: e.target.value }))} disabled={!editing}
                   style={{ width: "100%", border: `1.5px solid ${P.mist}`, borderRadius: 11, padding: "11px 14px", fontSize: 14, color: P.navy, fontFamily: P.font, background: editing ? P.white : P.mistBg, outline: "none", transition: "all .2s", boxSizing: "border-box", opacity: editing ? 1 : .85 }}
-                  onFocus={(e) => { if (editing) { e.target.style.borderColor = P.sky; e.target.style.boxShadow = "0 0 0 3px rgba(151,202,219,.2)"; } }}
+                  onFocus={(e) => { if (editing) { e.target.style.borderColor = P.sky; e.target.style.boxShadow = "0 0 0 3px rgba(212, 210, 195, .2)"; } }}
                   onBlur={(e)  => { e.target.style.borderColor = P.mist; e.target.style.boxShadow = "none"; }}
                 />
               </div>
@@ -208,8 +208,8 @@ export default function DashboardProfile({ addNotif }) {
       {tab === "address" && (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           {[{ title: "Home Address", addr: "Kathmandu, Bagmati Province", default: true }, { title: "Work Address", addr: "Patan, Lalitpur", default: false }].map((a, i) => (
-            <div key={i} style={{ background: P.white, border: `1.5px solid ${a.default ? P.ocean : P.mist}`, borderRadius: 18, padding: 22, position: "relative", boxShadow: a.default ? "0 4px 16px rgba(1,138,190,.1)" : "none" }}>
-              {a.default && <span style={{ position: "absolute", top: 14, right: 14, fontSize: 10, fontWeight: 800, padding: "2px 9px", borderRadius: 999, background: "rgba(1,138,190,.1)", border: "1px solid rgba(1,138,190,.25)", color: P.ocean }}>Default</span>}
+            <div key={i} style={{ background: P.white, border: `1.5px solid ${a.default ? P.ocean : P.mist}`, borderRadius: 18, padding: 22, position: "relative", boxShadow: a.default ? "0 4px 16px rgba(40, 43, 74, .1)" : "none" }}>
+              {a.default && <span style={{ position: "absolute", top: 14, right: 14, fontSize: 10, fontWeight: 800, padding: "2px 9px", borderRadius: 999, background: "rgba(40, 43, 74, .1)", border: "1px solid rgba(40, 43, 74, .25)", color: P.ocean }}>Default</span>}
               <div style={{ width: 40, height: 40, borderRadius: 11, background: P.mistBg, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12, color: P.ocean, border: `1px solid ${P.mist}` }}>{Icon.map}</div>
               <h4 style={{ color: P.navy, fontWeight: 800, fontSize: 15, margin: "0 0 6px" }}>{a.title}</h4>
               <p style={{ color: P.muted, fontSize: 13, margin: "0 0 16px", lineHeight: 1.5 }}>{a.addr}, Nepal</p>
@@ -240,7 +240,7 @@ export default function DashboardProfile({ addNotif }) {
                 <p style={{ fontSize: 11, fontWeight: 800, color: P.muted, letterSpacing: ".1em", textTransform: "uppercase", margin: "0 0 8px" }}>{f.l}</p>
                 <input type="password" value={pwForm[f.k]} onChange={(e) => setPwForm((v) => ({ ...v, [f.k]: e.target.value }))} placeholder="••••••••"
                   style={{ width: "100%", border: `1.5px solid ${P.mist}`, borderRadius: 11, padding: "11px 14px", fontSize: 14, color: P.navy, fontFamily: P.font, background: P.mistBg, outline: "none", transition: "all .2s", boxSizing: "border-box" }}
-                  onFocus={(e) => { e.target.style.borderColor = P.sky; e.target.style.background = P.white; e.target.style.boxShadow = "0 0 0 3px rgba(151,202,219,.2)"; }}
+                  onFocus={(e) => { e.target.style.borderColor = P.sky; e.target.style.background = P.white; e.target.style.boxShadow = "0 0 0 3px rgba(212, 210, 195, .2)"; }}
                   onBlur={(e)  => { e.target.style.borderColor = P.mist; e.target.style.background = P.mistBg; e.target.style.boxShadow = "none"; }}
                 />
               </div>

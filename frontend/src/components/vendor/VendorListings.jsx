@@ -1,10 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 
 const P = {
-  navy:"#001B48", royal:"#02457A", ocean:"#018ABE",
-  sky:"#97CADB", mist:"#D6E8EE", white:"#ffffff",
-  muted:"#6b99b5", mistBg:"#f0f6f9",
-  font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const STATUS_STYLE = {
@@ -42,7 +49,7 @@ function EditModal({ product, onClose, onSaved }) {
     background:P.mistBg, color:P.navy, fontSize:13, fontFamily:P.font,
     outline:"none", transition:"all .2s", boxSizing:"border-box",
   };
-  const fi = (e) => { e.target.style.borderColor=P.ocean; e.target.style.background=P.white; e.target.style.boxShadow="0 0 0 3px rgba(1,138,190,.12)"; };
+  const fi = (e) => { e.target.style.borderColor=P.ocean; e.target.style.background=P.white; e.target.style.boxShadow="0 0 0 3px rgba(40, 43, 74, .12)"; };
   const fb = (e) => { e.target.style.borderColor=P.mist;  e.target.style.background=P.mistBg; e.target.style.boxShadow="none"; };
 
   const handleImagePick = (e) => {
@@ -103,7 +110,7 @@ function EditModal({ product, onClose, onSaved }) {
 
   return (
     <div style={{ position:"fixed", inset:0, zIndex:1000, background:"rgba(0,15,40,0.6)", backdropFilter:"blur(4px)", display:"flex", alignItems:"center", justifyContent:"center", padding:16, fontFamily:P.font }}>
-      <div style={{ background:P.white, borderRadius:22, width:"100%", maxWidth:560, maxHeight:"90vh", overflowY:"auto", boxShadow:"0 24px 60px rgba(0,27,72,0.2)" }}>
+      <div style={{ background:P.white, borderRadius:22, width:"100%", maxWidth:560, maxHeight:"90vh", overflowY:"auto", boxShadow:"0 24px 60px rgba(40, 43, 74, 0.2)" }}>
 
         {/* Header */}
         <div style={{ padding:"20px 24px 0", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
@@ -123,7 +130,7 @@ function EditModal({ product, onClose, onSaved }) {
           {/* ── Image Upload ── */}
           <div style={{ marginBottom:18 }}>
             <label style={{ display:"block", fontSize:11, fontWeight:800, color:P.muted, letterSpacing:".1em", textTransform:"uppercase", marginBottom:8 }}>Product Image</label>
-            <div style={{ position:"relative", width:"100%", height:160, borderRadius:14, border:`2px dashed ${imageFile ? P.ocean : P.sky}`, background: preview ? "rgba(1,138,190,0.04)" : P.mistBg, overflow:"hidden", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", transition:"all .2s" }}
+            <div style={{ position:"relative", width:"100%", height:160, borderRadius:14, border:`2px dashed ${imageFile ? P.ocean : P.sky}`, background: preview ? "rgba(40, 43, 74, 0.04)" : P.mistBg, overflow:"hidden", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", transition:"all .2s" }}
               onMouseEnter={e=>{ e.currentTarget.style.borderColor=P.ocean; }}
               onMouseLeave={e=>{ e.currentTarget.style.borderColor=imageFile?P.ocean:P.sky; }}>
               <input type="file" accept="image/*" onChange={handleImagePick}
@@ -131,7 +138,7 @@ function EditModal({ product, onClose, onSaved }) {
               {preview ? (
                 <>
                   <img src={preview} alt="Preview" style={{ width:"100%", height:"100%", objectFit:"contain", padding:8 }} />
-                  <div style={{ position:"absolute", bottom:8, right:8, background:"rgba(2,69,122,0.85)", color:"white", padding:"3px 10px", borderRadius:7, fontSize:11, fontWeight:700, zIndex:3, pointerEvents:"none" }}>
+                  <div style={{ position:"absolute", bottom:8, right:8, background:"rgba(40, 43, 74, 0.85)", color:"white", padding:"3px 10px", borderRadius:7, fontSize:11, fontWeight:700, zIndex:3, pointerEvents:"none" }}>
                     {uploadedImage ? "✓ Uploaded" : imageFile ? "New image selected" : "Change Image"}
                   </div>
                 </>
@@ -189,7 +196,7 @@ function EditModal({ product, onClose, onSaved }) {
           <div style={{ display:"flex", gap:12 }}>
             <button onClick={onClose} style={{ flex:1, padding:"12px 0", background:P.mistBg, border:`1.5px solid ${P.mist}`, borderRadius:12, fontSize:14, fontWeight:700, color:P.muted, cursor:"pointer", fontFamily:P.font }}>Cancel</button>
             <button onClick={handleSave} disabled={saving}
-              style={{ flex:2, padding:"12px 0", background: saving ? P.mist : `linear-gradient(135deg,${P.royal},${P.ocean})`, color: saving ? P.muted : P.white, border:"none", borderRadius:12, fontSize:14, fontWeight:800, cursor: saving?"not-allowed":"pointer", fontFamily:P.font, boxShadow: saving?"none":"0 6px 20px rgba(1,138,190,.3)", display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
+              style={{ flex:2, padding:"12px 0", background: saving ? P.mist : `linear-gradient(135deg,${P.royal},${P.ocean})`, color: saving ? P.muted : P.white, border:"none", borderRadius:12, fontSize:14, fontWeight:800, cursor: saving?"not-allowed":"pointer", fontFamily:P.font, boxShadow: saving?"none":"0 6px 20px rgba(40, 43, 74, .3)", display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
               {saving ? (
                 <><span style={{ width:14, height:14, border:"2px solid rgba(255,255,255,.4)", borderTopColor:"white", borderRadius:"50%", display:"inline-block", animation:"spin .7s linear infinite" }} /> Saving...</>
               ) : "Save Changes"}
@@ -284,7 +291,7 @@ export default function VendorListings({ setTab }) {
             <h2 style={{ color:P.navy, fontWeight:900, fontSize:20, margin:"0 0 4px" }}>My Listings</h2>
             <p style={{ color:P.muted, fontSize:14, margin:0 }}>{products.length} total products</p>
           </div>
-          <button onClick={() => setTab("add-product")} style={{ display:"flex", alignItems:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontSize:13, fontWeight:700, padding:"10px 20px", borderRadius:12, border:"none", cursor:"pointer", fontFamily:P.font, boxShadow:"0 4px 14px rgba(1,138,190,0.3)" }}>
+          <button onClick={() => setTab("add-product")} style={{ display:"flex", alignItems:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontSize:13, fontWeight:700, padding:"10px 20px", borderRadius:12, border:"none", cursor:"pointer", fontFamily:P.font, boxShadow:"0 4px 14px rgba(40, 43, 74, 0.3)" }}>
             <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"/></svg>
             Add Product
           </button>
@@ -296,13 +303,13 @@ export default function VendorListings({ setTab }) {
             const key    = f === "Sold Out" ? "Sold" : f;
             const active = filter === key;
             return (
-              <button key={f} onClick={() => setFilter(key)} style={{ padding:"6px 16px", borderRadius:999, fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:P.font, transition:"all 0.15s", background: active ? `linear-gradient(135deg,${P.royal},${P.ocean})` : P.white, color: active ? P.white : P.muted, border: active ? "none" : `1px solid ${P.mist}`, boxShadow: active ? "0 4px 12px rgba(1,138,190,0.25)" : "none" }}>{f}</button>
+              <button key={f} onClick={() => setFilter(key)} style={{ padding:"6px 16px", borderRadius:999, fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:P.font, transition:"all 0.15s", background: active ? `linear-gradient(135deg,${P.royal},${P.ocean})` : P.white, color: active ? P.white : P.muted, border: active ? "none" : `1px solid ${P.mist}`, boxShadow: active ? "0 4px 12px rgba(40, 43, 74, 0.25)" : "none" }}>{f}</button>
             );
           })}
         </div>
 
         {/* Table */}
-        <div style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:20, overflow:"hidden", boxShadow:"0 2px 12px rgba(0,27,72,0.05)" }}>
+        <div style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:20, overflow:"hidden", boxShadow:"0 2px 12px rgba(40, 43, 74, 0.05)" }}>
           <div style={{ display:"grid", gridTemplateColumns:"2fr 1fr 1fr 1fr 90px 80px", padding:"10px 20px", background:P.mistBg, borderBottom:`1px solid ${P.mist}`, fontSize:10, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", color:P.muted }}>
             <span>Product</span><span>Category</span><span>Price</span><span>Stock</span><span>Status</span><span style={{ textAlign:"right" }}>Actions</span>
           </div>
@@ -364,7 +371,7 @@ export default function VendorListings({ setTab }) {
           onMouseLeave={e=>e.currentTarget.style.borderColor=P.sky}>
           <p style={{ color:P.navy, fontWeight:700, fontSize:15, margin:"0 0 6px" }}>Got more devices to sell?</p>
           <p style={{ color:P.muted, fontSize:13, margin:"0 0 18px" }}>List new products and reach thousands of buyers in minutes.</p>
-          <button onClick={() => setTab("add-product")} style={{ background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:13, padding:"10px 24px", borderRadius:12, border:"none", cursor:"pointer", fontFamily:P.font, boxShadow:"0 4px 14px rgba(1,138,190,0.3)" }}>
+          <button onClick={() => setTab("add-product")} style={{ background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:13, padding:"10px 24px", borderRadius:12, border:"none", cursor:"pointer", fontFamily:P.font, boxShadow:"0 4px 14px rgba(40, 43, 74, 0.3)" }}>
             + Add New Listing
           </button>
         </div>

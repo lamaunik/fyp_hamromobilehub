@@ -5,7 +5,7 @@ import { P } from "./DashboardConstants";
 import { Icon } from "./DashboardIcons";
 import { ProductThumb } from "./DashboardUI";
 
-export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNotifs, products = [], viewProduct }) {
+export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNotifs, products = [], viewProduct, unreadChat }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -47,7 +47,7 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
         alignItems: "center",
         justifyContent: "space-between",
         flexShrink: 0,
-        boxShadow: "0 2px 14px rgba(0,27,72,.06)",
+        boxShadow: "0 2px 14px rgba(40, 43, 74, .06)",
         fontFamily: P.font,
         zIndex: 20,
       }}
@@ -89,13 +89,13 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
               borderRadius: 10, fontSize: 13, color: P.navy,
               background: focused ? P.white : P.mistBg,
               width: focused ? 260 : 210,
-              boxShadow: focused ? "0 0 0 3px rgba(151,202,219,.2)" : "none",
+              boxShadow: focused ? "0 0 0 3px rgba(212, 210, 195, .2)" : "none",
               transition: "all .25s cubic-bezier(.4,0,.2,1)",
               fontFamily: P.font,
             }}
           />
           {focused && searched && (
-            <div style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0, background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 14, boxShadow: "0 8px 32px rgba(0,27,72,.12)", zIndex: 99, overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0, background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 14, boxShadow: "0 8px 32px rgba(40, 43, 74, .12)", zIndex: 99, overflow: "hidden" }}>
               {searchResults.length > 0 ? searchResults.map((p) => (
                 <div
                   key={p._id || p.id}
@@ -135,6 +135,9 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
             style={{ position: "relative", width: 36, height: 36, borderRadius: 10, border: `1px solid ${P.mist}`, display: "flex", alignItems: "center", justifyContent: "center", color: P.royal, background: P.mistBg }}
           >
             <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            {unreadChat && (
+              <span className="pulse" style={{ position: "absolute", top: 7, right: 7, width: 8, height: 8, background: P.ocean, borderRadius: "50%", border: `2px solid ${P.white}` }} />
+            )}
           </button>
         </div>
 
@@ -151,7 +154,7 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
             )}
           </button>
           {showNotif && (
-            <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, width: 300, background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 16, boxShadow: "0 12px 40px rgba(0,27,72,.14)", zIndex: 99, overflow: "hidden", animation: "scaleIn .2s cubic-bezier(.4,0,.2,1)" }}>
+            <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, width: 300, background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 16, boxShadow: "0 12px 40px rgba(40, 43, 74, .14)", zIndex: 99, overflow: "hidden", animation: "scaleIn .2s cubic-bezier(.4,0,.2,1)" }}>
               <div style={{ padding: "14px 16px", borderBottom: `1px solid ${P.mist}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <span style={{ color: P.navy, fontWeight: 800, fontSize: 14 }}>Notifications</span>
                 <button onClick={() => setNotifs([])} style={{ fontSize: 11, fontWeight: 700, color: P.ocean, background: "none", border: "none", cursor: "pointer" }}>Clear all</button>
@@ -182,7 +185,7 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
           onMouseEnter={(e) => { e.currentTarget.style.borderColor = P.sky; e.currentTarget.style.background = P.white; }}
           onMouseLeave={(e) => { e.currentTarget.style.borderColor = P.mist; e.currentTarget.style.background = P.mistBg; }}
         >
-          <div style={{ width: 32, height: 32, borderRadius: "50%", background: `linear-gradient(135deg,${P.royal},${P.ocean})`, display: "flex", alignItems: "center", justifyContent: "center", border: `2px solid ${P.white}`, boxShadow: "0 2px 8px rgba(1,138,190,.28)", overflow: "hidden" }}>
+          <div style={{ width: 32, height: 32, borderRadius: "50%", background: `linear-gradient(135deg,${P.royal},${P.ocean})`, display: "flex", alignItems: "center", justifyContent: "center", border: `2px solid ${P.white}`, boxShadow: "0 2px 8px rgba(40, 43, 74, .28)", overflow: "hidden" }}>
             {user?.profilePicture ? (
               <img src={user.profilePicture.startsWith("http") ? user.profilePicture : `http://localhost:5000${user.profilePicture}`} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             ) : (

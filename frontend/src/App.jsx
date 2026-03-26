@@ -10,6 +10,9 @@ import Dashboard       from "./pages/Dashboard";
 import VendorDashboard from "./pages/VendorDashboard";
 import AdminDashboard  from "./pages/AdminDashboard";
 import MessagesPage    from "./pages/MessagesPage";
+import KhaltiVerify    from "./pages/KhaltiVerify";
+import CheckoutPage    from "./pages/CheckoutPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
@@ -56,6 +59,36 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <MessagesPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Khalti Verification */}
+          <Route
+            path="/khalti/verify"
+            element={
+              <ProtectedRoute>
+                <KhaltiVerify />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Checkout Page */}
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Payment Success Page */}
+          <Route
+            path="/success"
+            element={
+              <ProtectedRoute>
+                <PaymentSuccessPage />
               </ProtectedRoute>
             }
           />

@@ -73,7 +73,7 @@ export default function ProductCard({ product: p, onView, onAddToCart, wishliste
               {p.badge}
             </span>
           )}
-          <span style={{ position: "absolute", top: 8, right: 8, fontSize: 10, fontWeight: 800, padding: "2px 7px", borderRadius: 999, background: "rgba(1,138,190,.1)", border: "1px solid rgba(1,138,190,.2)", color: P.ocean }}>
+          <span style={{ position: "absolute", top: 8, right: 8, fontSize: 10, fontWeight: 800, padding: "2px 7px", borderRadius: 999, background: "rgba(40, 43, 74, .1)", border: "1px solid rgba(40, 43, 74, .2)", color: P.ocean }}>
             -{pct(p.price, p.old)}%
           </span>
         </div>

@@ -14,7 +14,7 @@ const SLIDES = [
     icon: Icon.laptop,
     feature1: "500+ Products",
     feature2: "4.8 Avg Rating",
-    gradient: `linear-gradient(135deg,${P.navy} 0%,${P.royal} 55%,#013d6e 100%)`
+    gradient: `linear-gradient(135deg,${P.navy} 0%,${P.royal} 55%,#282B4A 100%)`
   },
   {
     badge: "NEW ARRIVALS",
@@ -53,7 +53,7 @@ function HeroSlider({ setTab }) {
   const slide = SLIDES[current];
 
   return (
-    <div style={{ position: "relative", minHeight: 220, overflow: "hidden", borderRadius: 24, boxShadow: "0 12px 40px rgba(0,27,72,.28)", transition: "background 0.5s ease" }}>
+    <div style={{ position: "relative", minHeight: 220, overflow: "hidden", borderRadius: 24, boxShadow: "0 12px 40px rgba(40, 43, 74, .28)", transition: "background 0.5s ease" }}>
       {SLIDES.map((s, i) => (
         <div key={i} style={{ 
           position: i === current ? "relative" : "absolute", top: 0, left: 0, right: 0, bottom: 0,
@@ -65,28 +65,28 @@ function HeroSlider({ setTab }) {
           zIndex: i === current ? 1 : 0
         }}>
           {/* Background Decorative Elements */}
-          <div style={{ position: "absolute", top: -50, right: 140, width: 250, height: 250, borderRadius: "50%", background: "rgba(1,138,190,.15)", filter: "blur(55px)", pointerEvents: "none" }} />
-          <div style={{ position: "absolute", inset: 0, opacity: .04, backgroundImage: `linear-gradient(rgba(151,202,219,1) 1px,transparent 1px),linear-gradient(90deg,rgba(151,202,219,1) 1px,transparent 1px)`, backgroundSize: "40px 40px", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", top: -50, right: 140, width: 250, height: 250, borderRadius: "50%", background: "rgba(40, 43, 74, .15)", filter: "blur(55px)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", inset: 0, opacity: .04, backgroundImage: `linear-gradient(rgba(212, 210, 195, 1) 1px,transparent 1px),linear-gradient(90deg,rgba(212, 210, 195, 1) 1px,transparent 1px)`, backgroundSize: "40px 40px", pointerEvents: "none" }} />
           
           <div style={{ position: "relative", zIndex: 1, transform: i === current ? "translateX(0)" : "translateX(-20px)", transition: "transform 0.6s ease", transitionDelay: "0.1s" }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(1,138,190,.22)", border: "1px solid rgba(1,138,190,.4)", borderRadius: 999, padding: "5px 14px", marginBottom: 16 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(40, 43, 74, .22)", border: "1px solid rgba(40, 43, 74, .4)", borderRadius: 999, padding: "5px 14px", marginBottom: 16 }}>
               <svg width="11" height="11" fill={P.sky} viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg>
               <span style={{ color: P.sky, fontSize: 10, fontWeight: 800, letterSpacing: ".12em" }}>{s.badge}</span>
             </div>
             <h2 style={{ color: P.white, fontWeight: 900, fontSize: 30, margin: "0 0 10px", letterSpacing: "-.03em", lineHeight: 1.15 }}>{s.title}</h2>
-            <p style={{ color: "rgba(151,202,219,.72)", fontSize: 14, margin: "0 0 24px", lineHeight: 1.6, maxWidth: 380 }}>{s.subtitle}</p>
+            <p style={{ color: "rgba(212, 210, 195, .72)", fontSize: 14, margin: "0 0 24px", lineHeight: 1.6, maxWidth: 380 }}>{s.subtitle}</p>
             <div style={{ display: "flex", gap: 12 }}>
-              <Btn onClick={() => setTab(s.primaryAction)} style={{ background: P.white, color: P.royal, fontWeight: 800, fontSize: 13, padding: "12px 26px", borderRadius: 12, boxShadow: "0 4px 16px rgba(0,27,72,.2)" }}>{s.primaryBtn}</Btn>
-              <Btn onClick={() => setTab("orders")} style={{ background: "transparent", color: P.sky, fontWeight: 700, fontSize: 13, padding: "11px 20px", borderRadius: 12, border: "1px solid rgba(151,202,219,.35)" }}>My Orders</Btn>
+              <Btn onClick={() => setTab(s.primaryAction)} style={{ background: P.white, color: P.royal, fontWeight: 800, fontSize: 13, padding: "12px 26px", borderRadius: 12, boxShadow: "0 4px 16px rgba(40, 43, 74, .2)" }}>{s.primaryBtn}</Btn>
+              <Btn onClick={() => setTab("orders")} style={{ background: "transparent", color: P.sky, fontWeight: 700, fontSize: 13, padding: "11px 20px", borderRadius: 12, border: "1px solid rgba(212, 210, 195, .35)" }}>My Orders</Btn>
             </div>
           </div>
-          <div style={{ position: "relative", zIndex: 1, flexShrink: 0, width: 130, height: 130, borderRadius: 28, background: "rgba(1,138,190,.18)", border: "1px solid rgba(151,202,219,.22)", display: "flex", alignItems: "center", justifyContent: "center", color: P.sky, transform: i === current ? "translateX(0)" : "translateX(20px)", transition: "transform 0.6s ease", transitionDelay: "0.1s" }}>
+          <div style={{ position: "relative", zIndex: 1, flexShrink: 0, width: 130, height: 130, borderRadius: 28, background: "rgba(40, 43, 74, .18)", border: "1px solid rgba(212, 210, 195, .22)", display: "flex", alignItems: "center", justifyContent: "center", color: P.sky, transform: i === current ? "translateX(0)" : "translateX(20px)", transition: "transform 0.6s ease", transitionDelay: "0.1s" }}>
             {s.icon}
-            <div style={{ position: "absolute", top: -12, right: -16, background: P.white, borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 16px rgba(0,27,72,.12)", display: "flex", alignItems: "center", gap: 5 }}>
+            <div style={{ position: "absolute", top: -12, right: -16, background: P.white, borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 16px rgba(40, 43, 74, .12)", display: "flex", alignItems: "center", gap: 5 }}>
               <span style={{ width: 8, height: 8, borderRadius: "50%", background: P.green, display: "inline-block" }} />
               <span style={{ fontSize: 11, color: P.navy, fontWeight: 700 }}>{s.feature1}</span>
             </div>
-            <div style={{ position: "absolute", bottom: -12, left: -16, background: P.white, borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 16px rgba(0,27,72,.12)", display: "flex", alignItems: "center", gap: 5 }}>
+            <div style={{ position: "absolute", bottom: -12, left: -16, background: P.white, borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 16px rgba(40, 43, 74, .12)", display: "flex", alignItems: "center", gap: 5 }}>
               {Icon.star}<span style={{ fontSize: 11, color: P.navy, fontWeight: 700 }}>{s.feature2}</span>
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function DashboardHome({ setTab, viewProduct, addToCart, wishlist
           { label: "Customers", val: counts[3] > 999 ? Math.floor(counts[3] / 1000) + "k+" : counts[3], suf: "" },
         ].map((s, i) => (
           <div key={i} className="card fadeUp" style={{ background: P.white, border: `1px solid ${P.mist}`, borderRadius: 16, padding: "16px 18px", display: "flex", alignItems: "center", gap: 14, animationDelay: `${i * .07}s` }}>
-            <div style={{ width: 42, height: 42, borderRadius: 12, background: `linear-gradient(135deg,${P.royal},${P.ocean})`, display: "flex", alignItems: "center", justifyContent: "center", color: P.white, flexShrink: 0, boxShadow: "0 4px 12px rgba(1,138,190,.28)" }}>
+            <div style={{ width: 42, height: 42, borderRadius: 12, background: `linear-gradient(135deg,${P.royal},${P.ocean})`, display: "flex", alignItems: "center", justifyContent: "center", color: P.white, flexShrink: 0, boxShadow: "0 4px 12px rgba(40, 43, 74, .28)" }}>
               {[Icon.phone, Icon.shield, Icon.truck, Icon.map][i]}
             </div>
             <div>
@@ -199,8 +199,8 @@ export default function DashboardHome({ setTab, viewProduct, addToCart, wishlist
       {/* Promo Banners */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         {[
-          { title: "New Arrivals",     sub: "Latest smartphones just dropped",  btn: "Explore →",   bg: `linear-gradient(135deg,${P.navy},${P.royal})`,  icon: Icon.phone,  txtCol: P.sky,                    btnStyle: { border: "1px solid rgba(151,202,219,.4)", color: P.sky } },
-          { title: "Accessories Sale", sub: "Up to 40% off on all accessories", btn: "Shop Now →", bg: `linear-gradient(135deg,${P.royal},${P.ocean})`, icon: Icon.camera, txtCol: "rgba(214,232,238,.8)",    btnStyle: { background: "rgba(255,255,255,.18)", border: "1px solid rgba(255,255,255,.3)", color: P.white } },
+          { title: "New Arrivals",     sub: "Latest smartphones just dropped",  btn: "Explore →",   bg: `linear-gradient(135deg,${P.navy},${P.royal})`,  icon: Icon.phone,  txtCol: P.sky,                    btnStyle: { border: "1px solid rgba(212, 210, 195, .4)", color: P.sky } },
+          { title: "Accessories Sale", sub: "Up to 40% off on all accessories", btn: "Shop Now →", bg: `linear-gradient(135deg,${P.royal},${P.ocean})`, icon: Icon.camera, txtCol: "rgba(229, 227, 213, .8)",    btnStyle: { background: "rgba(255,255,255,.18)", border: "1px solid rgba(255,255,255,.3)", color: P.white } },
         ].map((b, i) => (
           <div key={i} className="btn" onClick={() => setTab("products")} style={{ background: b.bg, borderRadius: 20, padding: "24px 28px", display: "flex", alignItems: "center", gap: 20, overflow: "hidden", position: "relative", cursor: "pointer" }}>
             <div className="float" style={{ position: "absolute", top: -30, right: -10, width: 140, height: 140, borderRadius: "50%", background: "rgba(255,255,255,.06)", filter: "blur(30px)", pointerEvents: "none" }} />

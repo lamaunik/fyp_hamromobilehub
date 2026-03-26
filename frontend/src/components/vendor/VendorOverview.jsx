@@ -2,16 +2,17 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 const P = {
-  navy:    "#001B48",
-  royal:   "#02457A",
-  ocean:   "#018ABE",
-  sky:     "#97CADB",
-  mist:    "#D6E8EE",
-  mistBg:  "#f0f6f9",
-  white:   "#ffffff",
-  muted:   "#6b99b5",
-  border:  "#D6E8EE",
-  font:    "'Helvetica Neue', Helvetica, Arial, 'Segoe UI', sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const QUICK = [
@@ -100,7 +101,7 @@ export default function VendorOverview({ setTab }) {
         background: `linear-gradient(135deg, ${P.royal} 0%, ${P.ocean} 100%)`,
         borderRadius: 20, padding: "28px 32px",
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        boxShadow: "0 4px 24px rgba(1,138,190,0.2)",
+        boxShadow: "0 4px 24px rgba(40, 43, 74, 0.2)",
       }}>
         <div>
           <div style={{
@@ -116,7 +117,7 @@ export default function VendorOverview({ setTab }) {
           <h2 style={{ color: P.white, fontWeight: 900, fontSize: 28, margin: "0 0 8px", fontFamily: P.font }}>
             Hey, {user?.name?.split(" ")[0] || "Vendor"}
           </h2>
-          <p style={{ color: "rgba(214,232,238,0.85)", fontSize: 14, maxWidth: 420, margin: 0, fontFamily: P.font, lineHeight: 1.6 }}>
+          <p style={{ color: "rgba(229, 227, 213, 0.85)", fontSize: 14, maxWidth: 420, margin: 0, fontFamily: P.font, lineHeight: 1.6 }}>
             Manage your listings, track orders and grow your business on HamroHub.
           </p>
         </div>
@@ -137,21 +138,21 @@ export default function VendorOverview({ setTab }) {
           <div key={i} style={{
             background: P.white, border: `1px solid ${P.border}`,
             borderRadius: 16, padding: "20px 22px", cursor: "pointer",
-            boxShadow: "0 2px 12px rgba(0,27,72,0.06)",
+            boxShadow: "0 2px 12px rgba(40, 43, 74, 0.06)",
             transition: "all 0.2s",
           }}
             onClick={() => {
                 if (s.label === "Total Listings") setTab("listings");
                 else if (s.label === "Active Sales") setTab("orders");
             }}
-            onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 28px rgba(1,138,190,0.15)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
-            onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,27,72,0.06)"; e.currentTarget.style.transform = "translateY(0)"; }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 28px rgba(40, 43, 74, 0.15)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 2px 12px rgba(40, 43, 74, 0.06)"; e.currentTarget.style.transform = "translateY(0)"; }}
           >
             <div style={{
               width: 42, height: 42, borderRadius: 12,
               background: `linear-gradient(135deg, ${P.royal}, ${P.ocean})`,
               display: "flex", alignItems: "center", justifyContent: "center",
-              marginBottom: 16, boxShadow: "0 4px 12px rgba(1,138,190,0.25)",
+              marginBottom: 16, boxShadow: "0 4px 12px rgba(40, 43, 74, 0.25)",
             }}>
               {s.icon}
             </div>
@@ -166,7 +167,7 @@ export default function VendorOverview({ setTab }) {
       <div style={{
         background: P.white, border: `1px solid ${P.border}`,
         borderRadius: 16, padding: "22px 24px",
-        boxShadow: "0 2px 12px rgba(0,27,72,0.06)",
+        boxShadow: "0 2px 12px rgba(40, 43, 74, 0.06)",
       }}>
         <h3 style={{ color: P.navy, fontWeight: 800, fontSize: 16, margin: "0 0 16px", fontFamily: P.font }}>Quick Actions</h3>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
@@ -185,7 +186,7 @@ export default function VendorOverview({ setTab }) {
                   else if (q.label === "Check Orders") setTab("orders");
                   else if (q.label === "Edit Profile") setTab("settings");
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(1,138,190,0.08)"; e.currentTarget.style.borderColor = P.sky; e.currentTarget.style.color = P.navy; e.currentTarget.style.transform = "translateY(-2px)"; }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(40, 43, 74, 0.08)"; e.currentTarget.style.borderColor = P.sky; e.currentTarget.style.color = P.navy; e.currentTarget.style.transform = "translateY(-2px)"; }}
               onMouseLeave={e => { e.currentTarget.style.background = P.mistBg; e.currentTarget.style.borderColor = P.border; e.currentTarget.style.color = P.royal; e.currentTarget.style.transform = "translateY(0)"; }}
             >
               {q.label}
@@ -199,11 +200,11 @@ export default function VendorOverview({ setTab }) {
           <div style={{
             background: P.white, border: `1px dashed ${P.sky}`,
             borderRadius: 16, padding: "36px 24px", textAlign: "center",
-            boxShadow: "0 2px 12px rgba(0,27,72,0.04)",
+            boxShadow: "0 2px 12px rgba(40, 43, 74, 0.04)",
           }}>
             <div style={{
               width: 56, height: 56, borderRadius: 16,
-              background: "rgba(1,138,190,0.08)", border: `1px solid ${P.sky}`,
+              background: "rgba(40, 43, 74, 0.08)", border: `1px solid ${P.sky}`,
               display: "flex", alignItems: "center", justifyContent: "center",
               margin: "0 auto 16px",
             }}>
@@ -220,12 +221,12 @@ export default function VendorOverview({ setTab }) {
               background: `linear-gradient(135deg, ${P.royal}, ${P.ocean})`,
               color: P.white, fontWeight: 700, fontSize: 14, fontFamily: P.font,
               padding: "11px 28px", borderRadius: 999, border: "none", cursor: "pointer",
-              boxShadow: "0 4px 16px rgba(1,138,190,0.3)",
+              boxShadow: "0 4px 16px rgba(40, 43, 74, 0.3)",
               transition: "transform 0.15s, box-shadow 0.15s",
             }}
               onClick={() => setTab("add-product")}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(1,138,190,0.4)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(1,138,190,0.3)"; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(40, 43, 74, 0.4)"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(40, 43, 74, 0.3)"; }}
             >
               + Add Your First Product
               <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">

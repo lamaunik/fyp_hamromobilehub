@@ -10,8 +10,8 @@ function ConfirmModal({ open, type, onConfirm, onCancel: onClose, loading }) {
 
   const isDelete = type === "delete";
   const accentColor = isDelete ? P.royal : P.ocean;
-  const accentBg    = isDelete ? "rgba(2,69,122,.08)"  : "rgba(1,138,190,.08)";
-  const accentBorder= isDelete ? "rgba(2,69,122,.25)"  : "rgba(1,138,190,.25)";
+  const accentBg    = isDelete ? "rgba(40, 43, 74, .08)"  : "rgba(40, 43, 74, .08)";
+  const accentBorder= isDelete ? "rgba(40, 43, 74, .25)"  : "rgba(40, 43, 74, .25)";
 
   const icon = isDelete ? (
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={accentColor} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -47,7 +47,7 @@ function ConfirmModal({ open, type, onConfirm, onCancel: onClose, loading }) {
           borderRadius: 24,
           padding: "36px 32px 28px",
           width: "100%", maxWidth: 420,
-          boxShadow: "0 24px 64px rgba(0,27,72,0.22)",
+          boxShadow: "0 24px 64px rgba(40, 43, 74, 0.22)",
           animation: "scaleIn .22s cubic-bezier(.4,0,.2,1) both",
           display: "flex", flexDirection: "column", alignItems: "center",
           textAlign: "center",
@@ -101,7 +101,7 @@ function ConfirmModal({ open, type, onConfirm, onCancel: onClose, loading }) {
               fontFamily: P.font, transition: "all .18s",
               display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
               opacity: loading ? 0.75 : 1,
-              boxShadow: loading ? "none" : "0 4px 14px rgba(1,138,190,.3)",
+              boxShadow: loading ? "none" : "0 4px 14px rgba(40, 43, 74, .3)",
             }}
           >
             {loading && (
@@ -216,7 +216,7 @@ export default function DashboardOrders({ setTab, viewProduct, orders: initialOr
                 border: active ? `1.5px solid ${P.ocean}` : `1.5px solid ${P.mist}`, 
                 background: active ? `linear-gradient(135deg,${P.royal},${P.ocean})` : P.white, 
                 color: active ? P.white : P.muted, whiteSpace: "nowrap", fontFamily: P.font, 
-                transition: "all .2s", boxShadow: active ? "0 4px 14px rgba(1,138,190,.25)" : "none" 
+                transition: "all .2s", boxShadow: active ? "0 4px 14px rgba(40, 43, 74, .25)" : "none" 
               }}
               className="btn"
             >
@@ -251,7 +251,7 @@ export default function DashboardOrders({ setTab, viewProduct, orders: initialOr
               key={order._id} 
               style={{ 
                 background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 20, overflow: "hidden", 
-                boxShadow: "0 4px 16px rgba(0,27,72,.04)", animationName: "fadeUp", animationDuration: ".4s", 
+                boxShadow: "0 4px 16px rgba(40, 43, 74, .04)", animationName: "fadeUp", animationDuration: ".4s", 
                 animationTimingFunction: "cubic-bezier(.4,0,.2,1)", animationFillMode: "both", 
                 animationDelay: `${i * .05}s`, transition: "border-color .2s" 
               }}
@@ -269,7 +269,7 @@ export default function DashboardOrders({ setTab, viewProduct, orders: initialOr
                     <ProductThumb cat="placeholder" size={32} />
                   )}
                   {hasMore && (
-                    <div style={{ position: "absolute", bottom: 0, right: 0, background: "rgba(0,27,72,.8)", color: P.white, fontSize: 10, fontWeight: 800, padding: "2px 6px", borderTopLeftRadius: 8 }}>
+                    <div style={{ position: "absolute", bottom: 0, right: 0, background: "rgba(40, 43, 74, .8)", color: P.white, fontSize: 10, fontWeight: 800, padding: "2px 6px", borderTopLeftRadius: 8 }}>
                       +{items.length - 1}
                     </div>
                   )}
@@ -364,7 +364,7 @@ export default function DashboardOrders({ setTab, viewProduct, orders: initialOr
                         key={idx} 
                         style={{ display: "flex", alignItems: "center", gap: 16, padding: "12px 16px", background: P.white, borderRadius: 14, border: `1.5px solid ${P.mist}`, cursor: "pointer", transition: "all .15s" }}
                         onClick={() => viewProduct(item.product)}
-                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = P.sky; e.currentTarget.style.boxShadow = "0 4px 12px rgba(1,138,190,.05)"; }}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = P.sky; e.currentTarget.style.boxShadow = "0 4px 12px rgba(40, 43, 74, .05)"; }}
                         onMouseLeave={(e) => { e.currentTarget.style.borderColor = P.mist; e.currentTarget.style.boxShadow = "none"; }}
                       >
                         <div style={{ width: 56, height: 56, borderRadius: 10, background: P.mistBg, display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${P.mist}`, flexShrink: 0, color: P.sky, overflow: "hidden" }}>

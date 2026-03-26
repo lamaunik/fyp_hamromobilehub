@@ -5,11 +5,17 @@ import { api } from "../utils/api";
 import { socket } from "../utils/socket";
 
 const P = {
-  navy:"#001B48", royal:"#02457A", ocean:"#018ABE",
-  sky:"#97CADB", mist:"#D6E8EE", white:"#ffffff",
-  muted:"#6b99b5", mistBg:"#f0f6f9",
-  font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
-  purple:"#7c3aed", purpleLight:"rgba(124,58,237,0.1)",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 export default function MessagesPage() {
@@ -171,9 +177,13 @@ export default function MessagesPage() {
                    style={{ padding:"16px 20px", borderBottom:`1px solid ${P.mist}`, cursor:"pointer", background: isActive ? P.mistBg : P.white, transition:"background 0.2s" }}
                    onMouseEnter={e => { if(!isActive) e.currentTarget.style.background = "#fafafa"; }}
                    onMouseLeave={e => { if(!isActive) e.currentTarget.style.background = P.white; }}>
-                   <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                     <div style={{ width:40, height:40, borderRadius:"50%", background:P.purpleLight, color:P.purple, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, fontSize:16 }}>
-                       {other?.name?.charAt(0).toUpperCase() || "U"}
+                   <div style={{ display:"flex", alignItems:"center", gap:14 }}>
+                     <div style={{ width:42, height:42, borderRadius:"50%", background:`linear-gradient(135deg, ${P.royal}, ${P.ocean})`, color:P.white, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, fontSize:16, boxShadow:"0 2px 8px rgba(40, 43, 74, 0.3)", flexShrink:0, overflow:"hidden" }}>
+                       {other?.profilePicture ? (
+                         <img src={other.profilePicture.startsWith("http") ? other.profilePicture : `http://localhost:5000${other.profilePicture}`} alt={other.name} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                       ) : (
+                         other?.name?.charAt(0).toUpperCase() || "U"
+                       )}
                      </div>
                      <div style={{ flex:1, overflow:"hidden" }}>
                        <div style={{ fontWeight:700, color:P.navy, fontSize:15, marginBottom:4, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
@@ -196,9 +206,13 @@ export default function MessagesPage() {
         {activeChat ? (
           <>
             {/* Chat Header */}
-            <div style={{ padding:"20px 24px", background:P.white, borderBottom:`1px solid ${P.mist}`, display:"flex", alignItems:"center", gap:12 }}>
-              <div style={{ width:40, height:40, borderRadius:"50%", background:P.purpleLight, color:P.purple, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, fontSize:16 }}>
-                 {getOtherParticipant(activeChat)?.name?.charAt(0).toUpperCase() || "U"}
+            <div style={{ padding:"16px 24px", background:P.white, borderBottom:`1px solid ${P.mist}`, display:"flex", alignItems:"center", gap:14, boxShadow:"0 2px 10px rgba(40, 43, 74, 0.04)", zIndex:10 }}>
+              <div style={{ width:42, height:42, borderRadius:"50%", background:`linear-gradient(135deg, ${P.royal}, ${P.ocean})`, color:P.white, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, fontSize:16, boxShadow:"0 2px 8px rgba(40, 43, 74, 0.3)", overflow:"hidden" }}>
+                 {getOtherParticipant(activeChat)?.profilePicture ? (
+                   <img src={getOtherParticipant(activeChat).profilePicture.startsWith("http") ? getOtherParticipant(activeChat).profilePicture : `http://localhost:5000${getOtherParticipant(activeChat).profilePicture}`} alt="Avatar" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                 ) : (
+                   getOtherParticipant(activeChat)?.name?.charAt(0).toUpperCase() || "U"
+                 )}
               </div>
               <h3 style={{ margin:0, color:P.navy, fontSize:17, fontWeight:800 }}>
                  {getOtherParticipant(activeChat)?.name || "Unknown User"}
@@ -206,14 +220,28 @@ export default function MessagesPage() {
             </div>
 
             {/* Messages List */}
-            <div style={{ flex:1, padding:"24px", overflowY:"auto", display:"flex", flexDirection:"column", gap:12 }}>
+            <div style={{ flex:1, padding:"24px", overflowY:"auto", display:"flex", flexDirection:"column", gap:16, background:"#f4f7f9" }}>
               {messages.map((m, i) => {
-                const isMine = m.sender === user._id;
+                const isMine = m.sender === user?._id || m.sender === user?.id;
                 return (
-                  <div key={m._id || i} style={{ alignSelf: isMine ? "flex-end" : "flex-start", maxWidth:"70%" }}>
-                    <div style={{ background: isMine ? P.purple : P.white, color: isMine ? P.white : P.navy, padding:"12px 16px", borderRadius:"16px", borderBottomRightRadius: isMine ? 4 : 16, borderBottomLeftRadius: !isMine ? 4 : 16, boxShadow:"0 2px 8px rgba(0,0,0,0.05)", fontSize:14, lineHeight:1.5, border: isMine ? "none" : `1px solid ${P.mist}` }}>
+                  <div key={m._id || i} style={{ alignSelf: isMine ? "flex-end" : "flex-start", maxWidth:"75%", display:"flex", flexDirection:"column", alignItems: isMine ? "flex-end" : "flex-start" }}>
+                    <div style={{ 
+                       background: isMine ? `linear-gradient(135deg, ${P.ocean}, ${P.royal})` : P.white, 
+                       color: isMine ? P.white : P.navy, 
+                       padding:"12px 18px", 
+                       borderRadius:"18px", 
+                       borderBottomRightRadius: isMine ? 4 : 18, 
+                       borderBottomLeftRadius: !isMine ? 4 : 18, 
+                       boxShadow: isMine ? "0 4px 14px rgba(40, 43, 74, 0.25)" : "0 2px 10px rgba(40, 43, 74, 0.06)", 
+                       fontSize:14, 
+                       lineHeight:1.5, 
+                       border: isMine ? "none" : `1.5px solid ${P.mist}` 
+                    }}>
                       {m.text}
                     </div>
+                    <span style={{ fontSize: 10, color: P.muted, marginTop: 4, padding: "0 4px", fontWeight: 600 }}>
+                       {m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Just now"}
+                    </span>
                   </div>
                 );
               })}
@@ -233,8 +261,8 @@ export default function MessagesPage() {
                   onBlur={e => e.target.style.borderColor = P.mist}
                 />
                 <button type="submit" disabled={!newMessage.trim()}
-                  style={{ width:50, height:50, borderRadius:"50%", background:newMessage.trim() ? `linear-gradient(135deg,${P.purple},#a855f7)` : P.mist, border:"none", display:"flex", alignItems:"center", justifyContent:"center", color:P.white, cursor: newMessage.trim() ? "pointer" : "default", opacity: newMessage.trim() ? 1 : 0.7, transition:"all 0.2s" }}>
-                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ transform:"translateX(-1px) translateY(1px)" }}><path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                  style={{ width:50, height:50, borderRadius:"50%", background:newMessage.trim() ? `linear-gradient(135deg,${P.ocean},${P.royal})` : P.mist, border:"none", display:"flex", alignItems:"center", justifyContent:"center", color:P.white, cursor: newMessage.trim() ? "pointer" : "default", opacity: newMessage.trim() ? 1 : 0.7, transition:"all 0.2s", boxShadow: newMessage.trim() ? "0 4px 12px rgba(40, 43, 74, 0.3)" : "none" }}>
+                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ transform:"translateX(-1px) translateY(1px)" }}><path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                 </button>
               </form>
             </div>

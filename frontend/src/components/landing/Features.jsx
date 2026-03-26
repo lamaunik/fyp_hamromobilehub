@@ -1,7 +1,15 @@
 const P = {
-  navy:"#001B48",royal:"#02457A",ocean:"#018ABE",
-  sky:"#97CADB",mist:"#D6E8EE",white:"#ffffff",
-  muted:"#6b99b5",mistBg:"#f0f6f9",font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const features = [
@@ -18,7 +26,7 @@ export default function Features() {
     <section id="products" style={{ background:P.white,padding:"96px 24px",fontFamily:P.font }}>
       <div style={{ maxWidth:1280,margin:"0 auto" }}>
         <div style={{ textAlign:"center",marginBottom:64 }}>
-          <span style={{ display:"inline-block",background:`rgba(1,138,190,0.08)`,color:P.ocean,fontSize:11,fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",padding:"6px 16px",borderRadius:999,marginBottom:16,border:`1px solid ${P.sky}` }}>
+          <span style={{ display:"inline-block",background:`rgba(40, 43, 74, 0.08)`,color:P.ocean,fontSize:11,fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",padding:"6px 16px",borderRadius:999,marginBottom:16,border:`1px solid ${P.sky}` }}>
             Integrated Solutions
           </span>
           <h2 style={{ fontSize:42,fontWeight:900,color:P.navy,margin:"0 0 16px",letterSpacing:"-0.02em" }}>
@@ -32,11 +40,11 @@ export default function Features() {
 
         <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:24 }}>
           {features.map((f,i)=>(
-            <div key={i} style={{ background:P.white,border:`1px solid ${P.mist}`,borderRadius:20,padding:28,cursor:"pointer",transition:"all 0.2s",boxShadow:"0 2px 12px rgba(0,27,72,0.05)",position:"relative",overflow:"hidden" }}
-              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 16px 48px rgba(1,138,190,0.14)";e.currentTarget.style.borderColor=P.sky; }}
-              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 2px 12px rgba(0,27,72,0.05)";e.currentTarget.style.borderColor=P.mist; }}
+            <div key={i} style={{ background:P.white,border:`1px solid ${P.mist}`,borderRadius:20,padding:28,cursor:"pointer",transition:"all 0.2s",boxShadow:"0 2px 12px rgba(40, 43, 74, 0.05)",position:"relative",overflow:"hidden" }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 16px 48px rgba(40, 43, 74, 0.14)";e.currentTarget.style.borderColor=P.sky; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 2px 12px rgba(40, 43, 74, 0.05)";e.currentTarget.style.borderColor=P.mist; }}
             >
-              <div style={{ width:52,height:52,borderRadius:16,background:`linear-gradient(135deg,${P.royal},${P.ocean})`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20,boxShadow:"0 6px 18px rgba(1,138,190,0.28)" }}>
+              <div style={{ width:52,height:52,borderRadius:16,background:`linear-gradient(135deg,${P.royal},${P.ocean})`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20,boxShadow:"0 6px 18px rgba(40, 43, 74, 0.28)" }}>
                 {f.icon}
               </div>
               <h3 style={{ color:P.navy,fontWeight:800,fontSize:17,margin:"0 0 8px" }}>{f.title}</h3>
@@ -45,7 +53,7 @@ export default function Features() {
                 Learn more
                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
               </div>
-              <div style={{ position:"absolute",bottom:-16,right:-16,width:80,height:80,borderRadius:"50%",background:"rgba(1,138,190,0.06)" }}/>
+              <div style={{ position:"absolute",bottom:-16,right:-16,width:80,height:80,borderRadius:"50%",background:"rgba(40, 43, 74, 0.06)" }}/>
             </div>
           ))}
         </div>

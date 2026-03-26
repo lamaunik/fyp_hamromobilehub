@@ -1,17 +1,17 @@
 import { useState } from "react";
 
 const P = {
-  navy:    "#001B48",
-  royal:   "#02457A",
-  ocean:   "#018ABE",
-  sky:     "#97CADB",
-  mist:    "#D6E8EE",
-  mistBg:  "#f0f6f9",
-  white:   "#ffffff",
-  highlight: "#f59e0b", // Gold/yellow for stars
-  muted:   "#6b99b5",
-  border:  "#D6E8EE",
-  font:    "'Helvetica Neue', Helvetica, Arial, 'Segoe UI', sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const MOCK_REVIEWS = [
@@ -80,7 +80,7 @@ export default function VendorReviews() {
       {/* Summary Card */}
       <div style={{
         background: `linear-gradient(135deg, ${P.royal} 0%, ${P.ocean} 100%)`, borderRadius: 16, padding: 32,
-        display: "flex", alignItems: "center", gap: 40, color: P.white, boxShadow: "0 4px 24px rgba(1,138,190,0.2)"
+        display: "flex", alignItems: "center", gap: 40, color: P.white, boxShadow: "0 4px 24px rgba(40, 43, 74, 0.2)"
       }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ fontSize: 48, fontWeight: 900, margin: "0 0 8px", lineHeight: 1 }}>{averageRating}</p>
@@ -108,7 +108,7 @@ export default function VendorReviews() {
       </div>
 
       {/* Reviews List */}
-      <div style={{ background: P.white, border: `1px solid ${P.border}`, borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(0,27,72,0.04)" }}>
+      <div style={{ background: P.white, border: `1px solid ${P.border}`, borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(40, 43, 74, 0.04)" }}>
         {/* Filter Bar */}
         <div style={{ padding: "16px 24px", borderBottom: `1px solid ${P.mist}`, display: "flex", gap: 8 }}>
           {["All Reviews", "5 Stars", "4 Stars", "3 Stars & Below"].map((f, i) => (
@@ -149,7 +149,7 @@ export default function VendorReviews() {
               <p style={{ color: P.navy, fontSize: 14, lineHeight: 1.6, margin: "0 0 16px" }}>
                 "{review.comment}"
               </p>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(151,202,219,0.15)", padding: "4px 12px", borderRadius: 6 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(212, 210, 195, 0.15)", padding: "4px 12px", borderRadius: 6 }}>
                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke={P.ocean} strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>

@@ -1,7 +1,15 @@
 const P = {
-  navy:"#001B48",royal:"#02457A",ocean:"#018ABE",
-  sky:"#97CADB",mist:"#D6E8EE",white:"#ffffff",
-  muted:"#6b99b5",mistBg:"#f0f6f9",font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const team = [
@@ -16,7 +24,7 @@ export default function Team() {
     <section id="vendors" style={{ background:P.mistBg,padding:"96px 24px",fontFamily:P.font }}>
       <div style={{ maxWidth:1280,margin:"0 auto" }}>
         <div style={{ textAlign:"center",marginBottom:64 }}>
-          <span style={{ display:"inline-block",background:"rgba(1,138,190,0.08)",color:P.ocean,fontSize:11,fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",padding:"6px 16px",borderRadius:999,border:`1px solid ${P.sky}`,marginBottom:16 }}>
+          <span style={{ display:"inline-block",background:"rgba(40, 43, 74, 0.08)",color:P.ocean,fontSize:11,fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",padding:"6px 16px",borderRadius:999,border:`1px solid ${P.sky}`,marginBottom:16 }}>
             Meet Our Team
           </span>
           <h2 style={{ fontSize:42,fontWeight:900,color:P.navy,margin:"0 0 16px",letterSpacing:"-0.02em" }}>
@@ -28,9 +36,9 @@ export default function Team() {
 
         <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:24 }}>
           {team.map((member,i)=>(
-            <div key={i} style={{ background:P.white,borderRadius:20,overflow:"hidden",border:`1px solid ${P.mist}`,transition:"all 0.2s",boxShadow:"0 2px 12px rgba(0,27,72,0.06)" }}
-              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 16px 48px rgba(1,138,190,0.14)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 2px 12px rgba(0,27,72,0.06)"; }}
+            <div key={i} style={{ background:P.white,borderRadius:20,overflow:"hidden",border:`1px solid ${P.mist}`,transition:"all 0.2s",boxShadow:"0 2px 12px rgba(40, 43, 74, 0.06)" }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 16px 48px rgba(40, 43, 74, 0.14)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 2px 12px rgba(40, 43, 74, 0.06)"; }}
             >
               <div style={{ height:160,background:`linear-gradient(135deg,${P.royal},${P.ocean})`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative",overflow:"hidden" }}>
                 <div style={{ position:"absolute",inset:0,opacity:0.15,backgroundImage:"radial-gradient(circle at 70% 20%, white 1px, transparent 1px)",backgroundSize:"20px 20px" }}/>

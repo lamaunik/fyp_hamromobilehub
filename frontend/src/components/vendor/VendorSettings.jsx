@@ -2,11 +2,17 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 const P = {
-  navy:   "#001B48", royal:  "#02457A", ocean:  "#018ABE",
-  sky:    "#97CADB", mist:   "#D6E8EE", white:  "#ffffff",
-  muted:  "#6b99b5", mistBg: "#f0f6f9", border: "#D6E8EE",
-  green:  "#22c55e", red:    "#ef4444",
-  font:   "'Helvetica Neue', Helvetica, Arial, 'Segoe UI', sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 function Toggle({ label, description, checked, onChange }) {
@@ -143,11 +149,11 @@ export default function VendorSettings() {
 
       {/* ── Hero Banner ── */}
       <div style={{ background:`linear-gradient(135deg,${P.navy},${P.royal})`, borderRadius:22, padding:"28px 32px", display:"flex", alignItems:"center", gap:24, marginBottom:28, position:"relative", overflow:"hidden" }}>
-        <div style={{ position:"absolute", top:-30, right:-10, width:160, height:160, borderRadius:"50%", background:"rgba(1,138,190,.15)", filter:"blur(40px)", pointerEvents:"none" }} />
+        <div style={{ position:"absolute", top:-30, right:-10, width:160, height:160, borderRadius:"50%", background:"rgba(40, 43, 74, .15)", filter:"blur(40px)", pointerEvents:"none" }} />
 
         {/* Avatar */}
         <div style={{ position:"relative", flexShrink:0 }}>
-          <div style={{ width:72, height:72, borderRadius:"50%", background:`linear-gradient(135deg,${P.ocean},${P.sky})`, display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 6px 20px rgba(1,138,190,.4)", border:"3px solid rgba(255,255,255,.3)", overflow:"hidden" }}>
+          <div style={{ width:72, height:72, borderRadius:"50%", background:`linear-gradient(135deg,${P.ocean},${P.sky})`, display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 6px 20px rgba(40, 43, 74, .4)", border:"3px solid rgba(255,255,255,.3)", overflow:"hidden" }}>
             {form.profilePicture ? (
               <img src={form.profilePicture} alt="Avatar" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
             ) : (
@@ -162,9 +168,9 @@ export default function VendorSettings() {
         {/* Info */}
         <div style={{ position:"relative" }}>
           <h2 style={{ color:P.white, fontWeight:900, fontSize:22, margin:"0 0 4px" }}>{form.name || "Vendor"}</h2>
-          <p style={{ color:"rgba(151,202,219,.8)", fontSize:14, margin:"0 0 12px" }}>{form.email}</p>
+          <p style={{ color:"rgba(212, 210, 195, .8)", fontSize:14, margin:"0 0 12px" }}>{form.email}</p>
           <div style={{ display:"flex", gap:8 }}>
-            <span style={{ background:"rgba(1,138,190,.25)", border:"1px solid rgba(1,138,190,.4)", color:P.sky, fontSize:11, fontWeight:700, padding:"3px 12px", borderRadius:999 }}>Vendor</span>
+            <span style={{ background:"rgba(40, 43, 74, .25)", border:"1px solid rgba(40, 43, 74, .4)", color:P.sky, fontSize:11, fontWeight:700, padding:"3px 12px", borderRadius:999 }}>Vendor</span>
             <span style={{ background:"rgba(34,197,94,.2)", border:"1px solid rgba(34,197,94,.3)", color:"#86efac", fontSize:11, fontWeight:700, padding:"3px 12px", borderRadius:999 }}>Verified ✓</span>
           </div>
         </div>
@@ -174,7 +180,7 @@ export default function VendorSettings() {
           {statCards.map((s, i) => (
             <div key={i} style={{ background:"rgba(255,255,255,.1)", borderRadius:12, padding:"10px 16px", textAlign:"center", border:"1px solid rgba(255,255,255,.1)" }}>
               <p style={{ color:P.white, fontWeight:900, fontSize:18, margin:0 }}>{s.v}</p>
-              <p style={{ color:"rgba(151,202,219,.7)", fontSize:11, margin:"2px 0 0" }}>{s.l}</p>
+              <p style={{ color:"rgba(212, 210, 195, .7)", fontSize:11, margin:"2px 0 0" }}>{s.l}</p>
             </div>
           ))}
         </div>
@@ -183,7 +189,7 @@ export default function VendorSettings() {
       {/* ── Tab pills ── */}
       <div style={{ display:"flex", gap:4, marginBottom:24, background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:14, padding:5, width:"fit-content" }}>
         {TABS.map(t => (
-          <button key={t.id} onClick={() => { setTab(t.id); setEditing(false); }} style={{ padding:"9px 20px", borderRadius:10, fontSize:13, fontWeight:700, cursor:"pointer", border:"none", fontFamily:P.font, background: tab===t.id ? `linear-gradient(135deg,${P.royal},${P.ocean})` : P.white, color: tab===t.id ? P.white : P.muted, boxShadow: tab===t.id ? "0 4px 14px rgba(1,138,190,.25)" : "none", transition:"all .18s" }}>{t.l}</button>
+          <button key={t.id} onClick={() => { setTab(t.id); setEditing(false); }} style={{ padding:"9px 20px", borderRadius:10, fontSize:13, fontWeight:700, cursor:"pointer", border:"none", fontFamily:P.font, background: tab===t.id ? `linear-gradient(135deg,${P.royal},${P.ocean})` : P.white, color: tab===t.id ? P.white : P.muted, boxShadow: tab===t.id ? "0 4px 14px rgba(40, 43, 74, .25)" : "none", transition:"all .18s" }}>{t.l}</button>
         ))}
       </div>
 
@@ -216,7 +222,7 @@ export default function VendorSettings() {
                 <p style={{ fontSize:11, fontWeight:800, color:P.muted, letterSpacing:".1em", textTransform:"uppercase", margin:"0 0 8px" }}>{f.l}</p>
                 <input type={f.type} value={form[f.k]} onChange={e => setForm(v => ({ ...v, [f.k]: e.target.value }))} disabled={!editing}
                   style={inputStyle(editing)}
-                  onFocus={e => { if(editing){ e.target.style.borderColor=P.sky; e.target.style.boxShadow="0 0 0 3px rgba(151,202,219,.2)"; }}}
+                  onFocus={e => { if(editing){ e.target.style.borderColor=P.sky; e.target.style.boxShadow="0 0 0 3px rgba(212, 210, 195, .2)"; }}}
                   onBlur={e  => { e.target.style.borderColor=P.mist; e.target.style.boxShadow="none"; }}
                 />
               </div>
@@ -249,7 +255,7 @@ export default function VendorSettings() {
                 <p style={{ fontSize:11, fontWeight:800, color:P.muted, letterSpacing:".1em", textTransform:"uppercase", margin:"0 0 8px" }}>{f.l}</p>
                 <input type={f.type} value={form[f.k] || ""} onChange={e => setForm(v => ({ ...v, [f.k]: e.target.value }))}
                   placeholder={f.ph} style={inputStyle(true)}
-                  onFocus={e => { e.target.style.borderColor=P.sky; e.target.style.boxShadow="0 0 0 3px rgba(151,202,219,.2)"; }}
+                  onFocus={e => { e.target.style.borderColor=P.sky; e.target.style.boxShadow="0 0 0 3px rgba(212, 210, 195, .2)"; }}
                   onBlur={e  => { e.target.style.borderColor=P.mist; e.target.style.boxShadow="none"; }}
                 />
               </div>
@@ -262,7 +268,7 @@ export default function VendorSettings() {
             </div>
           </div>
           <div style={{ marginTop:24, display:"flex", justifyContent:"flex-end" }}>
-            <button onClick={saveInfo} style={{ padding:"11px 28px", background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontSize:14, fontWeight:700, borderRadius:12, border:"none", cursor:"pointer", fontFamily:P.font, boxShadow:"0 4px 16px rgba(1,138,190,.3)" }}>
+            <button onClick={saveInfo} style={{ padding:"11px 28px", background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontSize:14, fontWeight:700, borderRadius:12, border:"none", cursor:"pointer", fontFamily:P.font, boxShadow:"0 4px 16px rgba(40, 43, 74, .3)" }}>
               Save Store Settings
             </button>
           </div>
@@ -279,7 +285,7 @@ export default function VendorSettings() {
                 <p style={{ fontSize:11, fontWeight:800, color:P.muted, letterSpacing:".1em", textTransform:"uppercase", margin:"0 0 8px" }}>{f.l}</p>
                 <input type="password" value={pwForm[f.k]} onChange={e => setPwForm(v => ({ ...v, [f.k]: e.target.value }))} placeholder="••••••••"
                   style={inputStyle(true)}
-                  onFocus={e => { e.target.style.borderColor=P.sky; e.target.style.background=P.white; e.target.style.boxShadow="0 0 0 3px rgba(151,202,219,.2)"; }}
+                  onFocus={e => { e.target.style.borderColor=P.sky; e.target.style.background=P.white; e.target.style.boxShadow="0 0 0 3px rgba(212, 210, 195, .2)"; }}
                   onBlur={e  => { e.target.style.borderColor=P.mist; e.target.style.background=P.mistBg; e.target.style.boxShadow="none"; }}
                 />
               </div>

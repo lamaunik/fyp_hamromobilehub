@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { socket } from "../utils/socket";
 import VendorSidebar   from "../components/vendor/VendorSidebar";
 import VendorTopbar    from "../components/vendor/VendorTopbar";
 import VendorOverview  from "../components/vendor/VendorOverview";
@@ -18,22 +20,44 @@ function ComingSoon({ label }) {
     }}>
       <div style={{
         width: 80, height: 80, borderRadius: 24, marginBottom: 20,
-        background: "rgba(1,138,190,0.08)", border: "1px dashed rgba(1,138,190,0.3)",
+        background: "rgba(40, 43, 74, 0.08)", border: "1px dashed rgba(40, 43, 74, 0.3)",
         display: "flex", alignItems: "center", justifyContent: "center",
       }}>
-        <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#018ABE" strokeWidth={1.5}>
+        <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#282B4A" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
         </svg>
       </div>
-      <h2 style={{ color: "#001B48", fontWeight: 800, fontSize: 22, margin: "0 0 8px", fontFamily: "inherit" }}>{label}</h2>
+      <h2 style={{ color: "#282B4A", fontWeight: 800, fontSize: 22, margin: "0 0 8px", fontFamily: "inherit" }}>{label}</h2>
       <p style={{ color: "#6b99b5", fontSize: 14, fontFamily: "inherit" }}>Coming soon</p>
     </div>
   );
 }
 
 export default function VendorDashboard() {
+  const { user } = useAuth();
   const [tab, setTab]   = useState("overview");
   const [open, setOpen] = useState(true);
+  const [unreadChat, setUnreadChat] = useState(false);
+
+  // Global socket for vendor notifications
+  useEffect(() => {
+    if (user) {
+      socket.io.opts.query = { userId: user._id || user.id };
+      socket.connect();
+      
+      const handleRecv = (msg) => {
+        if (!window.location.pathname.includes("/messages") && msg.sender !== user._id && msg.sender !== user.id) {
+          setUnreadChat(true);
+        }
+      };
+      
+      socket.on("receive_message", handleRecv);
+      return () => {
+        socket.off("receive_message", handleRecv);
+        socket.disconnect();
+      };
+    }
+  }, [user]);
 
   const content = () => {
     switch (tab) {
@@ -53,13 +77,13 @@ export default function VendorDashboard() {
     <div style={{
       minHeight: "100vh",
       display: "flex",
-      background: "#f0f6f9",
+      background: "#EEEBDA",
       fontFamily: "'Helvetica Neue', Helvetica, Arial, 'Segoe UI', sans-serif",
     }}>
       <VendorSidebar tab={tab} setTab={setTab} open={open} setOpen={setOpen} />
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
-        <VendorTopbar tab={tab} onMenu={() => setOpen(o => !o)} />
-        <main style={{ flex: 1, overflowY: "auto", padding: "28px 32px", background: "#f0f6f9" }}>
+        <VendorTopbar tab={tab} onMenu={() => setOpen(o => !o)} unreadChat={unreadChat} />
+        <main style={{ flex: 1, overflowY: "auto", padding: "28px 32px", background: "#EEEBDA" }}>
           {content()}
         </main>
       </div>

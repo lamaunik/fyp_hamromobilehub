@@ -1,7 +1,15 @@
 const P = {
-  navy:"#001B48",royal:"#02457A",ocean:"#018ABE",
-  sky:"#97CADB",mist:"#D6E8EE",white:"#ffffff",
-  muted:"#6b99b5",font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const steps = [
@@ -15,19 +23,19 @@ export default function HowItWorks() {
   return (
     <section id="about" style={{ background:`linear-gradient(135deg,${P.navy} 0%,${P.royal} 100%)`,padding:"96px 24px",position:"relative",overflow:"hidden",fontFamily:P.font }}>
       <div style={{ position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(to right,${P.royal},${P.ocean})` }}/>
-      <div style={{ position:"absolute",left:-80,top:80,width:256,height:256,borderRadius:"50%",background:"rgba(1,138,190,0.1)",filter:"blur(48px)" }}/>
-      <div style={{ position:"absolute",right:-80,bottom:80,width:256,height:256,borderRadius:"50%",background:"rgba(151,202,219,0.08)",filter:"blur(48px)" }}/>
+      <div style={{ position:"absolute",left:-80,top:80,width:256,height:256,borderRadius:"50%",background:"rgba(40, 43, 74, 0.1)",filter:"blur(48px)" }}/>
+      <div style={{ position:"absolute",right:-80,bottom:80,width:256,height:256,borderRadius:"50%",background:"rgba(212, 210, 195, 0.08)",filter:"blur(48px)" }}/>
 
       <div style={{ maxWidth:1280,margin:"0 auto",position:"relative" }}>
         <div style={{ textAlign:"center",marginBottom:64 }}>
-          <span style={{ display:"inline-block",background:"rgba(1,138,190,0.18)",color:P.sky,fontSize:11,fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",padding:"6px 16px",borderRadius:999,border:"1px solid rgba(1,138,190,0.35)",marginBottom:16 }}>
+          <span style={{ display:"inline-block",background:"rgba(40, 43, 74, 0.18)",color:P.sky,fontSize:11,fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",padding:"6px 16px",borderRadius:999,border:"1px solid rgba(40, 43, 74, 0.35)",marginBottom:16 }}>
             How It Works
           </span>
           <h2 style={{ fontSize:42,fontWeight:900,color:P.white,margin:"0 0 16px",letterSpacing:"-0.02em" }}>
             Simple as{" "}
             <span style={{ background:`linear-gradient(to right,${P.sky},${P.mist})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>1, 2, 3, 4</span>
           </h2>
-          <p style={{ color:"rgba(151,202,219,0.65)",fontSize:17,maxWidth:480,margin:"0 auto",lineHeight:1.7 }}>
+          <p style={{ color:"rgba(212, 210, 195, 0.65)",fontSize:17,maxWidth:480,margin:"0 auto",lineHeight:1.7 }}>
             Trading phones has never been easier. Our streamlined process gets you buying or selling in minutes.
           </p>
         </div>
@@ -36,20 +44,20 @@ export default function HowItWorks() {
           {steps.map((s,i)=>(
             <div key={i} style={{ position:"relative" }}>
               {i < steps.length-1 && (
-                <div style={{ position:"absolute",top:40,left:"calc(100% - 10px)",width:"100%",height:1,background:`linear-gradient(to right,rgba(1,138,190,0.5),transparent)`,zIndex:0 }}/>
+                <div style={{ position:"absolute",top:40,left:"calc(100% - 10px)",width:"100%",height:1,background:`linear-gradient(to right,rgba(40, 43, 74, 0.5),transparent)`,zIndex:0 }}/>
               )}
-              <div style={{ position:"relative",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(151,202,219,0.15)",borderRadius:20,padding:28,transition:"all 0.2s" }}
-                onMouseEnter={e=>{ e.currentTarget.style.background="rgba(1,138,190,0.1)";e.currentTarget.style.transform="translateY(-4px)"; }}
+              <div style={{ position:"relative",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(212, 210, 195, 0.15)",borderRadius:20,padding:28,transition:"all 0.2s" }}
+                onMouseEnter={e=>{ e.currentTarget.style.background="rgba(40, 43, 74, 0.1)";e.currentTarget.style.transform="translateY(-4px)"; }}
                 onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,0.05)";e.currentTarget.style.transform="translateY(0)"; }}
               >
-                <div style={{ position:"absolute",top:-12,right:-12,width:32,height:32,borderRadius:"50%",background:`linear-gradient(135deg,${P.royal},${P.ocean})`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 12px rgba(1,138,190,0.35)" }}>
+                <div style={{ position:"absolute",top:-12,right:-12,width:32,height:32,borderRadius:"50%",background:`linear-gradient(135deg,${P.royal},${P.ocean})`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 12px rgba(40, 43, 74, 0.35)" }}>
                   <span style={{ color:P.white,fontSize:11,fontWeight:900 }}>{s.step}</span>
                 </div>
-                <div style={{ width:60,height:60,borderRadius:18,background:"rgba(1,138,190,0.15)",border:"1px solid rgba(1,138,190,0.25)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20 }}>
+                <div style={{ width:60,height:60,borderRadius:18,background:"rgba(40, 43, 74, 0.15)",border:"1px solid rgba(40, 43, 74, 0.25)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20 }}>
                   {s.icon}
                 </div>
                 <h3 style={{ color:P.white,fontWeight:800,fontSize:16,margin:"0 0 10px" }}>{s.title}</h3>
-                <p style={{ color:"rgba(151,202,219,0.65)",fontSize:13,lineHeight:1.7,margin:0 }}>{s.desc}</p>
+                <p style={{ color:"rgba(212, 210, 195, 0.65)",fontSize:13,lineHeight:1.7,margin:0 }}>{s.desc}</p>
               </div>
             </div>
           ))}

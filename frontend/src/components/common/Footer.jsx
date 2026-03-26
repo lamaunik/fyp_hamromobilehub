@@ -1,7 +1,15 @@
 const P = {
-  navy:"#001B48",royal:"#02457A",ocean:"#018ABE",
-  sky:"#97CADB",mist:"#D6E8EE",white:"#ffffff",
-  muted:"#6b99b5",font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const links = {
@@ -24,14 +32,14 @@ export default function Footer() {
                 HamroMobile<span style={{ color:P.sky }}>Hub</span>
               </span>
             </div>
-            <p style={{ color:"rgba(151,202,219,0.6)",fontSize:14,lineHeight:1.7,margin:"0 0 24px",maxWidth:260 }}>
+            <p style={{ color:"rgba(212, 210, 195, 0.6)",fontSize:14,lineHeight:1.7,margin:"0 0 24px",maxWidth:260 }}>
               The trusted marketplace for buying, selling, and trading smartphones. Join thousands of happy customers.
             </p>
             <div style={{ display:"flex",gap:10 }}>
               {["f","t","in","yt"].map(s=>(
-                <a key={s} href="#" style={{ width:34,height:34,borderRadius:"50%",background:"rgba(1,138,190,0.18)",display:"flex",alignItems:"center",justifyContent:"center",color:P.sky,fontSize:11,fontWeight:700,textDecoration:"none",transition:"all 0.2s" }}
+                <a key={s} href="#" style={{ width:34,height:34,borderRadius:"50%",background:"rgba(40, 43, 74, 0.18)",display:"flex",alignItems:"center",justifyContent:"center",color:P.sky,fontSize:11,fontWeight:700,textDecoration:"none",transition:"all 0.2s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.background=P.ocean;e.currentTarget.style.color=P.white; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="rgba(1,138,190,0.18)";e.currentTarget.style.color=P.sky; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="rgba(40, 43, 74, 0.18)";e.currentTarget.style.color=P.sky; }}
                 >{s}</a>
               ))}
             </div>
@@ -43,8 +51,8 @@ export default function Footer() {
               <ul style={{ listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:12 }}>
                 {items.map(item=>(
                   <li key={item}>
-                    <a href="#" style={{ color:"rgba(151,202,219,0.6)",fontSize:14,textDecoration:"none",transition:"color 0.2s" }}
-                      onMouseEnter={e=>e.target.style.color=P.sky} onMouseLeave={e=>e.target.style.color="rgba(151,202,219,0.6)"}
+                    <a href="#" style={{ color:"rgba(212, 210, 195, 0.6)",fontSize:14,textDecoration:"none",transition:"color 0.2s" }}
+                      onMouseEnter={e=>e.target.style.color=P.sky} onMouseLeave={e=>e.target.style.color="rgba(212, 210, 195, 0.6)"}
                     >{item}</a>
                   </li>
                 ))}
@@ -53,11 +61,11 @@ export default function Footer() {
           ))}
         </div>
 
-        <div style={{ borderTop:`1px solid rgba(1,138,190,0.2)`,paddingTop:28,display:"flex",alignItems:"center",justifyContent:"space-between" }}>
-          <p style={{ color:"rgba(151,202,219,0.5)",fontSize:13,margin:0 }}>© {new Date().getFullYear()} MobiHub. All rights reserved.</p>
+        <div style={{ borderTop:`1px solid rgba(40, 43, 74, 0.2)`,paddingTop:28,display:"flex",alignItems:"center",justifyContent:"space-between" }}>
+          <p style={{ color:"rgba(212, 210, 195, 0.5)",fontSize:13,margin:0 }}>© {new Date().getFullYear()} MobiHub. All rights reserved.</p>
           <div style={{ display:"flex",alignItems:"center",gap:8 }}>
             <div style={{ width:8,height:8,borderRadius:"50%",background:"#22c55e" }}/>
-            <span style={{ color:"rgba(151,202,219,0.5)",fontSize:12 }}>All systems operational</span>
+            <span style={{ color:"rgba(212, 210, 195, 0.5)",fontSize:12 }}>All systems operational</span>
           </div>
         </div>
       </div>

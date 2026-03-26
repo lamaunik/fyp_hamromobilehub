@@ -12,15 +12,17 @@ const NAV = [
 ];
 
 const P = {
-  navy:   "#001B48",
-  royal:  "#02457A",
-  ocean:  "#018ABE",
-  sky:    "#97CADB",
-  mist:   "#D6E8EE",
-  mistBg: "#f0f6f9",
-  white:  "#ffffff",
-  muted:  "#6b99b5",
-  font:   "'Helvetica Neue', Helvetica, Arial, 'Segoe UI', sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 export default function VendorSidebar({ tab, setTab, open, setOpen }) {
@@ -39,7 +41,7 @@ export default function VendorSidebar({ tab, setTab, open, setOpen }) {
       borderRight: `1px solid ${P.mist}`,
       fontFamily: P.font,
       position: "relative",
-      boxShadow: "2px 0 12px rgba(0,27,72,0.06)",
+      boxShadow: "2px 0 12px rgba(40, 43, 74, 0.06)",
     }}>
 
       {/* Logo */}
@@ -55,7 +57,7 @@ export default function VendorSidebar({ tab, setTab, open, setOpen }) {
               width: 34, height: 34, borderRadius: 10,
               background: `linear-gradient(135deg, ${P.royal}, ${P.ocean})`,
               display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: "0 4px 12px rgba(1,138,190,0.25)",
+              boxShadow: "0 4px 12px rgba(40, 43, 74, 0.25)",
             }}>
               <span style={{ color: P.white, fontWeight: 900, fontSize: 15 }}>M</span>
             </div>
@@ -73,7 +75,7 @@ export default function VendorSidebar({ tab, setTab, open, setOpen }) {
             width: 34, height: 34, borderRadius: 10,
             background: `linear-gradient(135deg, ${P.royal}, ${P.ocean})`,
             display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 4px 12px rgba(1,138,190,0.25)",
+            boxShadow: "0 4px 12px rgba(40, 43, 74, 0.25)",
           }}>
             <span style={{ color: P.white, fontWeight: 900, fontSize: 15 }}>M</span>
           </div>
@@ -97,7 +99,7 @@ export default function VendorSidebar({ tab, setTab, open, setOpen }) {
             width: 24, height: 24, borderRadius: "50%",
             background: P.ocean, border: `2px solid ${P.white}`,
             cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 4px 10px rgba(1,138,190,0.3)", color: P.white,
+            boxShadow: "0 4px 10px rgba(40, 43, 74, 0.3)", color: P.white,
           }}>
             <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
@@ -121,7 +123,7 @@ export default function VendorSidebar({ tab, setTab, open, setOpen }) {
                 display: "flex", alignItems: "center", gap: 10,
                 padding: "10px 12px", borderRadius: 12,
                 border: isActive ? `1px solid ${P.sky}` : "1px solid transparent",
-                background: isActive ? `linear-gradient(135deg, rgba(2,69,122,0.08), rgba(1,138,190,0.12))` : "none",
+                background: isActive ? `linear-gradient(135deg, rgba(40, 43, 74, 0.08), rgba(40, 43, 74, 0.12))` : "none",
                 color: isActive ? P.navy : P.muted,
                 fontSize: 13, fontWeight: isActive ? 700 : 600,
                 fontFamily: P.font, cursor: "pointer",
@@ -148,11 +150,11 @@ export default function VendorSidebar({ tab, setTab, open, setOpen }) {
             background: `linear-gradient(135deg, ${P.royal}, ${P.ocean})`,
             color: P.white, fontSize: 13, fontWeight: 700, fontFamily: P.font,
             padding: "11px", borderRadius: 12, border: "none", cursor: "pointer",
-            boxShadow: "0 4px 14px rgba(1,138,190,0.25)",
+            boxShadow: "0 4px 14px rgba(40, 43, 74, 0.25)",
             transition: "transform 0.15s, box-shadow 0.15s",
           }}
-            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(1,138,190,0.35)"; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 14px rgba(1,138,190,0.25)"; }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(40, 43, 74, 0.35)"; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 14px rgba(40, 43, 74, 0.25)"; }}
           >
             + Add Product
           </button>

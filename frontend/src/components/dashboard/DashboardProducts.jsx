@@ -54,7 +54,7 @@ export default function DashboardProducts({ viewProduct, addToCart, wishlist, to
             <p style={{ fontSize: 10, fontWeight: 800, color: P.muted, letterSpacing: ".12em", textTransform: "uppercase", margin: "0 0 10px" }}>{title}</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 3, maxHeight: 160, overflowY: "auto" }}>
               {items.map((item) => (
-                <label key={item} style={{ display: "flex", alignItems: "center", gap: 9, padding: "5px 8px", borderRadius: 9, cursor: "pointer", background: val === item ? "rgba(1,138,190,.07)" : "transparent", transition: "background .15s" }}>
+                <label key={item} style={{ display: "flex", alignItems: "center", gap: 9, padding: "5px 8px", borderRadius: 9, cursor: "pointer", background: val === item ? "rgba(40, 43, 74, .07)" : "transparent", transition: "background .15s" }}>
                   <input type="radio" name={name} checked={val === item} onChange={() => set(item)} style={{ accentColor: P.ocean, cursor: "pointer" }} />
                   <span style={{ fontSize: 13, fontWeight: 600, color: val === item ? P.ocean : P.muted }}>{item}</span>
                 </label>

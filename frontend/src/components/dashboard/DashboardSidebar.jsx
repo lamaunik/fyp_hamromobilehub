@@ -42,7 +42,7 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
         overflow: "hidden",
         background: P.white,
         borderRight: `1px solid ${P.mist}`,
-        boxShadow: "3px 0 20px rgba(0,27,72,.07)",
+        boxShadow: "3px 0 20px rgba(40, 43, 74, .07)",
         transition: "width .32s cubic-bezier(.4,0,.2,1)",
         display: "flex",
         flexDirection: "column",
@@ -51,7 +51,7 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
     >
       {/* Logo */}
       <div style={{ padding: "20px 18px 16px", borderBottom: `1px solid ${P.mist}`, display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 12, background: `linear-gradient(135deg,${P.royal},${P.ocean})`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 18px rgba(1,138,190,.35)", flexShrink: 0 }}>
+        <div style={{ width: 40, height: 40, borderRadius: 12, background: `linear-gradient(135deg,${P.royal},${P.ocean})`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 18px rgba(40, 43, 74, .35)", flexShrink: 0 }}>
           <span style={{ color: P.white, fontWeight: 900, fontSize: 18 }}>M</span>
         </div>
         <div>
@@ -82,7 +82,7 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
                 transition: "all .15s", position: "relative",
                 background: active ? `linear-gradient(135deg,${P.royal},${P.ocean})` : "transparent",
                 color: active ? P.white : P.muted,
-                boxShadow: active ? "0 4px 18px rgba(1,138,190,.3)" : "none",
+                boxShadow: active ? "0 4px 18px rgba(40, 43, 74, .3)" : "none",
                 animationName: "fadeUp", animationDuration: ".4s",
                 animationTimingFunction: "cubic-bezier(.4,0,.2,1)",
                 animationFillMode: "both", animationDelay: `${0.1 + i * 0.04}s`,

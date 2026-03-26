@@ -3,13 +3,21 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const P = {
-  navy:"#001B48", royal:"#02457A", ocean:"#018ABE",
-  sky:"#97CADB", mist:"#D6E8EE", white:"#ffffff",
-  muted:"#6b99b5", font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const inputStyle = {
-  width:"100%", background:"rgba(0,27,72,0.35)", border:`1px solid rgba(151,202,219,0.2)`,
+  width:"100%", background:"rgba(40, 43, 74, 0.35)", border:`1px solid rgba(212, 210, 195, 0.2)`,
   outline:"none", color:P.white, fontSize:14, borderRadius:14,
   paddingLeft:44, paddingRight:16, paddingTop:12, paddingBottom:12,
   transition:"border-color 0.2s, background 0.2s", boxSizing:"border-box",
@@ -98,21 +106,21 @@ export default function SignUp() {
   const passwordsMatch = form.confirm && form.password === form.confirm;
 
   return (
-    <div style={{ minHeight:"100vh", background:`linear-gradient(135deg,${P.navy} 0%,${P.royal} 55%,#013d6e 100%)`, display:"flex", alignItems:"center", justifyContent:"center", padding:"24px", position:"relative", overflow:"hidden", fontFamily:P.font }}>
+    <div style={{ minHeight:"100vh", background:`linear-gradient(135deg,${P.navy} 0%,${P.royal} 55%,#282B4A 100%)`, display:"flex", alignItems:"center", justifyContent:"center", padding:"24px", position:"relative", overflow:"hidden", fontFamily:P.font }}>
       {/* bg blobs */}
       <div style={{ position:"absolute", inset:0, pointerEvents:"none" }}>
-        <div style={{ position:"absolute", top:80, left:40, width:288, height:288, borderRadius:"50%", background:"rgba(1,138,190,0.18)", filter:"blur(64px)" }}/>
-        <div style={{ position:"absolute", bottom:80, right:40, width:384, height:384, borderRadius:"50%", background:"rgba(151,202,219,0.1)", filter:"blur(64px)" }}/>
-        <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:800, height:800, borderRadius:"50%", border:"1px solid rgba(1,138,190,0.12)" }}/>
-        <div style={{ position:"absolute", inset:0, opacity:0.04, backgroundImage:`linear-gradient(rgba(151,202,219,0.4) 1px,transparent 1px),linear-gradient(90deg,rgba(151,202,219,0.4) 1px,transparent 1px)`, backgroundSize:"60px 60px" }}/>
+        <div style={{ position:"absolute", top:80, left:40, width:288, height:288, borderRadius:"50%", background:"rgba(40, 43, 74, 0.18)", filter:"blur(64px)" }}/>
+        <div style={{ position:"absolute", bottom:80, right:40, width:384, height:384, borderRadius:"50%", background:"rgba(212, 210, 195, 0.1)", filter:"blur(64px)" }}/>
+        <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:800, height:800, borderRadius:"50%", border:"1px solid rgba(40, 43, 74, 0.12)" }}/>
+        <div style={{ position:"absolute", inset:0, opacity:0.04, backgroundImage:`linear-gradient(rgba(212, 210, 195, 0.4) 1px,transparent 1px),linear-gradient(90deg,rgba(212, 210, 195, 0.4) 1px,transparent 1px)`, backgroundSize:"60px 60px" }}/>
       </div>
 
       <div style={{ width:"100%", maxWidth:440, position:"relative", paddingTop:40, paddingBottom:40 }}>
         {/* Back */}
         <div style={{ marginBottom:24 }}>
-          <Link to="/" style={{ display:"inline-flex", alignItems:"center", gap:8, color:"rgba(151,202,219,0.6)", textDecoration:"none", fontSize:14, fontWeight:600 }}
-            onMouseEnter={e=>e.currentTarget.style.color=P.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(151,202,219,0.6)"}>
-            <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(151,202,219,0.2)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+          <Link to="/" style={{ display:"inline-flex", alignItems:"center", gap:8, color:"rgba(212, 210, 195, 0.6)", textDecoration:"none", fontSize:14, fontWeight:600 }}
+            onMouseEnter={e=>e.currentTarget.style.color=P.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(212, 210, 195, 0.6)"}>
+            <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(212, 210, 195, 0.2)", display:"flex", alignItems:"center", justifyContent:"center" }}>
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7"/></svg>
             </div>
             Back
@@ -121,7 +129,7 @@ export default function SignUp() {
 
         {/* Logo */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:10, marginBottom:32 }}>
-          <div style={{ width:40, height:40, borderRadius:12, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 6px 20px rgba(1,138,190,0.35)" }}>
+          <div style={{ width:40, height:40, borderRadius:12, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 6px 20px rgba(40, 43, 74, 0.35)" }}>
             <span style={{ color:P.white, fontWeight:900, fontSize:20 }}>M</span>
           </div>
           <span style={{ fontSize:22, fontWeight:900, color:P.white, letterSpacing:"-0.02em" }}>
@@ -130,18 +138,18 @@ export default function SignUp() {
         </div>
 
         {/* Card */}
-        <div style={{ background:"rgba(0,27,72,0.5)", backdropFilter:"blur(20px)", border:"1px solid rgba(151,202,219,0.15)", borderRadius:24, padding:32, boxShadow:"0 24px 64px rgba(0,0,0,0.35)" }}>
+        <div style={{ background:"rgba(40, 43, 74, 0.5)", backdropFilter:"blur(20px)", border:"1px solid rgba(212, 210, 195, 0.15)", borderRadius:24, padding:32, boxShadow:"0 24px 64px rgba(0,0,0,0.35)" }}>
 
           {step === 1 ? (
             <>
               {/* Header */}
               <div style={{ textAlign:"center", marginBottom:28 }}>
-                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(40, 43, 74, 0.18)", border:"1px solid rgba(40, 43, 74, 0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
                   <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
                   <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Join HMH</span>
                 </div>
                 <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Create Account</h1>
-            <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
+            <p style={{ color:"rgba(212, 210, 195, 0.6)", fontSize:14, margin:0 }}>
               Already have an account?{" "}
               <Link to="/signin" style={{ color:P.sky, fontWeight:700, textDecoration:"none" }}
                 onMouseEnter={e=>e.target.style.color=P.mist} onMouseLeave={e=>e.target.style.color=P.sky}>Sign In</Link>
@@ -157,7 +165,7 @@ export default function SignUp() {
           )}
 
           {/* Google */}
-          <button style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:10, background:"rgba(255,255,255,0.07)", border:"1px solid rgba(151,202,219,0.2)", color:P.white, fontWeight:600, fontSize:14, padding:"11px 0", borderRadius:14, cursor:"pointer", marginBottom:24, transition:"background 0.2s", fontFamily:P.font }}
+          <button style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:10, background:"rgba(255,255,255,0.07)", border:"1px solid rgba(212, 210, 195, 0.2)", color:P.white, fontWeight:600, fontSize:14, padding:"11px 0", borderRadius:14, cursor:"pointer", marginBottom:24, transition:"background 0.2s", fontFamily:P.font }}
             onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,0.12)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,0.07)"}>
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -170,28 +178,28 @@ export default function SignUp() {
 
           {/* Divider */}
           <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
-            <div style={{ flex:1, height:1, background:"rgba(151,202,219,0.15)" }}/>
-            <span style={{ color:"rgba(151,202,219,0.4)", fontSize:12, fontWeight:700 }}>OR</span>
-            <div style={{ flex:1, height:1, background:"rgba(151,202,219,0.15)" }}/>
+            <div style={{ flex:1, height:1, background:"rgba(212, 210, 195, 0.15)" }}/>
+            <span style={{ color:"rgba(212, 210, 195, 0.4)", fontSize:12, fontWeight:700 }}>OR</span>
+            <div style={{ flex:1, height:1, background:"rgba(212, 210, 195, 0.15)" }}/>
           </div>
 
           <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
 
             {/* Role Selector */}
             <div>
-              <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>I Am A</label>
+              <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>I Am A</label>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:8 }}>
                 {roles.map(r=>(
                   <button key={r.id} onClick={()=>setRole(r.id)} style={{
                     display:"flex", flexDirection:"column", alignItems:"center", gap:6, padding:"12px 0", borderRadius:14,
-                    border: role===r.id ? `1px solid rgba(1,138,190,0.6)` : "1px solid rgba(151,202,219,0.15)",
-                    background: role===r.id ? "rgba(1,138,190,0.2)" : "rgba(0,27,72,0.3)",
-                    color: role===r.id ? P.white : "rgba(151,202,219,0.5)",
+                    border: role===r.id ? `1px solid rgba(40, 43, 74, 0.6)` : "1px solid rgba(212, 210, 195, 0.15)",
+                    background: role===r.id ? "rgba(40, 43, 74, 0.2)" : "rgba(40, 43, 74, 0.3)",
+                    color: role===r.id ? P.white : "rgba(212, 210, 195, 0.5)",
                     fontSize:13, fontWeight:700, cursor:"pointer", transition:"all 0.2s", fontFamily:P.font,
-                    boxShadow: role===r.id ? "0 0 0 1px rgba(1,138,190,0.3)" : "none",
+                    boxShadow: role===r.id ? "0 0 0 1px rgba(40, 43, 74, 0.3)" : "none",
                   }}
-                    onMouseEnter={e=>{ if(role!==r.id){ e.currentTarget.style.background="rgba(1,138,190,0.1)"; e.currentTarget.style.color=P.white; }}}
-                    onMouseLeave={e=>{ if(role!==r.id){ e.currentTarget.style.background="rgba(0,27,72,0.3)"; e.currentTarget.style.color="rgba(151,202,219,0.5)"; }}}
+                    onMouseEnter={e=>{ if(role!==r.id){ e.currentTarget.style.background="rgba(40, 43, 74, 0.1)"; e.currentTarget.style.color=P.white; }}}
+                    onMouseLeave={e=>{ if(role!==r.id){ e.currentTarget.style.background="rgba(40, 43, 74, 0.3)"; e.currentTarget.style.color="rgba(212, 210, 195, 0.5)"; }}}
                   >
                     <span style={{ color: role===r.id ? P.sky : P.muted }}>{r.icon}</span>
                     {r.label}
@@ -202,45 +210,45 @@ export default function SignUp() {
 
             {/* Full Name */}
             <div>
-              <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Full Name</label>
+              <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Full Name</label>
               <div style={{ position:"relative" }}>
                 <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 </div>
                 <input type="text" value={form.name} onChange={handleChange("name")} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="Your full name"
                   style={inputStyle}
-                  onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
-                  onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                  onFocus={e=>{ e.target.style.borderColor="rgba(40, 43, 74, 0.6)"; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}
+                  onBlur={e=>{ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}
                 />
               </div>
             </div>
 
             {/* Email */}
             <div>
-              <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Email Address</label>
+              <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Email Address</label>
               <div style={{ position:"relative" }}>
                 <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
                 </div>
                 <input type="email" value={form.email} onChange={handleChange("email")} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="you@example.com"
                   style={inputStyle}
-                  onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
-                  onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                  onFocus={e=>{ e.target.style.borderColor="rgba(40, 43, 74, 0.6)"; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}
+                  onBlur={e=>{ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Password</label>
+              <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Password</label>
               <div style={{ position:"relative" }}>
                 <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                 </div>
                 <input type={showPassword?"text":"password"} value={form.password} onChange={handleChange("password")} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="Min. 8 characters"
                   style={{ ...inputStyle, paddingRight:44 }}
-                  onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
-                  onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                  onFocus={e=>{ e.target.style.borderColor="rgba(40, 43, 74, 0.6)"; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}
+                  onBlur={e=>{ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}
                 />
                 <button onClick={()=>setShowPassword(!showPassword)} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", color:P.muted, padding:0 }}>
                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -254,17 +262,17 @@ export default function SignUp() {
 
             {/* Confirm Password */}
             <div>
-              <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Confirm Password</label>
+              <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Confirm Password</label>
               <div style={{ position:"relative" }}>
                 <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 </div>
                 <input type={showConfirm?"text":"password"} value={form.confirm} onChange={handleChange("confirm")} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="Repeat your password"
                   style={{ ...inputStyle, paddingRight:72,
-                    borderColor: form.confirm ? (passwordsMatch ? "rgba(34,197,94,0.6)" : "rgba(220,38,38,0.5)") : "rgba(151,202,219,0.2)"
+                    borderColor: form.confirm ? (passwordsMatch ? "rgba(34,197,94,0.6)" : "rgba(220,38,38,0.5)") : "rgba(212, 210, 195, 0.2)"
                   }}
-                  onFocus={e=>{ if(!form.confirm){ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}}
-                  onBlur={e=>{ if(!form.confirm){ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}}
+                  onFocus={e=>{ if(!form.confirm){ e.target.style.borderColor="rgba(40, 43, 74, 0.6)"; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}}
+                  onBlur={e=>{ if(!form.confirm){ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}}
                 />
                 {form.confirm && (
                   <span style={{ position:"absolute", right:44, top:"50%", transform:"translateY(-50%)", fontSize:14, fontWeight:800, color: passwordsMatch ? "#4ade80" : "#f87171" }}>
@@ -287,14 +295,14 @@ export default function SignUp() {
                 type="button"
                 onClick={() => setAcceptedTerms(!acceptedTerms)}
                 style={{ 
-                  width:18, height:18, borderRadius:4, border: acceptedTerms ? `1px solid ${P.sky}` : "1px solid rgba(151,202,219,0.3)",
-                  background: acceptedTerms ? P.sky : "rgba(0,27,72,0.4)", 
+                  width:18, height:18, borderRadius:4, border: acceptedTerms ? `1px solid ${P.sky}` : "1px solid rgba(212, 210, 195, 0.3)",
+                  background: acceptedTerms ? P.sky : "rgba(40, 43, 74, 0.4)", 
                   flexShrink:0, marginTop:2, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", padding:0 
                 }}
               >
                 {acceptedTerms && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={P.navy} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>}
               </button>
-              <span style={{ color:"rgba(151,202,219,0.5)", fontSize:12, lineHeight:1.6 }}>
+              <span style={{ color:"rgba(212, 210, 195, 0.5)", fontSize:12, lineHeight:1.6 }}>
                 By creating an account, you agree to our{" "}
                 <button type="button" onClick={() => setPolicyModal('terms')} style={{ background:'none', border:'none', padding:0, color:P.sky, fontWeight:700, cursor:"pointer", fontFamily:P.font }}>Terms of Service</button>
                 {" "}and{" "}
@@ -304,7 +312,7 @@ export default function SignUp() {
 
             {/* Submit */}
             <button onClick={handleSubmit} disabled={loading}
-              style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(1,138,190,0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
+              style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(40, 43, 74, 0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
               onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
               onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
               {loading ? (
@@ -327,12 +335,12 @@ export default function SignUp() {
           ) : (
             <>
               <div style={{ textAlign:"center", marginBottom:28 }}>
-                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(40, 43, 74, 0.18)", border:"1px solid rgba(40, 43, 74, 0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
                   <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
                   <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Step 4: Verify Your Email</span>
                 </div>
                 <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Verify Email</h1>
-                <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
+                <p style={{ color:"rgba(212, 210, 195, 0.6)", fontSize:14, margin:0 }}>
                   We've sent a 6-digit code to <strong>{form.email}</strong>.
                 </p>
               </div>
@@ -346,16 +354,16 @@ export default function SignUp() {
 
               <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
                 <div>
-                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Verification Code</label>
+                  <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Verification Code</label>
                   <input type="text" value={otp} onChange={e=>setOtp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleVerify()} placeholder="Enter 6-digit code" maxLength={6}
                     style={{ ...inputStyle, textAlign:"center", fontSize:20, letterSpacing:"0.2em", paddingLeft:16 }}
-                    onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
-                    onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                    onFocus={e=>{ e.target.style.borderColor="rgba(40, 43, 74, 0.6)"; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}
+                    onBlur={e=>{ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}
                   />
                 </div>
 
                 <button onClick={handleVerify} disabled={loading}
-                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(1,138,190,0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
+                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(40, 43, 74, 0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
                   onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
                   onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
                   {loading ? (
@@ -381,8 +389,8 @@ export default function SignUp() {
         </div>
 
         <div style={{ textAlign:"center", marginTop:16 }}>
-          <Link to="/" style={{ color:"rgba(151,202,219,0.4)", fontSize:12, fontWeight:600, textDecoration:"none" }}
-            onMouseEnter={e=>e.target.style.color=P.sky} onMouseLeave={e=>e.target.style.color="rgba(151,202,219,0.4)"}>
+          <Link to="/" style={{ color:"rgba(212, 210, 195, 0.4)", fontSize:12, fontWeight:600, textDecoration:"none" }}
+            onMouseEnter={e=>e.target.style.color=P.sky} onMouseLeave={e=>e.target.style.color="rgba(212, 210, 195, 0.4)"}>
             Back to Home
           </Link>
         </div>
@@ -391,8 +399,8 @@ export default function SignUp() {
       {/* Policy Modal */}
       {policyModal && (
         <div style={{ position:"fixed", inset:0, zIndex:999, background:"rgba(0,11,28,0.8)", backdropFilter:"blur(5px)", display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
-          <div style={{ background:P.navy, border:"1px solid rgba(151,202,219,0.2)", borderRadius:16, width:"100%", maxWidth:500, maxHeight:"80vh", display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 20px 40px rgba(0,0,0,0.5)" }}>
-            <div style={{ padding:"20px 24px", borderBottom:"1px solid rgba(151,202,219,0.1)", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+          <div style={{ background:P.navy, border:"1px solid rgba(212, 210, 195, 0.2)", borderRadius:16, width:"100%", maxWidth:500, maxHeight:"80vh", display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:"0 20px 40px rgba(0,0,0,0.5)" }}>
+            <div style={{ padding:"20px 24px", borderBottom:"1px solid rgba(212, 210, 195, 0.1)", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
               <h2 style={{ margin:0, color:P.white, fontSize:18, fontWeight:700, fontFamily:P.font }}>
                 {policyModal === 'terms' ? 'Terms of Service' : 'Privacy Policy'}
               </h2>
@@ -400,7 +408,7 @@ export default function SignUp() {
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
             </div>
-            <div style={{ padding:"24px", overflowY:"auto", color:"rgba(151,202,219,0.8)", fontSize:14, lineHeight:1.6, fontFamily:P.font }}>
+            <div style={{ padding:"24px", overflowY:"auto", color:"rgba(212, 210, 195, 0.8)", fontSize:14, lineHeight:1.6, fontFamily:P.font }}>
               {policyModal === 'terms' ? (
                 <>
                   <p><strong>1. Acceptance of Terms:</strong> By accessing and using HamroMobileHub, you accept and agree to be bound by the terms and provision of this agreement.</p>
@@ -417,7 +425,7 @@ export default function SignUp() {
                 </>
               )}
             </div>
-            <div style={{ padding:"16px 24px", borderTop:"1px solid rgba(151,202,219,0.1)", textAlign:"right", background:"rgba(0,0,0,0.1)" }}>
+            <div style={{ padding:"16px 24px", borderTop:"1px solid rgba(212, 210, 195, 0.1)", textAlign:"right", background:"rgba(0,0,0,0.1)" }}>
               <button type="button" onClick={() => { setPolicyModal(null); setAcceptedTerms(true); }} style={{ background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, border:"none", padding:"10px 24px", borderRadius:8, fontWeight:700, cursor:"pointer", fontFamily:P.font }}>
                 I Understand & Agree
               </button>

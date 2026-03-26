@@ -9,6 +9,8 @@ import {
   getMyOrders,
   getOrders,
   getMyVendorOrders,
+  initiateKhaltiPayment,
+  verifyKhaltiPayment,
 } from "../controllers/orderController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
@@ -16,6 +18,9 @@ const router = express.Router();
 
 router.route("/vendor/myorders")
   .get(protect, restrictTo("vendor"), getMyVendorOrders);
+
+router.post("/khalti/initiate", protect, initiateKhaltiPayment);
+router.post("/khalti/verify", protect, verifyKhaltiPayment);
 
 router.route("/")
   .post(protect, addOrderItems)

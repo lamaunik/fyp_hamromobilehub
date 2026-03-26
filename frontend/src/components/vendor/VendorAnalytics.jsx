@@ -1,8 +1,15 @@
 const P = {
-  navy:"#001B48", royal:"#02457A", ocean:"#018ABE",
-  sky:"#97CADB", mist:"#D6E8EE", white:"#ffffff",
-  muted:"#6b99b5", mistBg:"#f0f6f9",
-  font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const MONTHS  = ["Oct","Nov","Dec","Jan","Feb","Mar"];
@@ -34,7 +41,7 @@ export default function VendorAnalytics() {
           { label:"Return Rate", value:"0%", sub:"No returns"     },
         ].map((k,i)=>(
           <div key={i} style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:16, padding:20, cursor:"pointer", transition:"all 0.2s", display:"flex", flexDirection:"column", gap:12 }}
-            onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow=`0 10px 28px rgba(1,138,190,0.13)`; e.currentTarget.style.borderColor=P.sky; }}
+            onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow=`0 10px 28px rgba(40, 43, 74, 0.13)`; e.currentTarget.style.borderColor=P.sky; }}
             onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="none"; e.currentTarget.style.borderColor=P.mist; }}>
             <div style={{ width:40, height:40, borderRadius:12, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", color:P.white }}>
               {KPI_ICONS[i]}
@@ -49,7 +56,7 @@ export default function VendorAnalytics() {
       </div>
 
       {/* Revenue Chart */}
-      <div style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:20, padding:24, boxShadow:"0 2px 12px rgba(0,27,72,0.05)" }}>
+      <div style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:20, padding:24, boxShadow:"0 2px 12px rgba(40, 43, 74, 0.05)" }}>
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:20 }}>
           <h3 style={{ color:P.navy, fontWeight:800, fontSize:15, margin:0 }}>Monthly Revenue</h3>
           <span style={{ color:P.muted, fontSize:12, background:P.mistBg, border:`1px solid ${P.mist}`, padding:"4px 12px", borderRadius:999 }}>Last 6 months</span>
@@ -69,7 +76,7 @@ export default function VendorAnalytics() {
       </div>
 
       {/* Top Listings */}
-      <div style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:20, padding:24, boxShadow:"0 2px 12px rgba(0,27,72,0.05)" }}>
+      <div style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:20, padding:24, boxShadow:"0 2px 12px rgba(40, 43, 74, 0.05)" }}>
         <h3 style={{ color:P.navy, fontWeight:800, fontSize:15, margin:"0 0 16px" }}>Top Listings Performance</h3>
         <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
           {[
@@ -78,7 +85,7 @@ export default function VendorAnalytics() {
             { name:"Unknown", views:0, sales:0, revenue:"Rs. 0" },
           ].map((p,i)=>(
             <div key={i} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 16px", background:P.mistBg, borderRadius:12, border:`1px solid ${P.mist}`, transition:"all 0.15s" }}
-              onMouseEnter={e=>{ e.currentTarget.style.background=`rgba(1,138,190,0.06)`; e.currentTarget.style.borderColor=P.sky; }}
+              onMouseEnter={e=>{ e.currentTarget.style.background=`rgba(40, 43, 74, 0.06)`; e.currentTarget.style.borderColor=P.sky; }}
               onMouseLeave={e=>{ e.currentTarget.style.background=P.mistBg; e.currentTarget.style.borderColor=P.mist; }}>
               <div style={{ display:"flex", alignItems:"center", gap:12 }}>
                 <div style={{ width:34, height:34, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900, fontSize:13 }}>{i+1}</div>

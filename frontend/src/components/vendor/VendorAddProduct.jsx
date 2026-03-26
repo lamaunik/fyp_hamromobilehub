@@ -1,10 +1,17 @@
 import { useState } from "react";
 
 const P = {
-  navy:"#001B48", royal:"#02457A", ocean:"#018ABE",
-  sky:"#97CADB", mist:"#D6E8EE", white:"#ffffff",
-  muted:"#6b99b5", mistBg:"#f0f6f9", border:"#D6E8EE",
-  font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const InputField = ({ label, name, value, onChange, type="text", placeholder, options, required }) => {
@@ -14,7 +21,7 @@ const InputField = ({ label, name, value, onChange, type="text", placeholder, op
     color:P.navy, fontSize:14, fontFamily:P.font,
     outline:"none", transition:"all 0.2s", boxSizing:"border-box",
   };
-  const focusStyle = (e) => { e.target.style.borderColor=P.ocean; e.target.style.boxShadow="0 0 0 3px rgba(1,138,190,0.15)"; };
+  const focusStyle = (e) => { e.target.style.borderColor=P.ocean; e.target.style.boxShadow="0 0 0 3px rgba(40, 43, 74, 0.15)"; };
   const blurStyle  = (e) => { e.target.style.borderColor=P.border; e.target.style.boxShadow="none"; };
 
   return (
@@ -147,7 +154,7 @@ export default function VendorAddProduct({ setTab }) {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} style={{ background:P.white, border:`1px solid ${P.border}`, borderRadius:16, padding:32, boxShadow:"0 2px 12px rgba(0,27,72,0.04)" }}>
+      <form onSubmit={handleSubmit} style={{ background:P.white, border:`1px solid ${P.border}`, borderRadius:16, padding:32, boxShadow:"0 2px 12px rgba(40, 43, 74, 0.04)" }}>
 
         {/* Name + Brand */}
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
@@ -172,9 +179,9 @@ export default function VendorAddProduct({ setTab }) {
             Product Image
           </label>
 
-          <div style={{ position:"relative", width:"100%", height:180, borderRadius:16, border:`2px dashed ${imageFile ? P.ocean : P.sky}`, background: imageFile ? "rgba(1,138,190,0.04)" : P.mistBg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", cursor:"pointer", transition:"all 0.2s", overflow:"hidden" }}
-            onMouseEnter={e=>{ e.currentTarget.style.borderColor=P.ocean; e.currentTarget.style.background="rgba(1,138,190,0.07)"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.borderColor=imageFile?P.ocean:P.sky; e.currentTarget.style.background=imageFile?"rgba(1,138,190,0.04)":P.mistBg; }}>
+          <div style={{ position:"relative", width:"100%", height:180, borderRadius:16, border:`2px dashed ${imageFile ? P.ocean : P.sky}`, background: imageFile ? "rgba(40, 43, 74, 0.04)" : P.mistBg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", cursor:"pointer", transition:"all 0.2s", overflow:"hidden" }}
+            onMouseEnter={e=>{ e.currentTarget.style.borderColor=P.ocean; e.currentTarget.style.background="rgba(40, 43, 74, 0.07)"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.borderColor=imageFile?P.ocean:P.sky; e.currentTarget.style.background=imageFile?"rgba(40, 43, 74, 0.04)":P.mistBg; }}>
 
             <input type="file" accept="image/*" onChange={handleImageChange}
               style={{ position:"absolute", inset:0, opacity:0, cursor:"pointer", width:"100%", height:"100%" }} />
@@ -188,7 +195,7 @@ export default function VendorAddProduct({ setTab }) {
               </>
             ) : (
               <>
-                <div style={{ width:48, height:48, borderRadius:"50%", background:P.white, display:"flex", alignItems:"center", justifyContent:"center", color:P.ocean, marginBottom:12, boxShadow:"0 4px 12px rgba(1,138,190,0.15)" }}>
+                <div style={{ width:48, height:48, borderRadius:"50%", background:P.white, display:"flex", alignItems:"center", justifyContent:"center", color:P.ocean, marginBottom:12, boxShadow:"0 4px 12px rgba(40, 43, 74, 0.15)" }}>
                   <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                 </div>
                 <p style={{ color:P.navy, fontWeight:700, fontSize:14, margin:"0 0 4px" }}>Click to upload image</p>
@@ -223,7 +230,7 @@ export default function VendorAddProduct({ setTab }) {
             Cancel
           </button>
           <button type="submit" disabled={loading || success}
-            style={{ background: success ? "linear-gradient(135deg,#16a34a,#22c55e)" : `linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, opacity: loading ? 0.75 : 1, fontWeight:700, fontSize:14, padding:"12px 32px", borderRadius:12, border:"none", cursor: loading ? "not-allowed" : "pointer", boxShadow:"0 4px 16px rgba(1,138,190,0.3)", display:"flex", alignItems:"center", gap:8, transition:"background .3s" }}>
+            style={{ background: success ? "linear-gradient(135deg,#16a34a,#22c55e)" : `linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, opacity: loading ? 0.75 : 1, fontWeight:700, fontSize:14, padding:"12px 32px", borderRadius:12, border:"none", cursor: loading ? "not-allowed" : "pointer", boxShadow:"0 4px 16px rgba(40, 43, 74, 0.3)", display:"flex", alignItems:"center", gap:8, transition:"background .3s" }}>
             {loading ? (
               <><span style={{ width:14, height:14, border:"2px solid rgba(255,255,255,.4)", borderTopColor:"white", borderRadius:"50%", display:"inline-block", animation:"spin .7s linear infinite" }} /> Saving...</>
             ) : success ? (

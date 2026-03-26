@@ -1,15 +1,22 @@
 import { useState, useEffect } from "react";
 
 const P = {
-  navy:"#001B48", royal:"#02457A", ocean:"#018ABE",
-  sky:"#97CADB", mist:"#D6E8EE", white:"#ffffff",
-  muted:"#6b99b5", mistBg:"#f0f6f9",
-  font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const STATUS_STYLE = {
   Delivered: { bg:"rgba(34,197,94,0.1)",  border:"rgba(34,197,94,0.25)",  text:"#16a34a" },
-  Shipped:   { bg:"rgba(1,138,190,0.1)",  border:"rgba(1,138,190,0.25)",  text:P.ocean   },
+  Shipped:   { bg:"rgba(40, 43, 74, 0.1)",  border:"rgba(40, 43, 74, 0.25)",  text:P.ocean   },
   Pending:   { bg:"rgba(234,179,8,0.1)",  border:"rgba(234,179,8,0.25)",  text:"#b45309" },
   Cancelled: { bg:"rgba(220,38,38,0.1)",  border:"rgba(220,38,38,0.25)",  text:"#dc2626" },
   Paid:      { bg:"rgba(34,197,94,0.1)",  border:"rgba(34,197,94,0.25)",  text:"#16a34a" },
@@ -36,10 +43,10 @@ function ConfirmModal({ order, onConfirm, onCancel, loading }) {
     }}>
       <div style={{
         background:P.white, borderRadius:22, padding:"32px 36px",
-        maxWidth:440, width:"90%", boxShadow:"0 24px 60px rgba(0,27,72,0.22)",
+        maxWidth:440, width:"90%", boxShadow:"0 24px 60px rgba(40, 43, 74, 0.22)",
       }}>
         {/* Icon */}
-        <div style={{ width:56, height:56, borderRadius:16, background:"rgba(1,138,190,0.1)", border:"1.5px solid rgba(1,138,190,0.25)", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px" }}>
+        <div style={{ width:56, height:56, borderRadius:16, background:"rgba(40, 43, 74, 0.1)", border:"1.5px solid rgba(40, 43, 74, 0.25)", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px" }}>
           <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke={P.ocean} strokeWidth={1.8}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
           </svg>
@@ -190,7 +197,7 @@ export default function VendorOrders() {
                   background: active ? `linear-gradient(135deg,${P.royal},${P.ocean})` : P.white,
                   color:  active ? P.white : P.muted,
                   border: active ? "none" : `1px solid ${P.mist}`,
-                  boxShadow: active ? "0 4px 12px rgba(1,138,190,0.25)" : "none",
+                  boxShadow: active ? "0 4px 12px rgba(40, 43, 74, 0.25)" : "none",
                 }}>
                   {t}
                   {count > 0 && (
@@ -226,9 +233,9 @@ export default function VendorOrders() {
               const canDeliver = o.status === "Pending" || o.status === "Paid";
 
               return (
-                <div key={o._id || i} style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:16, overflow:"hidden", boxShadow:"0 2px 8px rgba(0,27,72,0.04)", transition:"border-color .15s, box-shadow .15s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 20px rgba(1,138,190,0.1)"; e.currentTarget.style.borderColor=P.sky; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 2px 8px rgba(0,27,72,0.04)"; e.currentTarget.style.borderColor=P.mist; }}>
+                <div key={o._id || i} style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:16, overflow:"hidden", boxShadow:"0 2px 8px rgba(40, 43, 74, 0.04)", transition:"border-color .15s, box-shadow .15s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 6px 20px rgba(40, 43, 74, 0.1)"; e.currentTarget.style.borderColor=P.sky; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.boxShadow="0 2px 8px rgba(40, 43, 74, 0.04)"; e.currentTarget.style.borderColor=P.mist; }}>
 
                   <div style={{ padding:"16px 20px", display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
 
@@ -273,10 +280,10 @@ export default function VendorOrders() {
                             color:P.white, border:"none", borderRadius:10,
                             fontSize:12, fontWeight:700, cursor:"pointer",
                             fontFamily:P.font, display:"flex", alignItems:"center", gap:6,
-                            boxShadow:"0 3px 10px rgba(1,138,190,0.3)", transition:"all .15s",
+                            boxShadow:"0 3px 10px rgba(40, 43, 74, 0.3)", transition:"all .15s",
                           }}
-                          onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-1px)"; e.currentTarget.style.boxShadow="0 6px 16px rgba(1,138,190,0.4)"; }}
-                          onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 3px 10px rgba(1,138,190,0.3)"; }}
+                          onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-1px)"; e.currentTarget.style.boxShadow="0 6px 16px rgba(40, 43, 74, 0.4)"; }}
+                          onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 3px 10px rgba(40, 43, 74, 0.3)"; }}
                         >
                           <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>

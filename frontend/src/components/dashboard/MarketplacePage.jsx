@@ -2,16 +2,22 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const P = {
-  navy:"#001B48", royal:"#02457A", ocean:"#018ABE",
-  sky:"#97CADB", mist:"#D6E8EE", white:"#ffffff",
-  muted:"#6b99b5", mistBg:"#f0f6f9",
-  font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
-  purple:"#7c3aed", purpleLight:"rgba(124,58,237,0.1)",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const CONDITION_COLORS = {
   "Like New":{ bg:"rgba(34,197,94,0.1)",  border:"rgba(34,197,94,0.3)",  text:"#16a34a" },
-  "Good":    { bg:"rgba(1,138,190,0.1)",  border:"rgba(1,138,190,0.3)",  text:"#018ABE" },
+  "Good":    { bg:"rgba(40, 43, 74, 0.1)",  border:"rgba(40, 43, 74, 0.3)",  text:"#282B4A" },
   "Fair":    { bg:"rgba(234,179,8,0.1)",  border:"rgba(234,179,8,0.3)",  text:"#b45309" },
   "Poor":    { bg:"rgba(220,38,38,0.1)",  border:"rgba(220,38,38,0.3)",  text:"#dc2626" },
 };
@@ -69,7 +75,7 @@ function ContactModal({ product, onClose }) {
 
   return (
     <div style={{ position:"fixed", inset:0, zIndex:1000, background:"rgba(0,15,40,0.6)", backdropFilter:"blur(4px)", display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-      <div style={{ background:P.white, borderRadius:22, padding:"28px 32px", maxWidth:460, width:"100%", boxShadow:"0 24px 60px rgba(0,27,72,0.2)" }}>
+      <div style={{ background:P.white, borderRadius:22, padding:"28px 32px", maxWidth:460, width:"100%", boxShadow:"0 24px 60px rgba(40, 43, 74, 0.2)" }}>
 
         {/* Product preview in modal */}
         <div style={{ display:"flex", gap:14, alignItems:"center", marginBottom:20, padding:14, background:P.mistBg, borderRadius:14, border:`1.5px solid ${P.mist}` }}>
@@ -141,9 +147,9 @@ function ListingCard({ p, onContact }) {
   const showImg = imgSrc && !imgError;
 
   return (
-    <div style={{ background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:18, overflow:"hidden", boxShadow:"0 4px 16px rgba(0,27,72,.05)", transition:"all .2s", display:"flex", flexDirection:"column" }}
+    <div style={{ background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:18, overflow:"hidden", boxShadow:"0 4px 16px rgba(40, 43, 74, .05)", transition:"all .2s", display:"flex", flexDirection:"column" }}
       onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 12px 32px rgba(124,58,237,.12)"; e.currentTarget.style.borderColor="#c4b5fd"; }}
-      onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 4px 16px rgba(0,27,72,.05)"; e.currentTarget.style.borderColor=P.mist; }}>
+      onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 4px 16px rgba(40, 43, 74, .05)"; e.currentTarget.style.borderColor=P.mist; }}>
 
       {/* Image area */}
       <div style={{ height:200, background:`linear-gradient(135deg,rgba(124,58,237,0.06),rgba(124,58,237,0.03))`, position:"relative", overflow:"hidden", flexShrink:0 }}>

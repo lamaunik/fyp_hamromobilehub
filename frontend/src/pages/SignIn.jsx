@@ -3,13 +3,21 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const P = {
-  navy:"#001B48", royal:"#02457A", ocean:"#018ABE",
-  sky:"#97CADB", mist:"#D6E8EE", white:"#ffffff",
-  muted:"#6b99b5", font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const inputStyle = {
-  width:"100%", background:"rgba(0,27,72,0.35)", border:`1px solid rgba(151,202,219,0.2)`,
+  width:"100%", background:"rgba(40, 43, 74, 0.35)", border:`1px solid rgba(212, 210, 195, 0.2)`,
   outline:"none", color:P.white, fontSize:14, borderRadius:14,
   paddingLeft:44, paddingRight:16, paddingTop:12, paddingBottom:12,
   transition:"border-color 0.2s, background 0.2s", boxSizing:"border-box",
@@ -109,31 +117,31 @@ export default function SignIn() {
   };
 
   return (
-    <div style={{ minHeight:"100vh", background:`linear-gradient(135deg,${P.navy} 0%,${P.royal} 55%,#013d6e 100%)`, display:"flex", alignItems:"center", justifyContent:"center", padding:"24px", position:"relative", overflow:"hidden", fontFamily:P.font }}>
+    <div style={{ minHeight:"100vh", background:`linear-gradient(135deg,${P.navy} 0%,${P.royal} 55%,#282B4A 100%)`, display:"flex", alignItems:"center", justifyContent:"center", padding:"24px", position:"relative", overflow:"hidden", fontFamily:P.font }}>
       {/* bg blobs */}
       <div style={{ position:"absolute", inset:0, pointerEvents:"none" }}>
-        <div style={{ position:"absolute", top:80, left:40, width:288, height:288, borderRadius:"50%", background:"rgba(1,138,190,0.18)", filter:"blur(64px)" }}/>
-        <div style={{ position:"absolute", bottom:80, right:40, width:384, height:384, borderRadius:"50%", background:"rgba(151,202,219,0.1)", filter:"blur(64px)" }}/>
-        <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:800, height:800, borderRadius:"50%", border:"1px solid rgba(1,138,190,0.12)" }}/>
-        <div style={{ position:"absolute", inset:0, opacity:0.04, backgroundImage:`linear-gradient(rgba(151,202,219,0.4) 1px,transparent 1px),linear-gradient(90deg,rgba(151,202,219,0.4) 1px,transparent 1px)`, backgroundSize:"60px 60px" }}/>
+        <div style={{ position:"absolute", top:80, left:40, width:288, height:288, borderRadius:"50%", background:"rgba(40, 43, 74, 0.18)", filter:"blur(64px)" }}/>
+        <div style={{ position:"absolute", bottom:80, right:40, width:384, height:384, borderRadius:"50%", background:"rgba(212, 210, 195, 0.1)", filter:"blur(64px)" }}/>
+        <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:800, height:800, borderRadius:"50%", border:"1px solid rgba(40, 43, 74, 0.12)" }}/>
+        <div style={{ position:"absolute", inset:0, opacity:0.04, backgroundImage:`linear-gradient(rgba(212, 210, 195, 0.4) 1px,transparent 1px),linear-gradient(90deg,rgba(212, 210, 195, 0.4) 1px,transparent 1px)`, backgroundSize:"60px 60px" }}/>
       </div>
 
       <div style={{ width:"100%", maxWidth:440, position:"relative" }}>
         {/* Back button */}
         <div style={{ marginBottom:24 }}>
           {step === 1 ? (
-            <Link to="/" style={{ display:"inline-flex", alignItems:"center", gap:8, color:"rgba(151,202,219,0.6)", textDecoration:"none", fontSize:14, fontWeight:600, transition:"color 0.2s" }}
-              onMouseEnter={e=>e.currentTarget.style.color=P.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(151,202,219,0.6)"}>
-              <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(151,202,219,0.2)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+            <Link to="/" style={{ display:"inline-flex", alignItems:"center", gap:8, color:"rgba(212, 210, 195, 0.6)", textDecoration:"none", fontSize:14, fontWeight:600, transition:"color 0.2s" }}
+              onMouseEnter={e=>e.currentTarget.style.color=P.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(212, 210, 195, 0.6)"}>
+              <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(212, 210, 195, 0.2)", display:"flex", alignItems:"center", justifyContent:"center" }}>
                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7"/></svg>
               </div>
               Back
             </Link>
           ) : (
             <button onClick={()=>{setStep(1); setError(""); setMessage(""); setOtp(""); setNewPassword("");}} 
-              style={{ display:"inline-flex", alignItems:"center", gap:8, color:"rgba(151,202,219,0.6)", background:"none", border:"none", cursor:"pointer", fontSize:14, fontWeight:600, padding:0, fontFamily:P.font, transition:"color 0.2s" }}
-              onMouseEnter={e=>e.currentTarget.style.color=P.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(151,202,219,0.6)"}>
-              <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(151,202,219,0.2)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+              style={{ display:"inline-flex", alignItems:"center", gap:8, color:"rgba(212, 210, 195, 0.6)", background:"none", border:"none", cursor:"pointer", fontSize:14, fontWeight:600, padding:0, fontFamily:P.font, transition:"color 0.2s" }}
+              onMouseEnter={e=>e.currentTarget.style.color=P.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(212, 210, 195, 0.6)"}>
+              <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(212, 210, 195, 0.2)", display:"flex", alignItems:"center", justifyContent:"center" }}>
                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7"/></svg>
               </div>
               Back to Login
@@ -143,7 +151,7 @@ export default function SignIn() {
 
         {/* Logo */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:10, marginBottom:32 }}>
-          <div style={{ width:40, height:40, borderRadius:12, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 6px 20px rgba(1,138,190,0.35)" }}>
+          <div style={{ width:40, height:40, borderRadius:12, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 6px 20px rgba(40, 43, 74, 0.35)" }}>
             <span style={{ color:P.white, fontWeight:900, fontSize:20 }}>M</span>
           </div>
           <span style={{ fontSize:22, fontWeight:900, color:P.white, letterSpacing:"-0.02em" }}>
@@ -152,18 +160,18 @@ export default function SignIn() {
         </div>
 
         {/* Card */}
-        <div style={{ background:"rgba(0,27,72,0.5)", backdropFilter:"blur(20px)", border:"1px solid rgba(151,202,219,0.15)", borderRadius:24, padding:32, boxShadow:"0 24px 64px rgba(0,0,0,0.35)" }}>
+        <div style={{ background:"rgba(40, 43, 74, 0.5)", backdropFilter:"blur(20px)", border:"1px solid rgba(212, 210, 195, 0.15)", borderRadius:24, padding:32, boxShadow:"0 24px 64px rgba(0,0,0,0.35)" }}>
 
           {step === 1 && (
             <>
               {/* Header */}
               <div style={{ textAlign:"center", marginBottom:32 }}>
-                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(40, 43, 74, 0.18)", border:"1px solid rgba(40, 43, 74, 0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
                   <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
                   <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Welcome Back</span>
                 </div>
                 <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Sign In</h1>
-                <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
+                <p style={{ color:"rgba(212, 210, 195, 0.6)", fontSize:14, margin:0 }}>
                   Don't have an account?{" "}
                   <Link to="/signup" style={{ color:P.sky, fontWeight:700, textDecoration:"none" }}
                     onMouseEnter={e=>e.target.style.color=P.mist} onMouseLeave={e=>e.target.style.color=P.sky}>Get Started</Link>
@@ -187,30 +195,30 @@ export default function SignIn() {
               <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
                 {/* Email */}
                 <div>
-                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Email Address</label>
+                  <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Email Address</label>
                   <div style={{ position:"relative" }}>
                     <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
                       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
                     </div>
                     <input type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleLoginSubmit()} placeholder="you@example.com"
                       style={inputStyle}
-                      onFocus={e=>{ e.target.style.borderColor=`rgba(1,138,190,0.6)`; e.target.style.background="rgba(1,138,190,0.1)"; }}
-                      onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                      onFocus={e=>{ e.target.style.borderColor=`rgba(40, 43, 74, 0.6)`; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}
+                      onBlur={e=>{ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}
                     />
                   </div>
                 </div>
 
                 {/* Password */}
                 <div>
-                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Password</label>
+                  <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Password</label>
                   <div style={{ position:"relative" }}>
                     <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
                       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                     </div>
                     <input type={showPassword?"text":"password"} value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleLoginSubmit()} placeholder="Enter your password"
                       style={{ ...inputStyle, paddingRight:44 }}
-                      onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
-                      onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                      onFocus={e=>{ e.target.style.borderColor="rgba(40, 43, 74, 0.6)"; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}
+                      onBlur={e=>{ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}
                     />
                     <button onClick={()=>setShowPassword(!showPassword)} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", color:P.muted, padding:0 }}>
                       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -226,8 +234,8 @@ export default function SignIn() {
                 {/* Remember & Forgot */}
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                   <label style={{ display:"flex", alignItems:"center", gap:8, cursor:"pointer" }}>
-                    <div style={{ width:16, height:16, borderRadius:4, border:`1px solid rgba(151,202,219,0.3)`, background:"rgba(0,27,72,0.4)" }}/>
-                    <span style={{ color:"rgba(151,202,219,0.55)", fontSize:12, fontWeight:600 }}>Remember me</span>
+                    <div style={{ width:16, height:16, borderRadius:4, border:`1px solid rgba(212, 210, 195, 0.3)`, background:"rgba(40, 43, 74, 0.4)" }}/>
+                    <span style={{ color:"rgba(212, 210, 195, 0.55)", fontSize:12, fontWeight:600 }}>Remember me</span>
                   </label>
                   <button onClick={()=>{setStep(3); setError(""); setMessage("");}} style={{ color:P.sky, fontSize:12, fontWeight:700, background:"none", border:"none", cursor:"pointer", padding:0, fontFamily:P.font, transition:"color 0.2s" }}
                     onMouseEnter={e=>e.currentTarget.style.color=P.mist} onMouseLeave={e=>e.currentTarget.style.color=P.sky}>Forgot password?</button>
@@ -235,7 +243,7 @@ export default function SignIn() {
 
                 {/* Submit */}
                 <button onClick={handleLoginSubmit} disabled={loading}
-                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(1,138,190,0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
+                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(40, 43, 74, 0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
                   onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
                   onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
                   {loading ? (
@@ -255,12 +263,12 @@ export default function SignIn() {
           {step === 2 && (
             <>
               <div style={{ textAlign:"center", marginBottom:28 }}>
-                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(40, 43, 74, 0.18)", border:"1px solid rgba(40, 43, 74, 0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
                   <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
                   <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Action Required</span>
                 </div>
                 <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Verify Your Email</h1>
-                <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
+                <p style={{ color:"rgba(212, 210, 195, 0.6)", fontSize:14, margin:0 }}>
                   We've sent a 6-digit verification code to <strong>{email}</strong>.
                 </p>
               </div>
@@ -280,16 +288,16 @@ export default function SignIn() {
 
               <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
                 <div>
-                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Verification Code</label>
+                  <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Verification Code</label>
                   <input type="text" value={otp} onChange={e=>setOtp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleVerify()} placeholder="Enter 6-digit code" maxLength={6}
                     style={{ ...inputStyle, textAlign:"center", fontSize:20, letterSpacing:"0.2em", paddingLeft:16 }}
-                    onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
-                    onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                    onFocus={e=>{ e.target.style.borderColor="rgba(40, 43, 74, 0.6)"; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}
+                    onBlur={e=>{ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}
                   />
                 </div>
 
                 <button onClick={handleVerify} disabled={loading}
-                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(1,138,190,0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
+                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(40, 43, 74, 0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
                   onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
                   onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
                   {loading ? "Verifying..." : "Verify"}
@@ -307,12 +315,12 @@ export default function SignIn() {
           {step === 3 && (
             <>
               <div style={{ textAlign:"center", marginBottom:28 }}>
-                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(40, 43, 74, 0.18)", border:"1px solid rgba(40, 43, 74, 0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
                   <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
                   <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Reset Password</span>
                 </div>
                 <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Forgot Password</h1>
-                <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
+                <p style={{ color:"rgba(212, 210, 195, 0.6)", fontSize:14, margin:0 }}>
                   Enter your registered email address to receive a password reset code.
                 </p>
               </div>
@@ -326,21 +334,21 @@ export default function SignIn() {
 
               <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
                 <div>
-                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Email Address</label>
+                  <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Email Address</label>
                   <div style={{ position:"relative" }}>
                     <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
                       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
                     </div>
                     <input type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleForgotPasswordRequest()} placeholder="you@example.com"
                       style={inputStyle}
-                      onFocus={e=>{ e.target.style.borderColor=`rgba(1,138,190,0.6)`; e.target.style.background="rgba(1,138,190,0.1)"; }}
-                      onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                      onFocus={e=>{ e.target.style.borderColor=`rgba(40, 43, 74, 0.6)`; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}
+                      onBlur={e=>{ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}
                     />
                   </div>
                 </div>
 
                 <button onClick={handleForgotPasswordRequest} disabled={loading}
-                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(1,138,190,0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
+                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(40, 43, 74, 0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
                   onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
                   onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
                   {loading ? "Sending..." : "Send Reset Code"}
@@ -352,12 +360,12 @@ export default function SignIn() {
           {step === 4 && (
             <>
               <div style={{ textAlign:"center", marginBottom:28 }}>
-                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(1,138,190,0.18)", border:"1px solid rgba(1,138,190,0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(40, 43, 74, 0.18)", border:"1px solid rgba(40, 43, 74, 0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
                   <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
                   <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Set New Password</span>
                 </div>
                 <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Reset Password</h1>
-                <p style={{ color:"rgba(151,202,219,0.6)", fontSize:14, margin:0 }}>
+                <p style={{ color:"rgba(212, 210, 195, 0.6)", fontSize:14, margin:0 }}>
                   Enter the code sent to <strong>{email}</strong> and your new password.
                 </p>
               </div>
@@ -377,24 +385,24 @@ export default function SignIn() {
 
               <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
                 <div>
-                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Reset Code</label>
+                  <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Reset Code</label>
                   <input type="text" value={otp} onChange={e=>setOtp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleResetPassword()} placeholder="Enter 6-digit code" maxLength={6}
                     style={{ ...inputStyle, textAlign:"center", fontSize:20, letterSpacing:"0.2em", paddingLeft:16 }}
-                    onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
-                    onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                    onFocus={e=>{ e.target.style.borderColor="rgba(40, 43, 74, 0.6)"; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}
+                    onBlur={e=>{ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display:"block", color:"rgba(151,202,219,0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>New Password</label>
+                  <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>New Password</label>
                   <div style={{ position:"relative" }}>
                     <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
                       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                     </div>
                     <input type={showPassword?"text":"password"} value={newPassword} onChange={e=>setNewPassword(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleResetPassword()} placeholder="New password (min 8 char)"
                       style={{ ...inputStyle, paddingRight:44 }}
-                      onFocus={e=>{ e.target.style.borderColor="rgba(1,138,190,0.6)"; e.target.style.background="rgba(1,138,190,0.1)"; }}
-                      onBlur={e=>{ e.target.style.borderColor="rgba(151,202,219,0.2)"; e.target.style.background="rgba(0,27,72,0.35)"; }}
+                      onFocus={e=>{ e.target.style.borderColor="rgba(40, 43, 74, 0.6)"; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}
+                      onBlur={e=>{ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}
                     />
                     <button onClick={()=>setShowPassword(!showPassword)} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", color:P.muted, padding:0 }}>
                       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -408,7 +416,7 @@ export default function SignIn() {
                 </div>
 
                 <button onClick={handleResetPassword} disabled={loading}
-                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(1,138,190,0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
+                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(40, 43, 74, 0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
                   onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
                   onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
                   {loading ? "Resetting..." : "Reset Password"}
@@ -428,7 +436,7 @@ export default function SignIn() {
           ].map(b=>(
             <div key={b.label} style={{ display:"flex", alignItems:"center", gap:6 }}>
               {b.icon}
-              <span style={{ color:"rgba(151,202,219,0.45)", fontSize:12, fontWeight:600 }}>{b.label}</span>
+              <span style={{ color:"rgba(212, 210, 195, 0.45)", fontSize:12, fontWeight:600 }}>{b.label}</span>
             </div>
           ))}
         </div>

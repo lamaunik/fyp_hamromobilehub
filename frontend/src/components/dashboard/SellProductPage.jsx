@@ -2,11 +2,17 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 const P = {
-  navy:"#001B48", royal:"#02457A", ocean:"#018ABE",
-  sky:"#97CADB", mist:"#D6E8EE", white:"#ffffff",
-  muted:"#6b99b5", mistBg:"#f0f6f9",
-  font:"'Helvetica Neue',Helvetica,Arial,'Segoe UI',sans-serif",
-  purple:"#7c3aed", purpleLight:"rgba(124,58,237,0.1)",
+  navy:  "#282B4A",
+  royal: "#282B4A",
+  ocean: "#282B4A",
+  sky:   "#D4D2C3",
+  mist:  "#E5E3D5",
+  white: "#FFFFFF",
+  muted: "#7A7C8E",
+  mistBg:"#EEEBDA",
+  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
+  purple:"#282B4A",
+  purpleLight:"#E5E3D5"
 };
 
 const CATS  = ["Smartphones","Laptops","Tablets","Accessories","Wearables","Other"];
@@ -14,7 +20,7 @@ const CONDS = ["Like New","Good","Fair","Poor"];
 
 const CONDITION_COLORS = {
   "Like New":{ bg:"rgba(34,197,94,0.1)",  border:"rgba(34,197,94,0.3)",  text:"#16a34a" },
-  "Good":    { bg:"rgba(1,138,190,0.1)",  border:"rgba(1,138,190,0.3)",  text:"#018ABE" },
+  "Good":    { bg:"rgba(40, 43, 74, 0.1)",  border:"rgba(40, 43, 74, 0.3)",  text:"#282B4A" },
   "Fair":    { bg:"rgba(234,179,8,0.1)",  border:"rgba(234,179,8,0.3)",  text:"#b45309" },
   "Poor":    { bg:"rgba(220,38,38,0.1)",  border:"rgba(220,38,38,0.3)",  text:"#dc2626" },
 };
@@ -174,7 +180,7 @@ export default function SellProductPage({ setTab }) {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} style={{ background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:20, padding:32, boxShadow:"0 4px 20px rgba(0,27,72,.06)" }}>
+          <form onSubmit={handleSubmit} style={{ background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:20, padding:32, boxShadow:"0 4px 20px rgba(40, 43, 74, .06)" }}>
 
             {/* Title + Category */}
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:16 }}>
@@ -309,7 +315,7 @@ export default function SellProductPage({ setTab }) {
               const isSold = p.status === "sold";
               const thumb = p.images && p.images.length > 0 ? imgSrc(p.images[0]) : null;
               return (
-                <div key={p._id} style={{ background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:16, padding:"16px 20px", display:"flex", alignItems:"center", gap:16, opacity: isSold ? 0.6 : 1, boxShadow:"0 2px 10px rgba(0,27,72,.04)" }}>
+                <div key={p._id} style={{ background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:16, padding:"16px 20px", display:"flex", alignItems:"center", gap:16, opacity: isSold ? 0.6 : 1, boxShadow:"0 2px 10px rgba(40, 43, 74, .04)" }}>
                   {/* Thumbnail — shows real image */}
                   <div style={{ width:64, height:64, borderRadius:12, background:P.mistBg, border:`1px solid ${P.mist}`, overflow:"hidden", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
                     {thumb

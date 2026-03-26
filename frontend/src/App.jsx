@@ -9,6 +9,7 @@ import SignUp from "./pages/SignUp";
 import Dashboard       from "./pages/Dashboard";
 import VendorDashboard from "./pages/VendorDashboard";
 import AdminDashboard  from "./pages/AdminDashboard";
+import MessagesPage    from "./pages/MessagesPage";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
@@ -48,6 +49,16 @@ export default function App() {
 
           {/* Catch-all */}
           <Route path="*" element={<LandingPage />} />
+
+          {/* Messages Route */}
+          <Route
+            path="/messages"
+            element={
+              <ProtectedRoute>
+                <MessagesPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

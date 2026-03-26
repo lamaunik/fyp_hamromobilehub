@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const P = {
   navy:"#001B48", royal:"#02457A", ocean:"#018ABE",
@@ -60,6 +61,8 @@ const DefaultPlaceholder = ({ category, title }) => (
 
 // Contact Modal
 function ContactModal({ product, onClose }) {
+  const navigate = useNavigate();
+
   if (!product) return null;
   const seller  = product.seller;
   const imgSrc  = getImgSrc(product.images);
@@ -104,12 +107,12 @@ function ContactModal({ product, onClose }) {
         </div>
 
         <div style={{ display:"flex", gap:10 }}>
-          {seller?.email && (
-            <a href={`mailto:${seller.email}?subject=Interested in: ${product.title}&body=Hi, I saw your listing for ${product.title} at Rs. ${product.price}. Is it still available?`}
-              style={{ flex:1, padding:"11px 0", background:`linear-gradient(135deg,${P.purple},#a855f7)`, color:P.white, borderRadius:11, fontSize:13, fontWeight:700, textAlign:"center", textDecoration:"none", display:"flex", alignItems:"center", justifyContent:"center", gap:6 }}>
-              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-              Send Email
-            </a>
+          {seller && (
+            <button onClick={() => { onClose(); navigate("/messages", { state: { sellerId: seller._id } }); }}
+              style={{ flex:1, padding:"11px 0", background:`linear-gradient(135deg,${P.purple},#a855f7)`, color:P.white, borderRadius:11, fontSize:13, fontWeight:700, textAlign:"center", border:"none", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:6 }}>
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+              Chat Seller
+            </button>
           )}
           {(product.contactPhone || seller?.phone) && (
             <a href={`tel:${product.contactPhone || seller?.phone}`}

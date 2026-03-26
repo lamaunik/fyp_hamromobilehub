@@ -53,15 +53,25 @@ app.use("/api/messages", messageRoutes);
 
 // Socket.io connection logic
 io.on("connection", (socket) => {
-  console.log("🟢 A user connected:", socket.id);
+  const userId = socket.handshake.query.userId;
+  if (userId) {
+    socket.join(userId);
+  }
+  console.log("🟢 A user connected:", socket.id, "User ID:", userId || "Guest");
 
   socket.on("join_chat", (conversationId) => {
     socket.join(conversationId);
-    console.log(`User joined conversation: ${conversationId}`);
   });
 
   socket.on("send_message", (messageData) => {
+    // Send to the active conversation room
     io.to(messageData.conversationId).emit("receive_message", messageData);
+    
+    // Also explicitly alert the receiver's personal user room so it forces a sidebar refresh 
+    // if they haven't specifically joined this conversation room yet
+    if (messageData.receiverId) {
+       io.to(messageData.receiverId).emit("receive_message", messageData);
+    }
   });
 
   socket.on("disconnect", () => {

@@ -1,5 +1,5 @@
 // src/components/vendor/VendorTopbar.jsx
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const LABELS = {
@@ -25,6 +25,7 @@ const P = {
 
 export default function VendorTopbar({ tab, onMenu }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const current = LABELS[tab] || LABELS.overview;
 
   return (
@@ -66,6 +67,19 @@ export default function VendorTopbar({ tab, onMenu }) {
 
       {/* Right */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+
+        {/* Messages */}
+        <button onClick={() => navigate("/messages")} style={{
+          width: 38, height: 38, borderRadius: "50%",
+          background: "rgba(1,138,190,0.07)", border: `1px solid ${P.mist}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          cursor: "pointer", color: P.royal, transition: "all 0.2s",
+        }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(1,138,190,0.14)"; e.currentTarget.style.borderColor = P.sky; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "rgba(1,138,190,0.07)"; e.currentTarget.style.borderColor = P.mist; }}
+        >
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        </button>
 
         {/* Notification */}
         <button style={{

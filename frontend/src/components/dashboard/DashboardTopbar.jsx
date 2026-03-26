@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { P } from "./DashboardConstants";
 import { Icon } from "./DashboardIcons";
@@ -6,6 +7,7 @@ import { ProductThumb } from "./DashboardUI";
 
 export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNotifs, products = [], viewProduct }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [focused, setFocused] = useState(false);
   const [showNotif, setShowNotif] = useState(false);
@@ -123,6 +125,17 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
               )}
             </div>
           )}
+        </div>
+
+        {/* Messages */}
+        <div style={{ position: "relative" }}>
+          <button
+            className="icon-btn"
+            onClick={() => navigate("/messages")}
+            style={{ position: "relative", width: 36, height: 36, borderRadius: 10, border: `1px solid ${P.mist}`, display: "flex", alignItems: "center", justifyContent: "center", color: P.royal, background: P.mistBg }}
+          >
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          </button>
         </div>
 
         {/* Notifications */}

@@ -30,10 +30,14 @@ export default function MessagesPage() {
     }
     fetchConversations();
     
+    socket.io.opts.query = { userId: user._id };
     socket.connect();
     
     socket.on("receive_message", (message) => {
-      setMessages((prev) => [...prev, message]);
+      setMessages((prev) => {
+        if (prev.some(m => m._id === message._id)) return prev;
+        return [...prev, message];
+      });
       setConversations((prev) => {
         const updated = [...prev];
         const idx = updated.findIndex(c => c._id === message.conversationId);
@@ -83,7 +87,10 @@ export default function MessagesPage() {
   const fetchConversations = async () => {
     try {
       const res = await api.get("/messages");
-      if (res.success) setConversations(res.data);
+      if (res.success) {
+        setConversations(res.data);
+        res.data.forEach(c => socket.emit("join_chat", c._id));
+      }
     } catch (err) {
       console.error(err);
     }
@@ -121,14 +128,14 @@ export default function MessagesPage() {
       const res = await api.post("/messages", payload);
       
       if (res.success) {
-        const msg = res.data;
+        const msg = { ...res.data, receiverId: payload.receiverId };
+        // We do not eagerly setMessages here to avoid duplication.
+        // We let the socket event do it so the behavior is identical everywhere.
         socket.emit("send_message", msg);
         
         if (activeChat.isNew) {
            fetchConversations();
            setActiveChat({ _id: res.conversationId, participants: activeChat.participants });
-        } else {
-           setMessages([...messages, msg]);
         }
         setNewMessage("");
       }

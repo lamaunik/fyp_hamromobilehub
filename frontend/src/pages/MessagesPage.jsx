@@ -220,28 +220,53 @@ export default function MessagesPage() {
             </div>
 
             {/* Messages List */}
-            <div style={{ flex:1, padding:"24px", overflowY:"auto", display:"flex", flexDirection:"column", gap:16, background:"#f4f7f9" }}>
+            <div style={{ flex:1, padding:"24px", overflowY:"auto", display:"flex", flexDirection:"column", gap:20, background:"#f4f7f9" }}>
               {messages.map((m, i) => {
-                const isMine = m.sender === user?._id || m.sender === user?.id;
+                const senderId = m.sender?._id || m.sender;
+                const isMine = senderId === user?._id || senderId === user?.id;
+                const senderName  = m.sender?.name || "User";
+                const senderPhoto = m.sender?.profilePicture;
+
                 return (
-                  <div key={m._id || i} style={{ alignSelf: isMine ? "flex-end" : "flex-start", maxWidth:"75%", display:"flex", flexDirection:"column", alignItems: isMine ? "flex-end" : "flex-start" }}>
-                    <div style={{ 
-                       background: isMine ? `linear-gradient(135deg, ${P.ocean}, ${P.royal})` : P.white, 
-                       color: isMine ? P.white : P.navy, 
-                       padding:"12px 18px", 
-                       borderRadius:"18px", 
-                       borderBottomRightRadius: isMine ? 4 : 18, 
-                       borderBottomLeftRadius: !isMine ? 4 : 18, 
-                       boxShadow: isMine ? "0 4px 14px rgba(40, 43, 74, 0.25)" : "0 2px 10px rgba(40, 43, 74, 0.06)", 
-                       fontSize:14, 
-                       lineHeight:1.5, 
-                       border: isMine ? "none" : `1.5px solid ${P.mist}` 
-                    }}>
-                      {m.text}
+                  <div key={m._id || i} style={{ 
+                    alignSelf: isMine ? "flex-end" : "flex-start", 
+                    maxWidth:"80%", 
+                    display:"flex", 
+                    flexDirection:"row",
+                    gap: 10,
+                    alignItems: "flex-end",
+                    justifyContent: isMine ? "flex-end" : "flex-start"
+                  }}>
+                    {!isMine && (
+                      <div style={{ width:32, height:32, borderRadius:"50%", background:`linear-gradient(135deg, ${P.purple}, ${P.muted})`, color:P.white, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, fontSize:12, boxShadow:"0 2px 6px rgba(0,0,0,0.1)", flexShrink:0, overflow:"hidden", marginBottom: 18 }}>
+                        {senderPhoto ? (
+                          <img src={senderPhoto.startsWith("http") ? senderPhoto : `http://localhost:5000${senderPhoto}`} alt="S" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                        ) : (
+                          senderName.charAt(0).toUpperCase()
+                        )}
+                      </div>
+                    )}
+
+                    <div style={{ display:"flex", flexDirection:"column", alignItems: isMine ? "flex-end" : "flex-start" }}>
+                      {!isMine && <span style={{ fontSize: 11, fontWeight: 700, color: P.navy, marginBottom: 4, marginLeft: 4 }}>{senderName}</span>}
+                      <div style={{ 
+                        background: isMine ? `linear-gradient(135deg, ${P.ocean}, ${P.royal})` : P.white, 
+                        color: isMine ? P.white : P.navy, 
+                        padding:"12px 18px", 
+                        borderRadius:"18px", 
+                        borderBottomRightRadius: isMine ? 4 : 18, 
+                        borderBottomLeftRadius: !isMine ? 4 : 18, 
+                        boxShadow: isMine ? "0 4px 14px rgba(40, 43, 74, 0.25)" : "0 2px 10px rgba(40, 43, 74, 0.06)", 
+                        fontSize:14, 
+                        lineHeight:1.5, 
+                        border: isMine ? "none" : `1.5px solid ${P.mist}` 
+                      }}>
+                        {m.text}
+                      </div>
+                      <span style={{ fontSize: 10, color: P.muted, marginTop: 4, padding: "0 4px", fontWeight: 600 }}>
+                        {m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Just now"}
+                      </span>
                     </div>
-                    <span style={{ fontSize: 10, color: P.muted, marginTop: 4, padding: "0 4px", fontWeight: 600 }}>
-                       {m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Just now"}
-                    </span>
                   </div>
                 );
               })}

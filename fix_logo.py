@@ -1,4 +1,4 @@
-from PIL import Image
+import PIL.Image as PILImage
 import colorsys
 import os
 
@@ -11,11 +11,11 @@ def fix_logo():
 
     try:
         # Load image and ensure it's in RGBA mode for transparency handling
-        img = Image.open(path).convert("RGBA")
+        img = PILImage.open(path).convert("RGBA")
         width, height = img.size
         
         # Create a new image for the transformed logo to be safe
-        new_img = Image.new("RGBA", (width, height))
+        new_img = PILImage.new("RGBA", (width, height))
         
         for y in range(height):
             for x in range(width):

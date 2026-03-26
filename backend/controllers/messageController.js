@@ -7,7 +7,7 @@ export const getConversations = async (req, res) => {
     const conversations = await Conversation.find({
       participants: req.user._id,
     })
-      .populate("participants", "name email")
+      .populate("participants", "name email profilePicture")
       .sort({ updatedAt: -1 });
 
     res.json({ success: true, count: conversations.length, data: conversations });
@@ -22,7 +22,9 @@ export const getMessages = async (req, res) => {
   try {
     const messages = await Message.find({
       conversationId: req.params.conversationId,
-    }).sort({ createdAt: 1 });
+    })
+      .populate("sender", "name profilePicture")
+      .sort({ createdAt: 1 });
     
     res.json({ success: true, count: messages.length, data: messages });
   } catch (error) {

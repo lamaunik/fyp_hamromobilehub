@@ -98,6 +98,23 @@ export default function Dashboard() {
     if (tab === "orders") fetchOrders();
   }, [tab]);
 
+  // Sync Wishlist from DB on mount
+  useEffect(() => {
+    const syncFromDB = async () => {
+      try {
+        if (!user) return;
+        const res = await api.get("/users/profile");
+        if (res.success && res.data?.wishlist) {
+          // Merge or overwrite local with DB
+          setWishlist(res.data.wishlist);
+        }
+      } catch (err) {
+        console.error("Failed to sync wishlist from DB", err);
+      }
+    };
+    syncFromDB();
+  }, [user]);
+
   const switchTab   = (t) => { 
     if (!user && ["orders", "profile", "cart", "wishlist", "sell"].includes(t)) {
       alert("Please sign in or create an account to access this feature.");
@@ -131,13 +148,24 @@ export default function Dashboard() {
   const removeOrder = (orderId)  => setOrders(prev => prev.filter(o => o._id !== orderId));
   const updateOrder = (orderId, patch) => setOrders(prev => prev.map(o => o._id === orderId ? { ...o, ...patch } : o));
 
-  const toggleWish = (id) => {
+  const toggleWish = async (id) => {
     if (!user) {
       alert("Please sign up first to add items to your wishlist.");
       navigate("/signup");
       return;
     }
-    setWishlist(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+    const newList = wishlist.includes(id) 
+      ? wishlist.filter(x => x !== id) 
+      : [...wishlist, id];
+    
+    setWishlist(newList);
+    
+    // Sync to DB immediately
+    try {
+      await api.put("/users/wishlist", { wishlist: newList });
+    } catch (err) {
+      console.error("Failed to sync wishlist to DB", err);
+    }
   };
   const addNotif   = (n)  => setNotifs(prev => [n, ...prev]);
 

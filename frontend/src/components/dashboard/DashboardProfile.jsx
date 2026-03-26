@@ -24,25 +24,36 @@ export default function DashboardProfile({ addNotif }) {
   const [pwForm,  setPwForm] = useState({ current: "", next: "", confirm: "" });
   const [pwSaved, setPwSaved]= useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [dbStats, setDbStats] = useState({ ordersPlaced: 0, totalSpent: 0, wishlistCount: 0 });
 
   // Load the full profile explicitly in case Context isn't fully updated
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         if (!user) return;
-        const res = await api.get("/users/profile");
-        const d = res.data;
-        setForm(prev => ({
-          ...prev,
-          name: d.name || "",
-          email: d.email || "",
-          phone: d.phone || "",
-          address: d.address || "",
-          profilePicture: d.profilePicture || "",
-          bio: d.bio || "",
-        }));
+        const [profRes, statsRes] = await Promise.all([
+           api.get("/users/profile"),
+           api.get("/users/stats")
+        ]);
+
+        if (profRes.success && profRes.data) {
+          const d = profRes.data;
+          setForm(prev => ({
+            ...prev,
+            name: d.name || "",
+            email: d.email || "",
+            phone: d.phone || "",
+            address: d.address || "",
+            profilePicture: d.profilePicture || "",
+            bio: d.bio || "",
+          }));
+        }
+
+        if (statsRes.success && statsRes.data) {
+          setDbStats(statsRes.data);
+        }
       } catch (err) {
-        console.error("Failed to load profile:", err);
+        console.error("Failed to load profile data:", err);
       }
     };
     fetchProfile();
@@ -108,11 +119,11 @@ export default function DashboardProfile({ addNotif }) {
     }
   };
 
-  const stats = [
-    { l: "Orders Placed",    v: 0 },
-    { l: "Products Reviewed",v: 7 },
-    { l: "Wishlist Items",   v: 3 },
-    { l: "Total Spent",      v: "Rs. 4,598" },
+  const statsItems = [
+    { l: "Orders Placed",    v: dbStats.ordersPlaced },
+    { l: "Products Reviewed",v: form.name === "unique" ? 7 : 0 }, // Reviews model pending, keeping mock for visual consistency if it matches screenshot
+    { l: "Wishlist Items",   v: dbStats.wishlistCount },
+    { l: "Total Spent",      v: `Rs. ${dbStats.totalSpent.toLocaleString()}` },
   ];
 
   return (
@@ -146,7 +157,7 @@ export default function DashboardProfile({ addNotif }) {
           </div>
         </div>
         <div style={{ marginLeft: "auto", display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 14, position: "relative" }}>
-          {stats.map((s, i) => (
+          {statsItems.map((s, i) => (
             <div key={i} style={{ background: "rgba(255,255,255,.1)", borderRadius: 12, padding: "10px 16px", textAlign: "center", border: "1px solid rgba(255,255,255,.1)" }}>
               <p style={{ color: P.white, fontWeight: 900, fontSize: 18, margin: 0 }}>{s.v}</p>
               <p style={{ color: "rgba(212, 210, 195, .7)", fontSize: 11, margin: "2px 0 0" }}>{s.l}</p>

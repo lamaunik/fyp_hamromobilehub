@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { socket } from "../utils/socket";
+import { P } from "../components/dashboard/DashboardConstants";
 import VendorSidebar   from "../components/vendor/VendorSidebar";
 import VendorTopbar    from "../components/vendor/VendorTopbar";
 import VendorOverview  from "../components/vendor/VendorOverview";
@@ -16,19 +17,25 @@ function ComingSoon({ label }) {
     <div style={{
       display: "flex", flexDirection: "column", alignItems: "center",
       justifyContent: "center", minHeight: "60vh", textAlign: "center",
-      fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+      fontFamily: P.font, padding: 40, background: P.white,
+      borderRadius: 32, border: `1px dashed ${P.mist}`,
+      boxShadow: "0 10px 40px rgba(0,0,0,0.02)"
     }}>
       <div style={{
-        width: 80, height: 80, borderRadius: 24, marginBottom: 20,
-        background: "rgba(40, 43, 74, 0.08)", border: "1px dashed rgba(40, 43, 74, 0.3)",
+        width: 100, height: 100, borderRadius: 28, marginBottom: 24,
+        background: P.mistBg, border: `1px solid ${P.mist}`,
         display: "flex", alignItems: "center", justifyContent: "center",
+        color: P.navy, boxShadow: "0 8px 24px rgba(0,0,0,0.04)"
       }}>
-        <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#282B4A" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M11 4a2 2 0 114 0v1a2 2 0 002 2h1a2 2 0 110 4h-1a2 2 0 00-2 2v1a2 2 0 11-4 0V14a2 2 0 00-2-2H9a2 2 0 110-4h1a2 2 0 002-2V4z" />
         </svg>
       </div>
-      <h2 style={{ color: "#282B4A", fontWeight: 800, fontSize: 22, margin: "0 0 8px", fontFamily: "inherit" }}>{label}</h2>
-      <p style={{ color: "#6b99b5", fontSize: 14, fontFamily: "inherit" }}>Coming soon</p>
+      <h2 style={{ color: P.navy, fontWeight: 900, fontSize: 28, margin: "0 0 10px", fontFamily: P.fontHeading, letterSpacing: "0.5px" }}>{label} Module</h2>
+      <p style={{ color: P.muted, fontSize: 16, fontWeight: 500, maxWidth: 300, lineHeight: 1.6, marginInline: "auto" }}>We are currently architecting this feature for a premium experience. Expected release in Q2.</p>
+      <div style={{ marginTop: 32, padding: "8px 20px", background: P.mistBg, borderRadius: 12, color: P.navy, fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em" }}>
+         Status: In Development
+      </div>
     </div>
   );
 }
@@ -77,14 +84,16 @@ export default function VendorDashboard() {
     <div style={{
       minHeight: "100vh",
       display: "flex",
-      background: "#EEEBDA",
-      fontFamily: "'Helvetica Neue', Helvetica, Arial, 'Segoe UI', sans-serif",
+      background: P.mistBg,
+      fontFamily: P.font,
     }}>
       <VendorSidebar tab={tab} setTab={setTab} open={open} setOpen={setOpen} />
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
         <VendorTopbar tab={tab} onMenu={() => setOpen(o => !o)} unreadChat={unreadChat} />
-        <main style={{ flex: 1, overflowY: "auto", padding: "28px 32px", background: "#EEEBDA" }}>
-          {content()}
+        <main style={{ flex: 1, overflowY: "auto", padding: "40px" }}>
+          <div style={{ maxWidth: "1600px", margin: "0 auto" }}>
+            {content()}
+          </div>
         </main>
       </div>
     </div>

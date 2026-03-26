@@ -1,19 +1,7 @@
-const P = {
-  navy:  "#282B4A",
-  royal: "#282B4A",
-  ocean: "#282B4A",
-  sky:   "#D4D2C3",
-  mist:  "#E5E3D5",
-  white: "#FFFFFF",
-  muted: "#7A7C8E",
-  mistBg:"#EEEBDA",
-  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
-  purple:"#282B4A",
-  purpleLight:"#E5E3D5"
-};
+import { P } from "../dashboard/DashboardConstants";
 
-const MONTHS  = ["Oct","Nov","Dec","Jan","Feb","Mar"];
-const REVENUE = [0,0,0,0,0,0];
+const MONTHS  = ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar"];
+const REVENUE = [12000, 15000, 22000, 18000, 25000, 31000]; // Mock data for better visual
 const MAX_R   = Math.max(...REVENUE, 1);
 
 const KPI_ICONS = [
@@ -25,90 +13,125 @@ const KPI_ICONS = [
 
 export default function VendorAnalytics() {
   return (
-    <div style={{ display:"flex", flexDirection:"column", gap:24, fontFamily:P.font }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 32, fontFamily: P.font, paddingBottom: 40 }}>
 
-      <div>
-        <h2 style={{ color:P.navy, fontWeight:900, fontSize:20, margin:"0 0 4px" }}>Analytics</h2>
-        <p style={{ color:P.muted, fontSize:14, margin:0 }}>Your store performance overview</p>
+      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
+        <div>
+          <h2 style={{ color: P.navy, fontWeight: 900, fontSize: 28, margin: "0 0 6px", fontFamily: P.fontHeading, letterSpacing: "0.5px" }}>Business Intelligence</h2>
+          <p style={{ color: P.muted, fontSize: 14, fontWeight: 500, margin: 0 }}>Detailed performance audit for your store ecosystem.</p>
+        </div>
+        <div style={{ display: "flex", background: P.white, border: `1px solid ${P.mist}`, borderRadius: 12, padding: 4 }}>
+           {["7 Days", "30 Days", "Q1"].map((range, idx) => (
+             <button key={range} style={{ padding: "6px 16px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", background: idx === 1 ? P.navy : "transparent", color: idx === 1 ? P.white : P.muted, transition: "all 0.2s" }}>{range}</button>
+           ))}
+        </div>
       </div>
 
       {/* KPI Cards */}
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
         {[
-          { label:"Page Views",  value:"0",  sub:"0% this week"   },
-          { label:"Conversion",  value:"0%", sub:"+0% last month" },
-          { label:"Avg Order",   value:"Rs. 0", sub:"From 0 orders"  },
-          { label:"Return Rate", value:"0%", sub:"No returns"     },
-        ].map((k,i)=>(
-          <div key={i} style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:16, padding:20, cursor:"pointer", transition:"all 0.2s", display:"flex", flexDirection:"column", gap:12 }}
-            onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow=`0 10px 28px rgba(40, 43, 74, 0.13)`; e.currentTarget.style.borderColor=P.sky; }}
-            onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="none"; e.currentTarget.style.borderColor=P.mist; }}>
-            <div style={{ width:40, height:40, borderRadius:12, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", color:P.white }}>
+          { label: "Market Reach", value: "2,840", sub: "+12.5% vs LW", growth: true },
+          { label: "Conversion rate", value: "3.4%", sub: "Above average", growth: true },
+          { label: "Avg Ticket Size", value: "NPR 4.2k", sub: "Target: 5k", growth: false },
+          { label: "Product Churn", value: "0.8%", sub: "-0.2% health", growth: true },
+        ].map((k, i) => (
+          <div key={i} style={{ background: P.white, border: `1px solid ${P.mist}`, borderRadius: 24, padding: 24, cursor: "pointer", transition: "all 0.3s", display: "flex", flexDirection: "column", gap: 16, boxShadow: "0 4px 12px rgba(0,0,0,0.02)" }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = `0 20px 40px rgba(0,0,0,0.06)`; e.currentTarget.style.borderColor = P.accent; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.02)"; e.currentTarget.style.borderColor = P.mist; }}>
+            <div style={{ width: 44, height: 44, borderRadius: 14, background: P.mistBg, display: "flex", alignItems: "center", justifyContent: "center", color: P.navy }}>
               {KPI_ICONS[i]}
             </div>
             <div>
-              <p style={{ color:P.navy, fontWeight:900, fontSize:24, margin:"0 0 2px", letterSpacing:"-0.02em" }}>{k.value}</p>
-              <p style={{ color:P.muted, fontSize:12, fontWeight:600, margin:"0 0 4px" }}>{k.label}</p>
-              <p style={{ color:P.ocean, fontSize:12, fontWeight:600, margin:0 }}>{k.sub}</p>
+              <p style={{ color: P.navy, fontWeight: 900, fontSize: 26, margin: "0 0 4px", fontFamily: P.fontHeading, letterSpacing: "-0.5px" }}>{k.value}</p>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <p style={{ color: P.muted, fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", margin: 0 }}>{k.label}</p>
+                <div style={{ width: 4, height: 4, borderRadius: "50%", background: P.mist }}></div>
+                <p style={{ color: k.growth ? "#16a34a" : "#dc2626", fontSize: 11, fontWeight: 800, margin: 0 }}>{k.sub}</p>
+              </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Revenue Chart */}
-      <div style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:20, padding:24, boxShadow:"0 2px 12px rgba(40, 43, 74, 0.05)" }}>
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:20 }}>
-          <h3 style={{ color:P.navy, fontWeight:800, fontSize:15, margin:0 }}>Monthly Revenue</h3>
-          <span style={{ color:P.muted, fontSize:12, background:P.mistBg, border:`1px solid ${P.mist}`, padding:"4px 12px", borderRadius:999 }}>Last 6 months</span>
-        </div>
-        <div style={{ display:"flex", alignItems:"flex-end", gap:10, height:160 }}>
-          {MONTHS.map((m,i)=>(
-            <div key={m} style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", gap:6, height:"100%" }}>
-              {REVENUE[i] > 0 && <p style={{ color:P.ocean, fontSize:10, fontWeight:700, margin:0 }}>Rs. ${REVENUE[i]}</p>}
-              <div style={{ width:"100%", borderRadius:"6px 6px 0 0", transition:"all 0.3s", marginTop:"auto",
-                height:`${Math.max((REVENUE[i]/MAX_R)*100,5)}%`,
-                background: REVENUE[i]>0 ? `linear-gradient(to top,${P.royal},${P.ocean})` : P.mist,
-              }}/>
-              <p style={{ color:P.muted, fontSize:12, margin:0 }}>{m}</p>
+      {/* Main Stats Area */}
+      <div style={{ display: "grid", gridTemplateColumns: "1.8fr 1fr", gap: 24 }}>
+        
+        {/* Revenue Chart */}
+        <div style={{ background: P.white, border: `1px solid ${P.mist}`, borderRadius: 32, padding: 32, boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
+            <div>
+              <h3 style={{ color: P.navy, fontWeight: 900, fontSize: 18, margin: "0 0 4px", fontFamily: P.fontHeading }}>Revenue Trajectory</h3>
+              <p style={{ color: P.muted, fontSize: 13, fontWeight: 500, margin: 0 }}>Projected earnings based on fiscal trends.</p>
             </div>
-          ))}
+            <div style={{ textAlign: "right" }}>
+               <p style={{ color: P.accent, fontWeight: 900, fontSize: 20, margin: 0 }}>NPR 142.5k</p>
+               <p style={{ color: P.muted, fontSize: 11, fontWeight: 700, margin: 0 }}>TOTAL PERIOD REVENUE</p>
+            </div>
+          </div>
+          
+          <div style={{ display: "flex", alignItems: "flex-end", gap: 14, height: 200, padding: "0 10px" }}>
+            {MONTHS.map((m, i) => {
+              const h = (REVENUE[i] / MAX_R) * 100;
+              return (
+                <div key={m} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 12, height: "100%", position: "relative" }}>
+                  <div style={{ position: "absolute", top: (100-h-15) + "%", width: "100%", textAlign: "center", opacity: 0, transition: "all 0.2s" }} className="chart-label">
+                     <span style={{ background: P.navy, color: "white", padding: "4px 8px", borderRadius: 8, fontSize: 10, fontWeight: 800 }}>{REVENUE[i]/1000}k</span>
+                  </div>
+                  <div style={{ width: "100%", borderRadius: 12, transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)", marginTop: "auto",
+                    height: `${h}%`,
+                    background: i === 5 ? P.accent : P.navy,
+                    opacity: 0.9,
+                    cursor: "pointer",
+                  }} onMouseEnter={e => { e.currentTarget.style.opacity = 1; e.currentTarget.parentNode.querySelector(".chart-label").style.opacity = 1; }} onMouseLeave={e => { e.currentTarget.style.opacity = 0.9; e.currentTarget.parentNode.querySelector(".chart-label").style.opacity = 0; }} />
+                  <p style={{ color: P.muted, fontSize: 12, fontWeight: 700, margin: 0 }}>{m}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
+
+        {/* Top Listings Sidebar */}
+        <div style={{ background: P.white, border: `1px solid ${P.mist}`, borderRadius: 32, padding: 32, boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
+          <h3 style={{ color: P.navy, fontWeight: 900, fontSize: 18, margin: "0 0 24px", fontFamily: P.fontHeading }}>Elite Inventory</h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {[
+              { name: "iPhone 15 Pro", sales: 42, growth: "+15%" },
+              { name: "MacBook Air M2", sales: 28, growth: "+8%" },
+              { name: "AirPods Pro 2", sales: 84, growth: "+22%" },
+              { name: "iPad Pro 11\"", sales: 12, growth: "-4%" },
+            ].map((p, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", background: P.mistBg, borderRadius: 20, border: `1px solid ${P.mist}`, transition: "all 0.2s" }}
+                onMouseEnter={e => { e.currentTarget.style.background = P.white; e.currentTarget.style.borderColor = P.accent; e.currentTarget.style.transform = "scale(1.02)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = P.mistBg; e.currentTarget.style.borderColor = P.mist; e.currentTarget.style.transform = "scale(1)"; }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                  <div style={{ width: 36, height: 36, background: P.white, borderRadius: 10, border: `1px solid ${P.mist}`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 13, color: P.navy }}>{i + 1}</div>
+                  <div>
+                    <span style={{ color: P.navy, fontWeight: 800, fontSize: 14, display: "block" }}>{p.name}</span>
+                    <span style={{ color: P.muted, fontSize: 11, fontWeight: 600 }}>{p.sales} Units Sold</span>
+                  </div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <p style={{ color: p.growth.startsWith("+") ? "#16a34a" : "#dc2626", fontWeight: 800, fontSize: 13, margin: 0 }}>{p.growth}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
 
-      {/* Top Listings */}
-      <div style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:20, padding:24, boxShadow:"0 2px 12px rgba(40, 43, 74, 0.05)" }}>
-        <h3 style={{ color:P.navy, fontWeight:800, fontSize:15, margin:"0 0 16px" }}>Top Listings Performance</h3>
-        <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
-          {[
-            { name:"Unknown", views:0, sales:0, revenue:"Rs. 0" },
-            { name:"Unknown", views:0, sales:0, revenue:"Rs. 0" },
-            { name:"Unknown", views:0, sales:0, revenue:"Rs. 0" },
-          ].map((p,i)=>(
-            <div key={i} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 16px", background:P.mistBg, borderRadius:12, border:`1px solid ${P.mist}`, transition:"all 0.15s" }}
-              onMouseEnter={e=>{ e.currentTarget.style.background=`rgba(40, 43, 74, 0.06)`; e.currentTarget.style.borderColor=P.sky; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background=P.mistBg; e.currentTarget.style.borderColor=P.mist; }}>
-              <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                <div style={{ width:34, height:34, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900, fontSize:13 }}>{i+1}</div>
-                <span style={{ color:P.navy, fontWeight:600, fontSize:14 }}>{p.name}</span>
-              </div>
-              <div style={{ display:"flex", alignItems:"center", gap:24 }}>
-                <div style={{ textAlign:"right" }}>
-                  <p style={{ color:P.muted, fontSize:10, margin:"0 0 2px", textTransform:"uppercase", letterSpacing:"0.05em" }}>Views</p>
-                  <p style={{ color:P.navy, fontWeight:700, fontSize:14, margin:0 }}>{p.views}</p>
-                </div>
-                <div style={{ textAlign:"right" }}>
-                  <p style={{ color:P.muted, fontSize:10, margin:"0 0 2px", textTransform:"uppercase", letterSpacing:"0.05em" }}>Sales</p>
-                  <p style={{ color:P.navy, fontWeight:700, fontSize:14, margin:0 }}>{p.sales}</p>
-                </div>
-                <div style={{ textAlign:"right" }}>
-                  <p style={{ color:P.muted, fontSize:10, margin:"0 0 2px", textTransform:"uppercase", letterSpacing:"0.05em" }}>Revenue</p>
-                  <p style={{ color:P.ocean, fontWeight:900, fontSize:14, margin:0 }}>{p.revenue}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Insights Banner */}
+      <div style={{ background: `linear-gradient(135deg, ${P.navy}, #3f3f46)`, borderRadius: 32, padding: 32, display: "flex", alignItems: "center", gap: 32, color: P.white, boxShadow: "0 20px 50px rgba(0,0,0,0.15)" }}>
+         <div style={{ width: 64, height: 64, borderRadius: 20, background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+         </div>
+         <div style={{ flex: 1 }}>
+            <h4 style={{ fontSize: 18, fontWeight: 900, margin: "0 0 4px", fontFamily: P.fontHeading }}>AI Optimization Insight</h4>
+            <p style={{ fontSize: 14, fontWeight: 500, margin: 0, opacity: 0.9, lineHeight: 1.5 }}>Based on your Q1 data, increasing your stock for Apple Accessories on weekends could potentially boost your conversion rate by another <span style={{ color: P.accent, fontWeight: 900 }}>4.2%</span>. Consider running a flash promo on Saturdays.</p>
+         </div>
+         <button style={{ padding: "12px 24px", borderRadius: 14, background: P.white, color: P.navy, border: "none", fontSize: 13, fontWeight: 800, cursor: "pointer", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"} onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}>Apply Strategy</button>
       </div>
+
     </div>
   );
 }

@@ -3,17 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const P = {
-  navy:  "#282B4A",
-  royal: "#282B4A",
-  ocean: "#282B4A",
-  sky:   "#D4D2C3",
-  mist:  "#E5E3D5",
-  white: "#FFFFFF",
-  muted: "#7A7C8E",
-  mistBg:"#EEEBDA",
-  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
-  purple:"#282B4A",
-  purpleLight:"#E5E3D5"
+  navy:  "#18181b",
+  royal: "#27272a",
+  ocean: "#3f3f46",
+  sky:   "#e4e4e7",
+  mist:  "#f4f4f5",
+  white: "#ffffff",
+  muted: "#71717a",
+  mistBg:"#fafafa",
+  font:  "'DM Sans', 'Inter', sans-serif",
+  fontHeading: "'Barlow Condensed', 'Inter', sans-serif",
+  accent: "#f43f5e"
 };
 
 const STATS = [
@@ -36,14 +36,14 @@ const MOCK_USERS = [
 ];
 
 const ROLE_STYLE = {
-  user:   { bg:`rgba(40, 43, 74, 0.12)`,  border:`rgba(40, 43, 74, 0.28)`,  text:P.ocean },
-  vendor: { bg:`rgba(40, 43, 74, 0.18)`,   border:`rgba(40, 43, 74, 0.35)`,   text:P.sky },
-  admin:  { bg:`rgba(40, 43, 74, 0.2)`,     border:`rgba(212, 210, 195, 0.3)`, text:P.mist },
+  user:   { bg:P.mistBg,  border:P.sky,  text:P.muted },
+  vendor: { bg:"#fff1f2", border:"#ffe4e6", text:P.accent },
+  admin:  { bg:"#f8fafc", border:"#e2e8f0", text:P.navy },
 };
 
 const STATUS_STYLE = {
-  Active:    { bg:"rgba(34,197,94,0.1)",   border:"rgba(34,197,94,0.25)",  text:"#4ade80" },
-  Suspended: { bg:"rgba(220,38,38,0.1)",   border:"rgba(220,38,38,0.25)", text:"#f87171" },
+  Active:    { bg:"#f0fdf4", border:"#bbf7d0", text:"#16a34a" },
+  Suspended: { bg:"#fef2f2", border:"#fecaca", text:"#ef4444" },
 };
 
 const NAV = [
@@ -83,8 +83,10 @@ export default function AdminDashboard() {
         if (usersRes.success && usersRes.data) {
           const mapped = usersRes.data.map(u => ({
             id: u._id,
-            name: u.name,
-            email: u.email,
+            name: u.name || "Unknown",
+            email: u.email || "No Email",
+            phone: u.phone || "—",
+            address: u.address || "—",
             role: u.role,
             isApproved: u.isApproved,
             status: u.isDeactivated ? "Suspended" : "Active",
@@ -150,40 +152,32 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div style={{ minHeight:"100vh", display:"flex", background:`linear-gradient(160deg,${P.navy} 0%,${P.royal} 100%)`, fontFamily:P.font }}>
+    <div style={{ minHeight:"100vh", display:"flex", background:P.mistBg, fontFamily:P.font }}>
 
       {/* ── SIDEBAR ── */}
-      <aside style={{ width:220, flexShrink:0, display:"flex", flexDirection:"column", height:"100vh", position:"sticky", top:0, background:"rgba(0,15,40,0.92)", borderRight:`1px solid rgba(40, 43, 74, 0.15)`, backdropFilter:"blur(12px)" }}>
+      <aside style={{ width:220, flexShrink:0, display:"flex", flexDirection:"column", height:"100vh", position:"sticky", top:0, background:P.white, borderRight:`1px solid ${P.mist}` }}>
 
         {/* Logo */}
-        <div style={{ padding:"20px 20px 16px", borderBottom:"1px solid rgba(40, 43, 74, 0.1)" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-            <div style={{ width:36, height:36, borderRadius:10, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 14px rgba(40, 43, 74, 0.35)", flexShrink:0 }}>
-              <span style={{ color:P.white, fontWeight:900, fontSize:16 }}>A</span>
-            </div>
-            <div>
-              <p style={{ color:P.white, fontWeight:900, fontSize:13, lineHeight:1, margin:0 }}>HamroMobile Hub</p>
-              <p style={{ color:P.sky, fontSize:9, fontWeight:800, letterSpacing:"0.12em", marginTop:3 }}>ADMIN PANEL</p>
-            </div>
-          </div>
+        <div style={{ padding:"0 22px", borderBottom:`1px solid ${P.mist}`, display:"flex", alignItems:"center", flexShrink:0, height:80, overflow:"hidden" }}>
+          <img src="/logo.png" alt="HamroMobile Hub" style={{ width: 180, height: 180, minWidth: 180, minHeight: 180, objectFit: "contain", marginLeft: -14, filter: "hue-rotate(225deg) saturate(1.6) brightness(1.1)" }} />
         </div>
 
 
 
         {/* Nav */}
-        <nav style={{ flex:1, padding:"12px", display:"flex", flexDirection:"column", gap:2, overflowY:"auto" }}>
+        <nav style={{ flex:1, padding:"24px 12px", display:"flex", flexDirection:"column", gap:6, overflowY:"auto" }}>
+          <p style={{ fontSize:10, fontWeight:800, color:P.muted, letterSpacing:"0.1em", textTransform:"uppercase", padding:"0 12px", marginBottom:4 }}>Menu</p>
           {NAV.map(item => {
             const active = activeNav === item.id;
             return (
               <button key={item.id} onClick={()=>setActiveNav(item.id)}
-                style={{ width:"100%", display:"flex", alignItems:"center", gap:10, padding:"10px 12px", borderRadius:12, fontSize:13, fontWeight:600, cursor:"pointer", border:"none", textAlign:"left", transition:"all 0.15s", fontFamily:P.font,
-                  background: active ? `rgba(40, 43, 74, 0.18)` : "transparent",
-                  color: active ? P.sky : "rgba(212, 210, 195, 0.45)",
-                  outline: active ? `1px solid rgba(40, 43, 74, 0.3)` : "1px solid transparent",
+                style={{ width:"100%", display:"flex", alignItems:"center", gap:10, padding:"10px 12px", borderRadius:12, fontSize:13, fontWeight:700, cursor:"pointer", border:"none", textAlign:"left", transition:"all 0.2s", fontFamily:P.font,
+                  background: active ? P.navy : "transparent",
+                  color: active ? P.white : P.muted,
                 }}
-                onMouseEnter={e=>{ if(!active){ e.currentTarget.style.background="rgba(40, 43, 74, 0.08)"; e.currentTarget.style.color="rgba(212, 210, 195, 0.85)"; }}}
-                onMouseLeave={e=>{ if(!active){ e.currentTarget.style.background="transparent"; e.currentTarget.style.color="rgba(212, 210, 195, 0.45)"; }}}>
-                <span style={{ color: active ? P.sky : P.muted, flexShrink:0 }}>{item.icon}</span>
+                onMouseEnter={e=>{ if(!active){ e.currentTarget.style.background=P.mistBg; e.currentTarget.style.color=P.navy; }}}
+                onMouseLeave={e=>{ if(!active){ e.currentTarget.style.background="transparent"; e.currentTarget.style.color=P.muted; }}}>
+                <span style={{ color: active ? P.white : P.muted, flexShrink:0 }}>{item.icon}</span>
                 {item.label}
               </button>
             );
@@ -191,12 +185,12 @@ export default function AdminDashboard() {
         </nav>
 
         {/* Logout */}
-        <div style={{ padding:"12px", borderTop:"1px solid rgba(40, 43, 74, 0.1)" }}>
+        <div style={{ padding:"16px 12px", borderTop:`1px solid ${P.mist}` }}>
           <button onClick={handleLogout}
-            style={{ width:"100%", display:"flex", alignItems:"center", gap:10, padding:"10px 12px", borderRadius:12, fontSize:13, fontWeight:600, cursor:"pointer", background:"transparent", border:"none", color:"rgba(212, 210, 195, 0.35)", fontFamily:P.font, transition:"all 0.15s" }}
-            onMouseEnter={e=>{ e.currentTarget.style.background="rgba(220,38,38,0.08)"; e.currentTarget.style.color="#f87171"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.color="rgba(212, 210, 195, 0.35)"; }}>
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            style={{ width:"100%", display:"flex", alignItems:"center", gap:10, padding:"10px 12px", borderRadius:12, fontSize:13, fontWeight:700, cursor:"pointer", background:"transparent", border:"none", color:P.muted, fontFamily:P.font, transition:"all 0.2s" }}
+            onMouseEnter={e=>{ e.currentTarget.style.background="#fee2e2"; e.currentTarget.style.color="#ef4444"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.color=P.muted; }}>
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
             Sign Out
           </button>
         </div>
@@ -309,67 +303,66 @@ export default function AdminDashboard() {
             <div style={{ display:"flex", flexDirection:"column", gap:24, maxWidth: 800 }}>
               <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                 <div>
-                  <h2 style={{ color:P.white, fontWeight:900, fontSize:24, margin:"0 0 8px" }}>Settings</h2>
+                  <h2 style={{ color:P.navy, fontWeight:900, fontSize:24, margin:"0 0 8px", fontFamily:P.fontHeading, letterSpacing:"0.5px" }}>Settings</h2>
                   <p style={{ color:P.muted, fontSize:14, margin:0 }}>Manage your platform preferences and admin account details.</p>
                 </div>
                 <button
                   style={{
                     display:"inline-flex", alignItems:"center", gap:8,
-                    background:`linear-gradient(135deg, ${P.royal}, ${P.ocean})`,
-                    color:P.white, fontWeight:700, fontSize:14, fontFamily:P.font,
+                    background:P.navy, color:P.white, fontWeight:700, fontSize:14, fontFamily:P.font,
                     padding:"12px 24px", borderRadius:12, border:"none", cursor:"pointer",
-                    boxShadow:"0 4px 16px rgba(40, 43, 74, 0.3)", transition:"all 0.2s",
+                    boxShadow:"0 4px 12px rgba(24,24,27,0.08)", transition:"all 0.2s",
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 6px 20px rgba(40, 43, 74, 0.4)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 4px 16px rgba(40, 43, 74, 0.3)"; }}
+                  onMouseEnter={e => { e.currentTarget.style.transform="translateY(-2px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; }}
                 >
                   Save Changes
                 </button>
               </div>
 
-              <div style={{ background:"rgba(0,15,40,0.6)", border:`1px solid rgba(40, 43, 74, 0.15)`, borderRadius:16, padding:24, backdropFilter:"blur(8px)" }}>
-                <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24, paddingBottom:16, borderBottom:`1px solid rgba(40, 43, 74, 0.1)` }}>
-                  <div style={{ width:40, height:40, borderRadius:10, background:"rgba(40, 43, 74, 0.1)", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke={P.ocean} strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+              <div style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:16, padding:24, boxShadow:"0 2px 12px rgba(24,24,27,0.03)" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24, paddingBottom:16, borderBottom:`1px solid ${P.mist}` }}>
+                  <div style={{ width:40, height:40, borderRadius:10, background:P.mistBg, border:`1px solid ${P.mist}`, display:"flex", alignItems:"center", justifyContent:"center" }}>
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke={P.navy} strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                   </div>
                   <div>
-                    <h3 style={{ color:P.white, fontWeight:800, fontSize:16, margin:0 }}>Admin Profile</h3>
+                    <h3 style={{ color:P.navy, fontWeight:800, fontSize:16, margin:0 }}>Admin Profile</h3>
                     <p style={{ color:P.muted, fontSize:13, margin:0 }}>Update your administrative details.</p>
                   </div>
                 </div>
                 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                   <div style={{ marginBottom: 16 }}>
-                    <label style={{ display:"block", color:P.sky, fontSize:13, fontWeight:700, marginBottom:8 }}>Full Name</label>
-                    <input defaultValue={user?.name || ""} placeholder="Admin Name" style={{ width:"100%", padding:"12px 16px", borderRadius:12, border:`1px solid rgba(40, 43, 74, 0.3)`, background:"rgba(0,15,40,0.5)", color:P.white, fontSize:14, outline:"none", boxSizing:"border-box" }} />
+                    <label style={{ display:"block", color:P.navy, fontSize:13, fontWeight:700, marginBottom:8 }}>Full Name</label>
+                    <input defaultValue={user?.name || ""} placeholder="Admin Name" style={{ width:"100%", padding:"12px 16px", borderRadius:12, border:`1px solid ${P.mist}`, background:P.mistBg, color:P.navy, fontSize:14, outline:"none", boxSizing:"border-box" }} />
                   </div>
                   <div style={{ marginBottom: 16 }}>
-                    <label style={{ display:"block", color:P.sky, fontSize:13, fontWeight:700, marginBottom:8 }}>Email Address</label>
-                    <input defaultValue={user?.email || ""} placeholder="admin@example.com" type="email" style={{ width:"100%", padding:"12px 16px", borderRadius:12, border:`1px solid rgba(40, 43, 74, 0.3)`, background:"rgba(0,15,40,0.5)", color:P.white, fontSize:14, outline:"none", boxSizing:"border-box" }} />
+                    <label style={{ display:"block", color:P.navy, fontSize:13, fontWeight:700, marginBottom:8 }}>Email Address</label>
+                    <input defaultValue={user?.email || ""} placeholder="admin@example.com" type="email" style={{ width:"100%", padding:"12px 16px", borderRadius:12, border:`1px solid ${P.mist}`, background:P.mistBg, color:P.navy, fontSize:14, outline:"none", boxSizing:"border-box" }} />
                   </div>
                 </div>
               </div>
 
-              <div style={{ background:"rgba(0,15,40,0.6)", border:`1px solid rgba(40, 43, 74, 0.15)`, borderRadius:16, padding:24, backdropFilter:"blur(8px)" }}>
-                <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16, paddingBottom:16, borderBottom:`1px solid rgba(40, 43, 74, 0.1)` }}>
-                  <div style={{ width:40, height:40, borderRadius:10, background:"rgba(40, 43, 74, 0.1)", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke={P.ocean} strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+              <div style={{ background:P.white, border:`1px solid ${P.mist}`, borderRadius:16, padding:24, boxShadow:"0 2px 12px rgba(24,24,27,0.03)" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16, paddingBottom:16, borderBottom:`1px solid ${P.mist}` }}>
+                  <div style={{ width:40, height:40, borderRadius:10, background:P.mistBg, border:`1px solid ${P.mist}`, display:"flex", alignItems:"center", justifyContent:"center" }}>
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke={P.navy} strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
                   </div>
                   <div>
-                    <h3 style={{ color:P.white, fontWeight:800, fontSize:16, margin:0 }}>Platform Notifications</h3>
+                    <h3 style={{ color:P.navy, fontWeight:800, fontSize:16, margin:0 }}>Platform Notifications</h3>
                     <p style={{ color:P.muted, fontSize:13, margin:0 }}>Control your administrative alerts.</p>
                   </div>
                 </div>
 
-                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"16px 0", borderBottom:`1px solid rgba(40, 43, 74, 0.1)` }}>
+                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"16px 0" }}>
                   <div>
-                    <span style={{ display:"block", color:P.white, fontSize:14, fontWeight:700, marginBottom:4 }}>New Vendor Approvals</span>
+                    <span style={{ display:"block", color:P.navy, fontSize:14, fontWeight:700, marginBottom:4 }}>New Vendor Approvals</span>
                     <span style={{ display:"block", color:P.muted, fontSize:13 }}>Get notified when a new vendor applies for an account.</span>
                   </div>
                   <label style={{ position:"relative", display:"inline-block", width:44, height:24, flexShrink:0 }}>
                     <input type="checkbox" defaultChecked style={{ opacity:0, width:0, height:0 }} />
-                    <span style={{ position:"absolute", cursor:"pointer", top:0, left:0, right:0, bottom:0, backgroundColor:P.ocean, borderRadius:34 }}>
-                      <span style={{ position:"absolute", height:18, width:18, left:3, bottom:3, backgroundColor:"white", borderRadius:"50%", transform:"translateX(20px)", transition:".3s" }} />
+                    <span style={{ position:"absolute", cursor:"pointer", top:0, left:0, right:0, bottom:0, backgroundColor:P.accent, borderRadius:34 }}>
+                      <span style={{ position:"absolute", height:18, width:18, left:3, bottom:3, backgroundColor:"white", borderRadius:"50%", transform:"translateX(20px)", transition:".3s", boxShadow:"0 2px 4px rgba(0,0,0,0.2)" }} />
                     </span>
                   </label>
                 </div>
@@ -385,22 +378,24 @@ export default function AdminDashboard() {
 
 // ─── Users Table ─────────────────────────────────────────────────────────────
 function UsersTable({ users, showActions = false, onToggleBan, onToggleApprove }) {
-  const cols = showActions ? "2fr 2fr 1fr 1fr 1.5fr 1.5fr" : "2fr 2fr 1fr 1fr 1.5fr";
+  const cols = showActions ? "1.5fr 1.8fr 1fr 0.8fr 1fr 1.2fr 1fr 1.2fr" : "1.8fr 2fr 1.2fr 1fr 1fr 1.5fr 1.8fr";
   return (
-    <div style={{ borderRadius:16, overflow:"hidden", background:"rgba(0,15,40,0.6)", border:"1px solid rgba(40, 43, 74, 0.15)", backdropFilter:"blur(8px)" }}>
+    <div style={{ borderRadius:16, overflow:"hidden", background:P.white, border:`1px solid ${P.mist}`, boxShadow:"0 2px 12px rgba(24,24,27,0.03)" }}>
       {/* Header row */}
-      <div style={{ display:"grid", gridTemplateColumns:cols, padding:"10px 20px", color:P.muted, fontSize:10, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", borderBottom:"1px solid rgba(40, 43, 74, 0.1)" }}>
+      <div style={{ display:"grid", gridTemplateColumns:cols, padding:"10px 20px", color:P.muted, fontSize:10, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", borderBottom:`1px solid ${P.mist}`, background:P.mistBg }}>
         <span>Name</span>
         <span>Email</span>
+        <span>Phone</span>
         <span>Role</span>
         <span>Status</span>
         <span>Joined</span>
+        <span style={{ paddingLeft: 10 }}>Address</span>
         {showActions && <span>Actions</span>}
       </div>
 
       {users.map((u,i)=>{
-        const rs = ROLE_STYLE[u.role];
-        const ss = STATUS_STYLE[u.status];
+        const rs = ROLE_STYLE[u.role] || ROLE_STYLE.user;
+        const ss = STATUS_STYLE[u.status] || STATUS_STYLE.Active;
         
         let customStatusUI = (
           <span style={{ fontSize:11, fontWeight:700, padding:"3px 8px", borderRadius:999, display:"inline-block", background:ss.bg, border:`1px solid ${ss.border}`, color:ss.text }}>
@@ -410,46 +405,51 @@ function UsersTable({ users, showActions = false, onToggleBan, onToggleApprove }
         
         if (u.role === "vendor" && !u.isApproved) {
             customStatusUI = (
-                <span style={{ fontSize:11, fontWeight:700, padding:"3px 8px", borderRadius:999, display:"inline-block", background:"rgba(234, 179, 8, 0.1)", border:"1px solid rgba(234, 179, 8, 0.25)", color:"#facc15" }}>
+                <span style={{ fontSize:11, fontWeight:700, padding:"3px 8px", borderRadius:999, display:"inline-block", background:"#fefce8", border:"1px solid #fef08a", color:"#eab308" }}>
                   Pending
                 </span>
             );
         }
 
         return (
-          <div key={i} style={{ display:"grid", gridTemplateColumns:cols, alignItems:"center", padding:"12px 20px", borderBottom: i < users.length-1 ? "1px solid rgba(40, 43, 74, 0.07)" : "none", transition:"background 0.15s" }}
-            onMouseEnter={e=>e.currentTarget.style.background="rgba(40, 43, 74, 0.05)"}
+          <div key={i} style={{ display:"grid", gridTemplateColumns:cols, alignItems:"center", padding:"12px 20px", borderBottom: i < users.length-1 ? `1px solid ${P.mist}` : "none", transition:"background 0.15s" }}
+            onMouseEnter={e=>e.currentTarget.style.background=P.mistBg}
             onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
 
             <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-              <div style={{ width:32, height:32, borderRadius:"50%", background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900, fontSize:13, color:P.white, flexShrink:0 }}>
-                {u.name.charAt(0)}
+              <div style={{ width:32, height:32, borderRadius:"50%", background:P.mistBg, border:`1px solid ${P.mist}`, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900, fontSize:13, color:P.navy, flexShrink:0 }}>
+                {u.name?.charAt(0) || "U"}
               </div>
-              <span style={{ color:P.white, fontWeight:600, fontSize:13 }}>{u.name}</span>
+              <span style={{ color:P.navy, fontWeight:600, fontSize:13 }}>{u.name || "Unknown"}</span>
             </div>
 
             <span style={{ color:P.muted, fontSize:13 }}>{u.email}</span>
+            <span style={{ color:P.navy, fontSize:12, fontWeight: 700 }}>{u.phone}</span>
 
-            <span style={{ fontSize:11, fontWeight:700, padding:"3px 8px", borderRadius:999, display:"inline-block", background:rs.bg, border:`1px solid ${rs.border}`, color:rs.text }}>
+            <span style={{ fontSize:11, fontWeight:700, padding:"3px 8px", borderRadius:999, display:"inline-block", background:rs.bg, border:`1px solid ${rs.border}`, color:rs.text, textAlign: "center" }}>
               {u.role}
             </span>
 
             {customStatusUI}
 
-            <span style={{ color:"rgba(212, 210, 195, 0.4)", fontSize:12 }}>{u.joined}</span>
+            <span style={{ color:P.muted, fontSize:12 }}>{u.joined}</span>
+
+            <span style={{ color:P.muted, fontSize:12, paddingLeft: 10, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={u.address}>
+               {u.address}
+            </span>
 
             {showActions && (
               <div style={{ display:"flex", gap:6 }}>
                 {u.role === "vendor" && (
                   <button onClick={() => onToggleApprove(u.id, u.isApproved)}
-                    style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background: u.isApproved ? "rgba(220,38,38,0.08)" : "rgba(34,197,94,0.08)", border: u.isApproved ? "1px solid rgba(220,38,38,0.2)" : "1px solid rgba(34,197,94,0.2)", color: u.isApproved ? "#f87171" : "#4ade80", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}>
+                    style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background: u.isApproved ? "#fef2f2" : "#f0fdf4", border: u.isApproved ? "1px solid #fecaca" : "1px solid #bbf7d0", color: u.isApproved ? "#ef4444" : "#16a34a", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}>
                     {u.isApproved ? "Revoke" : "Approve"}
                   </button>
                 )}
                 <button onClick={() => onToggleBan(u.id, u.status)}
-                  style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background:"rgba(220,38,38,0.08)", border:"1px solid rgba(220,38,38,0.2)", color:"#f87171", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="rgba(220,38,38,0.15)"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="rgba(220,38,38,0.08)"; }}>
+                  style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background:"#fef2f2", border:"1px solid #fecaca", color:"#ef4444", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="#fee2e2"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="#fef2f2"; }}>
                   {u.status === "Active" ? "Ban" : "Unban"}
                 </button>
               </div>

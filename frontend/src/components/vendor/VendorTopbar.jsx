@@ -39,31 +39,30 @@ export default function VendorTopbar({ tab, onMenu, unreadChat }) {
       padding: "14px 28px",
       display: "flex", alignItems: "center", justifyContent: "space-between",
       fontFamily: P.font,
-      boxShadow: "0 2px 12px rgba(40, 43, 74, 0.06)",
     }}>
 
       {/* Left */}
       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
         <button onClick={onMenu} style={{
           width: 36, height: 36, borderRadius: 10,
-          background: "rgba(40, 43, 74, 0.07)", border: `1px solid ${P.mist}`,
+          background: P.mistBg, border: `1px solid ${P.mist}`,
           display: "flex", alignItems: "center", justifyContent: "center",
-          cursor: "pointer", color: P.royal, transition: "all 0.2s",
+          cursor: "pointer", color: P.navy, transition: "all 0.2s",
         }}
-          onMouseEnter={e => { e.currentTarget.style.background = "rgba(40, 43, 74, 0.14)"; e.currentTarget.style.borderColor = P.sky; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "rgba(40, 43, 74, 0.07)"; e.currentTarget.style.borderColor = P.mist; }}
+          onMouseEnter={e => { e.currentTarget.style.background = P.sky; e.currentTarget.style.borderColor = P.sky; }}
+          onMouseLeave={e => { e.currentTarget.style.background = P.mistBg; e.currentTarget.style.borderColor = P.mist; }}
         >
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
 
         <div>
-          <h1 style={{ color: P.navy, fontWeight: 800, fontSize: 18, margin: 0, fontFamily: P.font }}>
+          <h1 style={{ color: P.navy, fontWeight: 900, fontSize: 18, margin: 0, fontFamily: P.fontHeading, letterSpacing: "0.5px" }}>
             {current.label}
           </h1>
-          <p style={{ color: P.muted, fontSize: 11, margin: "2px 0 0", fontFamily: P.font }}>
-            {new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+          <p style={{ color: P.muted, fontSize: 11, fontWeight: 700, margin: "2px 0 0", fontFamily: P.font, textTransform: "uppercase", letterSpacing: "0.1em" }}>
+            {new Date().toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}
           </p>
         </div>
       </div>
@@ -74,47 +73,42 @@ export default function VendorTopbar({ tab, onMenu, unreadChat }) {
         {/* Messages */}
         <button onClick={() => navigate("/messages")} style={{
           position: "relative",
-          width: 38, height: 38, borderRadius: "50%",
-          background: "rgba(40, 43, 74, 0.07)", border: `1px solid ${P.mist}`,
+          width: 40, height: 40, borderRadius: 12,
+          background: P.mistBg, border: `1px solid ${P.mist}`,
           display: "flex", alignItems: "center", justifyContent: "center",
-          cursor: "pointer", color: P.royal, transition: "all 0.2s",
+          cursor: "pointer", color: P.navy, transition: "all 0.2s",
         }}
-          onMouseEnter={e => { e.currentTarget.style.background = "rgba(40, 43, 74, 0.14)"; e.currentTarget.style.borderColor = P.sky; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "rgba(40, 43, 74, 0.07)"; e.currentTarget.style.borderColor = P.mist; }}
+          onMouseEnter={e => { e.currentTarget.style.background = P.sky; }}
+          onMouseLeave={e => { e.currentTarget.style.background = P.mistBg; }}
         >
             <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418-4.03-8 9-8s9 3.582 9 8z"/></svg>
             {unreadChat && (
-              <span className="pulse" style={{ position: "absolute", top: 7, right: 7, width: 8, height: 8, background: P.ocean, borderRadius: "50%", border: `2px solid ${P.white}` }} />
+              <span className="pulse" style={{ position: "absolute", top: -2, right: -2, width: 10, height: 10, background: P.accent, borderRadius: "50%", border: `2px solid ${P.white}` }} />
             )}
         </button>
 
         {/* Notification */}
         <button style={{
-          width: 38, height: 38, borderRadius: "50%",
-          background: "rgba(40, 43, 74, 0.07)", border: `1px solid ${P.mist}`,
+          width: 40, height: 40, borderRadius: 12,
+          background: P.mistBg, border: `1px solid ${P.mist}`,
           display: "flex", alignItems: "center", justifyContent: "center",
-          cursor: "pointer", color: P.royal, position: "relative", transition: "all 0.2s",
+          cursor: "pointer", color: P.navy, position: "relative", transition: "all 0.2s",
         }}
-          onMouseEnter={e => { e.currentTarget.style.background = "rgba(40, 43, 74, 0.14)"; e.currentTarget.style.borderColor = P.sky; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "rgba(40, 43, 74, 0.07)"; e.currentTarget.style.borderColor = P.mist; }}
+          onMouseEnter={e => { e.currentTarget.style.background = P.sky; }}
+          onMouseLeave={e => { e.currentTarget.style.background = P.mistBg; }}
         >
-          <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
-          <span style={{
-            position: "absolute", top: 7, right: 7,
-            width: 7, height: 7, borderRadius: "50%",
-            background: P.ocean, border: `2px solid ${P.white}`,
-          }} />
+          <span style={{ position: "absolute", top: -2, right: -2, width: 10, height: 10, borderRadius: "50%", background: P.accent, border: `2px solid ${P.white}` }} />
         </button>
 
         <div style={{
-          width: 36, height: 36, borderRadius: "50%",
-          background: `linear-gradient(135deg, ${P.royal}, ${P.ocean})`,
+          width: 40, height: 40, borderRadius: 12,
+          background: P.mistBg,
           display: "flex", alignItems: "center", justifyContent: "center",
-          color: P.white, fontWeight: 900, fontSize: 14,
-          border: `2px solid ${P.mist}`,
-          boxShadow: "0 2px 8px rgba(40, 43, 74, 0.2)",
+          color: P.navy, fontWeight: 900, fontSize: 14,
+          border: `1px solid ${P.mist}`,
           overflow: "hidden",
         }}>
           {user?.profilePicture ? (
@@ -126,20 +120,20 @@ export default function VendorTopbar({ tab, onMenu, unreadChat }) {
 
         {/* Browse Phones */}
         <Link to="/" style={{
-          display: "flex", alignItems: "center", gap: 6,
-          background: `linear-gradient(135deg, ${P.royal}, ${P.ocean})`,
+          display: "flex", alignItems: "center", gap: 8,
+          background: P.navy,
           color: P.white, fontSize: 13, fontWeight: 700,
-          padding: "8px 18px", borderRadius: 999, fontFamily: P.font,
+          padding: "10px 20px", borderRadius: 12, fontFamily: P.font,
           textDecoration: "none",
-          boxShadow: "0 4px 14px rgba(40, 43, 74, 0.25)",
-          transition: "transform 0.15s, box-shadow 0.15s",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+          transition: "all 0.2s",
         }}
-          onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(40, 43, 74, 0.35)"; }}
-          onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 14px rgba(40, 43, 74, 0.25)"; }}
+          onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
         >
-          Browse Phones
-          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          View Store
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
         </Link>
       </div>

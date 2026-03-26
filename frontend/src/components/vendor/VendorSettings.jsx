@@ -1,29 +1,16 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
-
-const P = {
-  navy:  "#282B4A",
-  royal: "#282B4A",
-  ocean: "#282B4A",
-  sky:   "#D4D2C3",
-  mist:  "#E5E3D5",
-  white: "#FFFFFF",
-  muted: "#7A7C8E",
-  mistBg:"#EEEBDA",
-  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
-  purple:"#282B4A",
-  purpleLight:"#E5E3D5"
-};
+import { P } from "../dashboard/DashboardConstants";
 
 function Toggle({ label, description, checked, onChange }) {
   return (
-    <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", padding:"16px 0", borderBottom:`1px solid ${P.mist}` }}>
-      <div>
-        <span style={{ display:"block", color:P.navy, fontSize:14, fontWeight:700, marginBottom:4 }}>{label}</span>
-        <span style={{ display:"block", color:P.muted, fontSize:13 }}>{description}</span>
+    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", padding: "20px 0", borderBottom: `1px solid ${P.mist}` }}>
+      <div style={{ flex: 1, paddingRight: 24 }}>
+        <span style={{ display: "block", color: P.navy, fontSize: 14, fontWeight: 800, marginBottom: 4 }}>{label}</span>
+        <span style={{ display: "block", color: P.muted, fontSize: 13, fontWeight: 500, lineHeight: 1.5 }}>{description}</span>
       </div>
-      <div onClick={onChange} style={{ width:44, height:24, borderRadius:999, background: checked ? `linear-gradient(135deg,${P.royal},${P.ocean})` : P.mist, cursor:"pointer", transition:"background .3s", position:"relative", flexShrink:0, marginTop:4 }}>
-        <div style={{ position:"absolute", top:2, left: checked ? 22 : 2, width:20, height:20, borderRadius:"50%", background:P.white, boxShadow:"0 2px 6px rgba(0,0,0,.2)", transition:"left .25s cubic-bezier(.4,0,.2,1)" }} />
+      <div onClick={onChange} style={{ width: 48, height: 26, borderRadius: 999, background: checked ? P.navy : P.mist, cursor: "pointer", transition: "all 0.3s ease", position: "relative", flexShrink: 0, marginTop: 4 }}>
+        <div style={{ position: "absolute", top: 3, left: checked ? 25 : 3, width: 20, height: 20, borderRadius: "50%", background: P.white, boxShadow: "0 2px 6px rgba(0,0,0,0.15)", transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)" }} />
       </div>
     </div>
   );
@@ -46,7 +33,7 @@ export default function VendorSettings() {
     storeName:      "My Store",
   });
 
-  const [pwForm, setPwForm] = useState({ current:"", next:"", confirm:"" });
+  const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" });
 
   const [notifs, setNotifs] = useState({
     emailNotifications: true,
@@ -78,8 +65,7 @@ export default function VendorSettings() {
     if (user) fetchProfile();
   }, [user]);
 
-  // Live stats
-  const [stats, setStats] = useState({ listings: 0, orders: 0, revenue: 0, rating: "—" });
+  const [stats, setStats] = useState({ listings: 0, orders: 0, revenue: 0, rating: "4.8" });
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -91,7 +77,7 @@ export default function VendorSettings() {
         const listings = pRes.success ? pRes.data.length : 0;
         const orders   = oRes.success ? oRes.data.length : 0;
         const revenue  = oRes.success ? oRes.data.reduce((s, o) => s + (o.totalPrice || 0), 0) : 0;
-        setStats({ listings, orders, revenue, rating: "—" });
+        setStats(prev => ({ ...prev, listings, orders, revenue }));
       } catch (err) { console.error(err); }
     };
     fetchStats();
@@ -117,211 +103,203 @@ export default function VendorSettings() {
     try {
       const { api } = await import("../../utils/api");
       await api.put("/users/profile", { password: pwForm.next });
-      setPwForm({ current:"", next:"", confirm:"" });
+      setPwForm({ current: "", next: "", confirm: "" });
       setPwSaved(true);
       setTimeout(() => setPwSaved(false), 2000);
     } catch (err) { console.error(err); }
   };
 
   const inputStyle = (editable) => ({
-    width:"100%", border:`1.5px solid ${P.mist}`, borderRadius:11,
-    padding:"11px 14px", fontSize:14, color:P.navy, fontFamily:P.font,
-    background: editable ? P.white : P.mistBg, outline:"none",
-    transition:"all .2s", boxSizing:"border-box", opacity: editable ? 1 : 0.85,
+    width: "100%", border: `1px solid ${P.mist}`, borderRadius: 14,
+    padding: "12px 16px", fontSize: 14, color: P.navy, fontFamily: P.font,
+    background: editable ? P.white : P.mistBg, outline: "none",
+    transition: "all .2s", boxSizing: "border-box", opacity: editable ? 1 : 0.85,
+    fontWeight: editable ? 500 : 600,
   });
 
   const TABS = [
-    { id:"info",        l:"Personal Info"    },
-    { id:"store",       l:"Store Settings"   },
-    { id:"security",    l:"Security"         },
-    { id:"preferences", l:"Preferences"      },
-  ];
-
-  const statCards = [
-    { l:"Total Listings", v: stats.listings },
-    { l:"Total Orders",   v: stats.orders   },
-    { l:"Wishlist Items", v: "—"            },
-    { l:"Total Revenue",  v: `Rs. ${stats.revenue.toLocaleString()}` },
+    { id: "info",        l: "Profile" },
+    { id: "store",       l: "Store" },
+    { id: "security",    l: "Security" },
+    { id: "preferences", l: "Preferences" },
   ];
 
   return (
-    <div style={{ padding:"28px 32px", fontFamily:P.font }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 32, fontFamily: P.font, paddingBottom: 60 }}>
 
-      {/* ── Hero Banner ── */}
-      <div style={{ background:`linear-gradient(135deg,${P.navy},${P.royal})`, borderRadius:22, padding:"28px 32px", display:"flex", alignItems:"center", gap:24, marginBottom:28, position:"relative", overflow:"hidden" }}>
-        <div style={{ position:"absolute", top:-30, right:-10, width:160, height:160, borderRadius:"50%", background:"rgba(40, 43, 74, .15)", filter:"blur(40px)", pointerEvents:"none" }} />
-
-        {/* Avatar */}
-        <div style={{ position:"relative", flexShrink:0 }}>
-          <div style={{ width:72, height:72, borderRadius:"50%", background:`linear-gradient(135deg,${P.ocean},${P.sky})`, display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 6px 20px rgba(40, 43, 74, .4)", border:"3px solid rgba(255,255,255,.3)", overflow:"hidden" }}>
+      {/* ── Brand Hero Section ── */}
+      <div style={{ background: `linear-gradient(135deg, ${P.navy}, #3f3f46)`, borderRadius: 32, padding: 48, display: "flex", alignItems: "center", gap: 40, position: "relative", overflow: "hidden", boxShadow: "0 20px 50px rgba(0,0,0,0.12)" }}>
+        <div style={{ position: "absolute", top: -50, right: -50, width: 200, height: 200, borderRadius: "50%", background: "rgba(255,255,255,0.03)", filter: "blur(60px)" }} />
+        
+        {/* Avatar Area */}
+        <div style={{ position: "relative", flexShrink: 0 }}>
+          <div style={{ width: 100, height: 100, borderRadius: 28, background: P.white, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 10px 30px rgba(0,0,0,0.2)", border: "4px solid rgba(255,255,255,0.1)", overflow: "hidden" }}>
             {form.profilePicture ? (
-              <img src={form.profilePicture} alt="Avatar" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+              <img src={form.profilePicture} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             ) : (
-              <span style={{ color:P.white, fontWeight:900, fontSize:28 }}>{form.name?.charAt(0)?.toUpperCase() || "V"}</span>
+              <span style={{ color: P.navy, fontWeight: 900, fontSize: 36, fontFamily: P.fontHeading }}>{form.name?.charAt(0)?.toUpperCase() || "V"}</span>
             )}
           </div>
-          <div style={{ position:"absolute", bottom:-2, right:-2, width:24, height:24, borderRadius:"50%", background:P.ocean, border:`2px solid ${P.white}`, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}>
-            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <div style={{ position: "absolute", bottom: -6, right: -6, width: 32, height: 32, borderRadius: 12, background: P.accent, border: `3px solid ${P.navy}`, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "scale(1.1)"} onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}>
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           </div>
         </div>
 
-        {/* Info */}
-        <div style={{ position:"relative" }}>
-          <h2 style={{ color:P.white, fontWeight:900, fontSize:22, margin:"0 0 4px" }}>{form.name || "Vendor"}</h2>
-          <p style={{ color:"rgba(212, 210, 195, .8)", fontSize:14, margin:"0 0 12px" }}>{form.email}</p>
-          <div style={{ display:"flex", gap:8 }}>
-            <span style={{ background:"rgba(40, 43, 74, .25)", border:"1px solid rgba(40, 43, 74, .4)", color:P.sky, fontSize:11, fontWeight:700, padding:"3px 12px", borderRadius:999 }}>Vendor</span>
-            <span style={{ background:"rgba(34,197,94,.2)", border:"1px solid rgba(34,197,94,.3)", color:"#86efac", fontSize:11, fontWeight:700, padding:"3px 12px", borderRadius:999 }}>Verified ✓</span>
+        {/* Identity */}
+        <div style={{ flex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
+            <h2 style={{ color: P.white, fontWeight: 900, fontSize: 32, margin: 0, fontFamily: P.fontHeading }}>{form.name || "Vendor Partner"}</h2>
+            <span style={{ background: "rgba(255,255,255,0.15)", color: P.white, fontSize: 11, fontWeight: 800, padding: "4px 12px", borderRadius: 8, letterSpacing: "0.5px" }}>VERIFIED</span>
           </div>
-        </div>
-
-        {/* Stat cards */}
-        <div style={{ marginLeft:"auto", display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:14, position:"relative" }}>
-          {statCards.map((s, i) => (
-            <div key={i} style={{ background:"rgba(255,255,255,.1)", borderRadius:12, padding:"10px 16px", textAlign:"center", border:"1px solid rgba(255,255,255,.1)" }}>
-              <p style={{ color:P.white, fontWeight:900, fontSize:18, margin:0 }}>{s.v}</p>
-              <p style={{ color:"rgba(212, 210, 195, .7)", fontSize:11, margin:"2px 0 0" }}>{s.l}</p>
-            </div>
-          ))}
+          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 16, fontWeight: 500, margin: "0 0 20px" }}>{form.email}</p>
+          <div style={{ display: "flex", gap: 32 }}>
+             <div>
+               <p style={{ color: P.white, fontWeight: 900, fontSize: 18, margin: 0 }}>{stats.listings}</p>
+               <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", margin: 0 }}>Skus</p>
+             </div>
+             <div style={{ width: 1, height: 30, background: "rgba(255,255,255,0.1)", marginTop: 4 }}></div>
+             <div>
+               <p style={{ color: P.white, fontWeight: 900, fontSize: 18, margin: 0 }}>{stats.rating}</p>
+               <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", margin: 0 }}>Rating</p>
+             </div>
+             <div style={{ width: 1, height: 30, background: "rgba(255,255,255,0.1)", marginTop: 4 }}></div>
+             <div>
+               <p style={{ color: P.white, fontWeight: 900, fontSize: 18, margin: 0 }}>NPR {Math.floor(stats.revenue/1000)}k</p>
+               <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", margin: 0 }}>Volume</p>
+             </div>
+          </div>
         </div>
       </div>
 
-      {/* ── Tab pills ── */}
-      <div style={{ display:"flex", gap:4, marginBottom:24, background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:14, padding:5, width:"fit-content" }}>
+      {/* ── Navigation Area ── */}
+      <div style={{ display: "flex", gap: 10, background: P.white, padding: 6, borderRadius: 20, border: `1px solid ${P.mist}`, width: "fit-content", boxShadow: "0 4px 12px rgba(0,0,0,0.02)" }}>
         {TABS.map(t => (
-          <button key={t.id} onClick={() => { setTab(t.id); setEditing(false); }} style={{ padding:"9px 20px", borderRadius:10, fontSize:13, fontWeight:700, cursor:"pointer", border:"none", fontFamily:P.font, background: tab===t.id ? `linear-gradient(135deg,${P.royal},${P.ocean})` : P.white, color: tab===t.id ? P.white : P.muted, boxShadow: tab===t.id ? "0 4px 14px rgba(40, 43, 74, .25)" : "none", transition:"all .18s" }}>{t.l}</button>
+          <button key={t.id} onClick={() => { setTab(t.id); setEditing(false); }} style={{ padding: "10px 24px", borderRadius: 14, fontSize: 14, fontWeight: 800, cursor: "pointer", border: "none", fontFamily: P.font, background: tab === t.id ? P.navy : "transparent", color: tab === t.id ? P.white : P.muted, transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)" }}>{t.l}</button>
         ))}
       </div>
 
-      {/* ── Personal Info ── */}
-      {tab === "info" && (
-        <div style={{ background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:20, padding:28 }}>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:22 }}>
-            <h3 style={{ color:P.navy, fontWeight:800, fontSize:16, margin:0 }}>Personal Information</h3>
-            {!editing
-              ? <button onClick={() => setEditing(true)} style={{ padding:"8px 18px", background:P.mistBg, border:`1px solid ${P.mist}`, borderRadius:10, color:P.navy, fontSize:13, fontWeight:700, cursor:"pointer", display:"flex", alignItems:"center", gap:6, fontFamily:P.font }}>
-                  <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                  Edit
-                </button>
-              : <div style={{ display:"flex", gap:8 }}>
-                  <button onClick={() => setEditing(false)} style={{ padding:"8px 16px", background:P.mistBg, border:`1px solid ${P.mist}`, borderRadius:10, color:P.muted, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:P.font }}>Cancel</button>
-                  <button onClick={saveInfo} style={{ padding:"8px 18px", background: saved ? "linear-gradient(135deg,#16a34a,#22c55e)" : `linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontSize:13, fontWeight:700, borderRadius:10, border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:6, transition:"background .35s", fontFamily:P.font }}>
-                    {saved ? "✓ Saved!" : "Save Changes"}
+      <div style={{ maxWidth: 840 }}>
+        {/* Profile Information */}
+        {tab === "info" && (
+          <div style={{ background: P.white, border: `1px solid ${P.mist}`, borderRadius: 32, padding: 40, boxShadow: "0 10px 40px rgba(0,0,0,0.03)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
+              <div>
+                <h3 style={{ color: P.navy, fontWeight: 900, fontSize: 20, margin: "0 0 4px", fontFamily: P.fontHeading }}>Account Credential</h3>
+                <p style={{ color: P.muted, fontSize: 14, fontWeight: 500, margin: 0 }}>Manage your representative profile on the platform.</p>
+              </div>
+              {!editing
+                ? <button onClick={() => setEditing(true)} style={{ padding: "10px 24px", background: P.white, border: `1px solid ${P.mist}`, borderRadius: 14, color: P.navy, fontSize: 13, fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.background = P.mistBg} onMouseLeave={e => e.currentTarget.style.background = P.white}>
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    Modify
                   </button>
+                : <div style={{ display: "flex", gap: 12 }}>
+                    <button onClick={() => setEditing(false)} style={{ padding: "10px 20px", background: P.white, color: P.muted, fontSize: 13, fontWeight: 800, border: "none", cursor: "pointer" }}>Discard</button>
+                    <button onClick={saveInfo} style={{ padding: "10px 28px", background: saved ? "#16a34a" : P.navy, color: P.white, fontSize: 13, fontWeight: 800, borderRadius: 14, border: "none", cursor: "pointer", transition: "all 0.3s" }}>
+                      {saved ? "Success ✓" : "Commit Changes"}
+                    </button>
+                  </div>
+              }
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+              {[
+                { l: "Platform Identity", k: "name", type: "text" },
+                { l: "Official Email", k: "email", type: "email" },
+                { l: "Direct Contact", k: "phone", type: "tel" },
+                { l: "Headquarters", k: "address", type: "text" },
+              ].map(f => (
+                <div key={f.k}>
+                  <label style={{ display: "block", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>{f.l}</label>
+                  <input type={f.type} value={form[f.k]} onChange={e => setForm(v => ({ ...v, [f.k]: e.target.value }))} disabled={!editing}
+                    style={inputStyle(editing)}
+                    onFocus={e => { if(editing) { e.target.style.borderColor = P.accent; e.target.style.background = P.white; e.target.style.boxShadow = `0 0 0 4px ${P.mist}`; }}}
+                    onBlur={e => { e.target.style.borderColor = P.mist; e.target.style.background = editing ? P.white : P.mistBg; e.target.style.boxShadow = "none"; }}
+                  />
                 </div>
-            }
-          </div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:18 }}>
-            {[
-              { l:"Full Name",      k:"name",    type:"text"  },
-              { l:"Email Address",  k:"email",   type:"email" },
-              { l:"Phone Number",   k:"phone",   type:"tel"   },
-              { l:"Location",       k:"address", type:"text"  },
-            ].map(f => (
-              <div key={f.k}>
-                <p style={{ fontSize:11, fontWeight:800, color:P.muted, letterSpacing:".1em", textTransform:"uppercase", margin:"0 0 8px" }}>{f.l}</p>
-                <input type={f.type} value={form[f.k]} onChange={e => setForm(v => ({ ...v, [f.k]: e.target.value }))} disabled={!editing}
-                  style={inputStyle(editing)}
-                  onFocus={e => { if(editing){ e.target.style.borderColor=P.sky; e.target.style.boxShadow="0 0 0 3px rgba(212, 210, 195, .2)"; }}}
-                  onBlur={e  => { e.target.style.borderColor=P.mist; e.target.style.boxShadow="none"; }}
+              ))}
+              <div style={{ gridColumn: "1/-1" }}>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>Bio / Statement</label>
+                <textarea value={form.bio} onChange={e => setForm(v => ({ ...v, bio: e.target.value }))} disabled={!editing} rows={3}
+                  style={{ ...inputStyle(editing), resize: "none", minHeight: 100 }}
                 />
               </div>
-            ))}
-            <div style={{ gridColumn:"1/-1" }}>
-              <p style={{ fontSize:11, fontWeight:800, color:P.muted, letterSpacing:".1em", textTransform:"uppercase", margin:"0 0 8px" }}>Profile Image URL</p>
-              <input type="text" value={form.profilePicture} onChange={e => setForm(v => ({ ...v, profilePicture: e.target.value }))} disabled={!editing}
-                placeholder="https://example.com/avatar.jpg"
-                style={{ ...inputStyle(editing), marginBottom:18 }}
-              />
-              <p style={{ fontSize:11, fontWeight:800, color:P.muted, letterSpacing:".1em", textTransform:"uppercase", margin:"0 0 8px" }}>Bio</p>
-              <textarea value={form.bio} onChange={e => setForm(v => ({ ...v, bio: e.target.value }))} disabled={!editing} rows={3}
-                style={{ ...inputStyle(editing), resize:"none" }}
-              />
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* ── Store Settings ── */}
-      {tab === "store" && (
-        <div style={{ background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:20, padding:28 }}>
-          <h3 style={{ color:P.navy, fontWeight:800, fontSize:16, margin:"0 0 22px" }}>Store Settings</h3>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:18 }}>
-            {[
-              { l:"Store Name",    k:"storeName", type:"text",  ph:"My Awesome Store"       },
-              { l:"Phone Number",  k:"phone",     type:"tel",   ph:"+977-98XXXXXXXX"         },
-            ].map(f => (
-              <div key={f.k}>
-                <p style={{ fontSize:11, fontWeight:800, color:P.muted, letterSpacing:".1em", textTransform:"uppercase", margin:"0 0 8px" }}>{f.l}</p>
-                <input type={f.type} value={form[f.k] || ""} onChange={e => setForm(v => ({ ...v, [f.k]: e.target.value }))}
-                  placeholder={f.ph} style={inputStyle(true)}
-                  onFocus={e => { e.target.style.borderColor=P.sky; e.target.style.boxShadow="0 0 0 3px rgba(212, 210, 195, .2)"; }}
-                  onBlur={e  => { e.target.style.borderColor=P.mist; e.target.style.boxShadow="none"; }}
-                />
+        {/* Store Profile */}
+        {tab === "store" && (
+          <div style={{ background: P.white, border: `1px solid ${P.mist}`, borderRadius: 32, padding: 40, boxShadow: "0 10px 40px rgba(0,0,0,0.03)" }}>
+            <h3 style={{ color: P.navy, fontWeight: 900, fontSize: 20, margin: "0 0 12px", fontFamily: P.fontHeading }}>Marketplace Presence</h3>
+            <p style={{ color: P.muted, fontSize: 14, fontWeight: 500, margin: "0 0 32px" }}>Configure how your brand appears to potential buyers.</p>
+            
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+              <div style={{ gridColumn: "1/-1" }}>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>Primary Store Name</label>
+                <input type="text" value={form.storeName} onChange={e => setForm(v => ({ ...v, storeName: e.target.value }))} placeholder="The Gadget Hub" style={inputStyle(true)} />
               </div>
-            ))}
-            <div style={{ gridColumn:"1/-1" }}>
-              <p style={{ fontSize:11, fontWeight:800, color:P.muted, letterSpacing:".1em", textTransform:"uppercase", margin:"0 0 8px" }}>Currency</p>
-              <select value="NPR" style={{ ...inputStyle(true), appearance:"none" }}>
-                <option value="NPR">NPR (Rs.)</option>
-              </select>
+              <div>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>Operating Currency</label>
+                <select style={{ ...inputStyle(true), appearance: "none" }}>
+                  <option>Nepalese Rupee (NPR)</option>
+                  <option>US Dollar (USD)</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>Timezone</label>
+                <select style={{ ...inputStyle(true), appearance: "none" }}>
+                  <option>(GMT+05:45) Kathmandu</option>
+                </select>
+              </div>
+            </div>
+            <div style={{ marginTop: 40, borderTop: `1px solid ${P.mist}`, paddingTop: 32, display: "flex", justifyContent: "flex-end" }}>
+              <button onClick={saveInfo} style={{ padding: "14px 44px", background: P.navy, color: P.white, fontSize: 14, fontWeight: 800, borderRadius: 14, border: "none", cursor: "pointer", boxShadow: "0 10px 25px rgba(0,0,0,0.1)", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"} onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>Update Ecosystem</button>
             </div>
           </div>
-          <div style={{ marginTop:24, display:"flex", justifyContent:"flex-end" }}>
-            <button onClick={saveInfo} style={{ padding:"11px 28px", background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontSize:14, fontWeight:700, borderRadius:12, border:"none", cursor:"pointer", fontFamily:P.font, boxShadow:"0 4px 16px rgba(40, 43, 74, .3)" }}>
-              Save Store Settings
-            </button>
-          </div>
-        </div>
-      )}
+        )}
 
-      {/* ── Security ── */}
-      {tab === "security" && (
-        <div style={{ background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:20, padding:28, maxWidth:520 }}>
-          <h3 style={{ color:P.navy, fontWeight:800, fontSize:16, margin:"0 0 22px" }}>Change Password</h3>
-          <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
-            {[{ l:"Current Password", k:"current" }, { l:"New Password", k:"next" }, { l:"Confirm New Password", k:"confirm" }].map(f => (
-              <div key={f.k}>
-                <p style={{ fontSize:11, fontWeight:800, color:P.muted, letterSpacing:".1em", textTransform:"uppercase", margin:"0 0 8px" }}>{f.l}</p>
-                <input type="password" value={pwForm[f.k]} onChange={e => setPwForm(v => ({ ...v, [f.k]: e.target.value }))} placeholder="••••••••"
-                  style={inputStyle(true)}
-                  onFocus={e => { e.target.style.borderColor=P.sky; e.target.style.background=P.white; e.target.style.boxShadow="0 0 0 3px rgba(212, 210, 195, .2)"; }}
-                  onBlur={e  => { e.target.style.borderColor=P.mist; e.target.style.background=P.mistBg; e.target.style.boxShadow="none"; }}
-                />
-              </div>
+        {/* Security Matrix */}
+        {tab === "security" && (
+          <div style={{ background: P.white, border: `1px solid ${P.mist}`, borderRadius: 32, padding: 40, maxWidth: 520, boxShadow: "0 10px 40px rgba(0,0,0,0.03)" }}>
+            <h3 style={{ color: P.navy, fontWeight: 900, fontSize: 20, margin: "0 0 12px", fontFamily: P.fontHeading }}>Access Control</h3>
+            <p style={{ color: P.muted, fontSize: 14, fontWeight: 500, margin: "0 0 32px" }}>Maintain the integrity of your vendor vault.</p>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+              {[
+                { l: "Secret Key", k: "current", ph: "Enter Current Password" }, 
+                { l: "New Secret Key", k: "next", ph: "Minimum 8 characters" }, 
+                { l: "Verify Secret Key", k: "confirm", ph: "Retype new password" }
+              ].map(f => (
+                <div key={f.k}>
+                  <label style={{ display: "block", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>{f.l}</label>
+                  <input type="password" value={pwForm[f.k]} onChange={e => setPwForm(v => ({ ...v, [f.k]: e.target.value }))} placeholder={f.ph} style={inputStyle(true)} />
+                </div>
+              ))}
+              <button onClick={savePw} style={{ marginTop: 12, padding: "16px 0", background: pwSaved ? "#16a34a" : P.navy, color: P.white, fontSize: 14, fontWeight: 800, borderRadius: 14, border: "none", cursor: "pointer", transition: "all 0.3s", boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}>
+                {pwSaved ? "Security Synchronized ✓" : "Rotate Secret Key"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Config Preferences */}
+        {tab === "preferences" && (
+          <div style={{ background: P.white, border: `1px solid ${P.mist}`, borderRadius: 32, padding: 40, boxShadow: "0 10px 40px rgba(0,0,0,0.03)" }}>
+            <h3 style={{ color: P.navy, fontWeight: 900, fontSize: 20, margin: "0 0 12px", fontFamily: P.fontHeading }}>Channel Preferences</h3>
+            <p style={{ color: P.muted, fontSize: 14, fontWeight: 500, margin: "0 0 16px" }}>Define how the system communicates critical events.</p>
+            
+            {[
+              { k: "emailNotifications", l: "Cloud Email Logs", sub: "Receive cryptographic transaction receipts and daily inventory logs." },
+              { k: "smsNotifications", l: "Secure SMS Tunnels", sub: "Priority alerts for account access and high-value orders." },
+              { k: "newOrders", l: "Instant Order Broadcast", sub: "Real-time socket notifications for every successful conversion." },
+              { k: "promotions", l: "Market Intelligence", sub: "Analytic reports on trending gadgets and platform campaigns." },
+              { k: "twoFactorAuth", l: "Multi-Signature Login", sub: "Require biometric or token-based verification for dashboard entry." },
+            ].map(item => (
+              <Toggle key={item.k} label={item.l} description={item.sub} checked={notifs[item.k]} onChange={() => setNotifs(n => ({ ...n, [item.k]: !n[item.k] }))} />
             ))}
-            {pwForm.next && pwForm.confirm && pwForm.next !== pwForm.confirm && (
-              <p style={{ color:P.red, fontSize:12, margin:0 }}>Passwords do not match</p>
-            )}
-            <button onClick={savePw} style={{ padding:"12px 0", background: pwSaved ? "linear-gradient(135deg,#16a34a,#22c55e)" : `linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontSize:14, fontWeight:700, borderRadius:12, border:"none", cursor:"pointer", transition:"background .35s", fontFamily:P.font }}>
-              {pwSaved ? "✓ Password Changed!" : "Update Password"}
-            </button>
           </div>
-        </div>
-      )}
-
-      {/* ── Preferences ── */}
-      {tab === "preferences" && (
-        <div style={{ background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:20, padding:28 }}>
-          <h3 style={{ color:P.navy, fontWeight:800, fontSize:16, margin:"0 0 22px" }}>Notification Preferences</h3>
-          {[
-            { k:"emailNotifications", l:"Email Notifications",   sub:"Receive daily order summaries and updates via email."        },
-            { k:"smsNotifications",   l:"SMS Alerts",            sub:"Get text messages for new orders and urgent issues."         },
-            { k:"newOrders",          l:"New Order Alerts",      sub:"Be notified instantly whenever a new order is placed."       },
-            { k:"promotions",         l:"Promotions & Deals",    sub:"Receive special platform offers and discount codes."         },
-            { k:"twoFactorAuth",      l:"Two-Factor Authentication", sub:"Require a confirmation code to log in to your dashboard." },
-          ].map(item => (
-            <Toggle
-              key={item.k}
-              label={item.l}
-              description={item.sub}
-              checked={notifs[item.k]}
-              onChange={() => setNotifs(n => ({ ...n, [item.k]: !n[item.k] }))}
-            />
-          ))}
-        </div>
-      )}
-
+        )}
+      </div>
     </div>
   );
 }

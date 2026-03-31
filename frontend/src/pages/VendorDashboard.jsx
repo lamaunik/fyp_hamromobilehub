@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { socket } from "../utils/socket";
 import { P } from "../components/dashboard/DashboardConstants";
 import VendorSidebar   from "../components/vendor/VendorSidebar";
@@ -42,9 +43,21 @@ function ComingSoon({ label }) {
 
 export default function VendorDashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [tab, setTab]   = useState("overview");
   const [open, setOpen] = useState(false);
   const [unreadChat, setUnreadChat] = useState(false);
+
+  // Redirect to KYC if not approved
+  useEffect(() => {
+    if (user && user.role === "vendor" && !user.isApproved) {
+      navigate("/vendor/kyc", { replace: true });
+    }
+  }, [user, navigate]);
+
+  if (!user) {
+    return <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: P.mistBg, color: P.navy, fontWeight: 800, fontFamily: P.font }}>Authenticating Hub Access...</div>;
+  }
 
   // Global socket for vendor notifications
   useEffect(() => {

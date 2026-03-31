@@ -171,3 +171,39 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+// @desc    Submit Vendor KYC
+// @route   PUT /api/users/kyc
+// @access  Private/Vendor
+export const submitKYC = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+    if (user.role !== "vendor") {
+      return res.status(403).json({ success: false, message: "Only vendors can submit KYC" });
+    }
+
+    const { storeName, storePhone, storeLocation, panNumber, panImage, licenseImage } = req.body;
+
+    user.storeName = storeName || user.storeName;
+    user.storePhone = storePhone || user.storePhone;
+    user.storeLocation = storeLocation || user.storeLocation;
+    user.panNumber = panNumber || user.panNumber;
+    user.panImage = panImage || user.panImage;
+    user.licenseImage = licenseImage || user.licenseImage;
+    user.kycSubmitted = true;
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "KYC submitted successfully! Please wait for admin approval.",
+      data: {
+        kycSubmitted: true,
+        isApproved: user.isApproved
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

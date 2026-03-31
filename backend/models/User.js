@@ -60,6 +60,30 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    storePhone: {
+      type: String,
+      default: "",
+    },
+    storeLocation: {
+      type: String,
+      default: "",
+    },
+    panNumber: {
+      type: String,
+      default: "",
+    },
+    panImage: {
+      type: String,
+      default: "",
+    },
+    licenseImage: {
+      type: String,
+      default: "",
+    },
+    kycSubmitted: {
+      type: Boolean,
+      default: false,
+    },
     wishlist: [
       {
         type: mongoose.Schema.Types.ObjectId,

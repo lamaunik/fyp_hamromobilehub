@@ -69,6 +69,7 @@ export default function AdminDashboard() {
 
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState({ users: 0, vendors: 0, products: 0, revenue: 0 });
+  const [kycReviewData, setKycReviewData] = useState(null); // Data for the vendor being reviewed
   
   useEffect(() => {
     const fetchAllData = async () => {
@@ -115,6 +116,30 @@ export default function AdminDashboard() {
     fetchAllData();
   }, []);
 
+  // Update setUsers to include KYC fields
+  useEffect(() => {
+    const fetchDetailedUsers = async () => {
+      try {
+        const { api } = await import("../utils/api");
+        const res = await api.get("/users");
+        if (res.success && res.data) {
+          const mapped = res.data.map(u => ({
+            id: u._id,
+            name: u.name, email: u.email, phone: u.phone, address: u.address,
+            role: u.role, isApproved: u.isApproved, status: u.isDeactivated ? "Suspended" : "Active",
+            joined: new Date(u.createdAt).toLocaleDateString(),
+            // KYC Fields
+            storeName: u.storeName, storePhone: u.storePhone, storeLocation: u.storeLocation,
+            panNumber: u.panNumber, panImage: u.panImage, licenseImage: u.licenseImage,
+            kycSubmitted: u.kycSubmitted
+          }));
+          setUsers(mapped);
+        }
+      } catch (err) { console.error(err); }
+    };
+    fetchDetailedUsers();
+  }, []);
+
   const handleLogout = () => { logout(); navigate("/signin"); };
 
   const handleToggleBan = async (userId, currentStatus) => {
@@ -151,6 +176,10 @@ export default function AdminDashboard() {
     { label:"Total Revenue",  value: `Rs. ${stats.revenue.toLocaleString()}`, color:P.sky,
       icon:<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> },
   ];
+
+  const handleReviewKYC = (vendor) => {
+    setKycReviewData(vendor);
+  };
 
   return (
     <div style={{ minHeight:"100vh", display:"flex", background:P.mistBg, fontFamily:P.font }}>
@@ -284,7 +313,12 @@ export default function AdminDashboard() {
               {/* Recent users */}
               <div>
                 <h2 style={{ color:P.white, fontWeight:900, fontSize:15, margin:"0 0 16px" }}>Recent Users</h2>
-                <UsersTable users={users.slice(0, 5)} onToggleBan={handleToggleBan} onToggleApprove={handleToggleApprove} />
+                <UsersTable 
+                  users={users.filter(u => u.role !== "vendor" || u.kycSubmitted).slice(0, 5)} 
+                  onToggleBan={handleToggleBan} 
+                  onToggleApprove={handleToggleApprove} 
+                  onReview={handleReviewKYC} 
+                />
               </div>
             </div>
           )}
@@ -301,7 +335,7 @@ export default function AdminDashboard() {
                   + Invite User
                 </button>
               </div>
-              <UsersTable users={users} showActions onToggleBan={handleToggleBan} onToggleApprove={handleToggleApprove} />
+              <UsersTable users={users} showActions onToggleBan={handleToggleBan} onToggleApprove={handleToggleApprove} onReview={handleReviewKYC} />
             </div>
           )}
 
@@ -314,7 +348,13 @@ export default function AdminDashboard() {
                   <p style={{ color:P.muted, fontSize:12, margin:"4px 0 0" }}>Approve, suspend or manage vendor accounts</p>
                 </div>
               </div>
-              <UsersTable users={users.filter(u=>u.role==="vendor")} showActions onToggleBan={handleToggleBan} onToggleApprove={handleToggleApprove} />
+              <UsersTable 
+                users={users.filter(u => u.role === "vendor" && (u.kycSubmitted || u.isApproved))} 
+                showActions 
+                onToggleBan={handleToggleBan} 
+                onToggleApprove={handleToggleApprove} 
+                onReview={handleReviewKYC} 
+              />
             </div>
           )}
 
@@ -403,13 +443,141 @@ export default function AdminDashboard() {
 
         </main>
       </div>
+
+      {/* KYC Review Modal */}
+      {kycReviewData && (
+        <KYCReviewModal 
+          vendor={kycReviewData} 
+          onClose={() => setKycReviewData(null)} 
+          onApprove={() => {
+            handleToggleApprove(kycReviewData.id, false);
+            setKycReviewData(null);
+          }} 
+        />
+      )}
+    </div>
+  );
+}
+
+function KYCReviewModal({ vendor, onClose, onApprove }) {
+  const [viewImg, setViewImg] = useState(null);
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 999,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      background: "rgba(0,0,0,0.8)", backdropFilter: "blur(4px)", padding: 20
+    }}>
+      <div style={{
+        maxWidth: 900, width: "100%", background: P.white, borderRadius: 24,
+        overflow: "hidden", display: "flex", flexDirection: "column", maxHeight: "90vh",
+        boxShadow: "0 25px 50px rgba(0,0,0,0.25)"
+      }}>
+        {/* Header */}
+        <div style={{ padding: "20px 32px", borderBottom: `1px solid ${P.mist}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div>
+            <h2 style={{ color: P.navy, fontSize: 20, fontWeight: 900, margin: 0, fontFamily: P.fontHeading }}>KYC Review: {vendor.storeName || vendor.name}</h2>
+            <p style={{ color: P.muted, fontSize: 12, margin: 0 }}>Review legal documents and business details</p>
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: P.navy }}>
+            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        {/* Content */}
+        <div style={{ padding: 32, overflowY: "auto", flex: 1 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
+            {/* Left: Info */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <div>
+                <h4 style={{ textTransform: "uppercase", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "1px", marginBottom: 8 }}>Store Information</h4>
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  <p style={{ margin: 0, fontSize: 14, fontWeight: 700 }}>{vendor.storeName}</p>
+                  <p style={{ margin: 0, fontSize: 13, color: P.muted }}>Location: {vendor.storeLocation}</p>
+                  <p style={{ margin: 0, fontSize: 13, color: P.muted }}>Contact: {vendor.storePhone}</p>
+                </div>
+              </div>
+
+              <div>
+                <h4 style={{ textTransform: "uppercase", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "1px", marginBottom: 8 }}>Legal Details</h4>
+                <div style={{ background: P.mistBg, padding: 16, borderRadius: 12, border: `1px solid ${P.mist}` }}>
+                  <p style={{ margin: 0, fontSize: 16, fontWeight: 900, color: P.navy }}>PAN: {vendor.panNumber || "Not Provided"}</p>
+                </div>
+              </div>
+
+              <div style={{ marginTop: "auto", padding: "20px", background: "#f0fdf4", borderRadius: 16, border: "1px solid #bbf7d0" }}>
+                 <p style={{ margin:0, fontSize: 13, color: "#166534", lineHeight: 1.5, fontWeight: 500 }}>
+                   Ensure that the PAN image matches the provided name and number before approving.
+                 </p>
+              </div>
+            </div>
+
+            {/* Right: Documents */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <h4 style={{ textTransform: "uppercase", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "1px", margin: 0 }}>Documents</h4>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div 
+                  onClick={() => setViewImg(vendor.panImage)}
+                  style={{ cursor:"pointer", borderRadius: 16, overflow: "hidden", aspectRatio: "4/3", background: P.mistBg, border: `1px solid ${P.mist}`, position:"relative" }}>
+                  {vendor.panImage ? (
+                    <img src={vendor.panImage} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: P.muted }}>No PAN Image</div>
+                  )}
+                  <div style={{ position:"absolute", bottom:0, background: "rgba(0,0,0,0.6)", color: "white", width: "100%", padding: 6, fontSize: 10, textAlign: "center" }}>PAN DOCUMENT</div>
+                </div>
+
+                <div 
+                  onClick={() => setViewImg(vendor.licenseImage)}
+                  style={{ cursor:"pointer", borderRadius: 16, overflow: "hidden", aspectRatio: "4/3", background: P.mistBg, border: `1px solid ${P.mist}`, position:"relative" }}>
+                  {vendor.licenseImage ? (
+                    <img src={vendor.licenseImage} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: P.muted }}>No License Image</div>
+                  )}
+                  <div style={{ position:"absolute", bottom:0, background: "rgba(0,0,0,0.6)", color: "white", width: "100%", padding: 6, fontSize: 10, textAlign: "center" }}>BUSINESS LICENSE</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{ padding: "24px 32px", borderTop: `1px solid ${P.mist}`, background: P.mistBg, display: "flex", gap: 16, justifyContent: "flex-end" }}>
+           <button onClick={onClose} style={{ padding: "12px 24px", borderRadius: 12, border: "none", background: "none", color: P.muted, fontWeight: 800, cursor: "pointer" }}>Close</button>
+           <button 
+             onClick={onApprove}
+             style={{ 
+               padding: "12px 32px", borderRadius: 12, border: "none", background: P.navy, color: P.white, 
+               fontWeight: 900, cursor: "pointer", transition: "transform 0.2s" 
+             }}
+             onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
+             onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
+           >
+             Verified & Approve Vendor
+           </button>
+        </div>
+      </div>
+
+      {/* Fullscreen Preview */}
+      {viewImg && (
+        <div 
+          onClick={() => setViewImg(null)}
+          style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.95)", display: "flex", alignItems: "center", justifyContent: "center", padding: 40, cursor: "zoom-out" }}>
+          <img src={viewImg} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", borderRadius: 8 }} />
+          <button style={{ position:"absolute", top: 30, right: 30, background: "none", border: "none", color: "white", cursor: "pointer" }}>
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
 
 // ─── Users Table ─────────────────────────────────────────────────────────────
-function UsersTable({ users, showActions = false, onToggleBan, onToggleApprove }) {
-  const cols = showActions ? "1.5fr 1.8fr 1fr 0.8fr 1fr 1.2fr 1fr 1.2fr" : "1.8fr 2fr 1.2fr 1fr 1fr 1.5fr 1.8fr";
+function UsersTable({ users, showActions = false, onToggleBan, onToggleApprove, onReview }) {
+  const cols = showActions ? "1.5fr 1.8fr 1fr 0.8fr 1fr 1.2fr 1fr 1.4fr" : "1.8fr 2fr 1.2fr 1fr 1fr 1.5fr 1.8fr";
   return (
     <div style={{ borderRadius:16, overflow:"hidden", background:P.white, border:`1px solid ${P.mist}`, boxShadow:"0 2px 12px rgba(24,24,27,0.03)" }}>
       {/* Header row */}
@@ -472,10 +640,17 @@ function UsersTable({ users, showActions = false, onToggleBan, onToggleApprove }
             {showActions && (
               <div style={{ display:"flex", gap:6 }}>
                 {u.role === "vendor" && (
-                  <button onClick={() => onToggleApprove(u.id, u.isApproved)}
-                    style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background: u.isApproved ? "#fef2f2" : "#f0fdf4", border: u.isApproved ? "1px solid #fecaca" : "1px solid #bbf7d0", color: u.isApproved ? "#ef4444" : "#16a34a", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}>
-                    {u.isApproved ? "Revoke" : "Approve"}
-                  </button>
+                    <>
+                    <button onClick={() => onReview(u)} 
+                        title="Review KYC Documents"
+                        style={{ width:32, height:31, display:"flex", alignItems:"center", justifyContent:"center", borderRadius:8, background:P.mistBg, border:`1px solid ${P.mist}`, color:P.navy, cursor:"pointer" }}>
+                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    </button>
+                    <button onClick={() => onToggleApprove(u.id, u.isApproved)}
+                        style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background: u.isApproved ? "#fef2f2" : "#f0fdf4", border: u.isApproved ? "1px solid #fecaca" : "1px solid #bbf7d0", color: u.isApproved ? "#ef4444" : "#16a34a", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}>
+                        {u.isApproved ? "Revoke" : "Approve"}
+                    </button>
+                    </>
                 )}
                 <button onClick={() => onToggleBan(u.id, u.status)}
                   style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background:"#fef2f2", border:"1px solid #fecaca", color:"#ef4444", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}

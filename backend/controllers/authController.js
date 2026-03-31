@@ -29,6 +29,7 @@ const sendTokenResponse = (user, statusCode, res) => {
       storeName:      user.storeName,
       isDeactivated:  user.isDeactivated,
       isApproved:     user.isApproved,
+      kycSubmitted:   user.kycSubmitted,
     },
   });
 };
@@ -190,12 +191,7 @@ export const login = async (req, res) => {
       });
     }
 
-    if (user.isApproved === false) {
-      return res.status(403).json({
-        success: false,
-        message: "Your vendor account is pending admin approval.",
-      });
-    }
+    // REMOVED: isApproved check. Vendors can now log in but will be restricted to KYC page in frontend.
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {

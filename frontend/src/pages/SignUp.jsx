@@ -96,7 +96,7 @@ export default function SignUp() {
         return;
       }
       if (user.role==="admin") navigate("/admin/dashboard");
-      else if (user.role==="vendor") navigate("/vendor/dashboard");
+      else if (user.role==="vendor") navigate("/vendor/kyc");
       else navigate("/dashboard");
     } catch(err) { setError(err.message); }
     finally { setLoading(false); }

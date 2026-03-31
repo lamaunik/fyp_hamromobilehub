@@ -8,6 +8,7 @@ import {
   getUserById,
   updateUser,
   deleteUser,
+  submitKYC,
 } from "../controllers/userController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
@@ -23,6 +24,9 @@ router.get("/stats", protect, getUserStats);
 
 // Wishlist sync route
 router.put("/wishlist", protect, syncWishlist);
+
+// Vendor KYC route
+router.put("/kyc", protect, restrictTo("vendor"), submitKYC);
 
 // Admin only routes below
 router.use(protect);

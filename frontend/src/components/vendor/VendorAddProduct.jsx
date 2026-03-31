@@ -96,7 +96,7 @@ export default function VendorAddProduct({ setTab }) {
         discountPrice: formData.discountPrice ? Number(formData.discountPrice) : undefined,
         category: formData.category,
         stock: Number(formData.stock),
-        images: imageMeta ? [imageMeta] : [],
+        images: imageMeta ? [imageMeta.url] : [], // Send only the URL string
       };
 
       const res = await api.post("/products", payload);

@@ -23,7 +23,7 @@ export const updateUserProfile = async (req, res) => {
     if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
     // Update all allowed fields
-    const fields = ["name", "email", "phone", "address", "profilePicture", "bio", "storeName"];
+    const fields = ["name", "email", "phone", "address", "profilePicture", "bio", "storeName", "panNumber", "storeLocation"];
     fields.forEach(field => {
       if (req.body[field] !== undefined) user[field] = req.body[field];
     });

@@ -95,13 +95,14 @@ export default function VendorDashboard() {
 
   return (
     <div style={{
-      minHeight: "100vh",
+      height: "100vh",
       display: "flex",
       background: P.mistBg,
       fontFamily: P.font,
+      overflow: "hidden",
     }}>
       <VendorSidebar tab={tab} setTab={setTab} open={open} setOpen={setOpen} />
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
         <VendorTopbar tab={tab} onMenu={() => setOpen(o => !o)} unreadChat={unreadChat} />
         <main style={{ flex: 1, overflowY: "auto", padding: "40px" }}>
           <div style={{ maxWidth: "1600px", margin: "0 auto" }}>

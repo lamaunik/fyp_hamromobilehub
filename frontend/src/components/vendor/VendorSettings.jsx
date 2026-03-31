@@ -29,8 +29,10 @@ export default function VendorSettings() {
     phone:          user?.phone || "",
     address:        user?.address || "",
     profilePicture: user?.profilePicture || "",
-    bio:            "Passionate vendor on HamroMobileHub.",
-    storeName:      "My Store",
+    bio:            user?.bio || "Passionate vendor on HamroMobileHub.",
+    storeName:      user?.storeName || "My Store",
+    panNumber:      user?.panNumber || "",
+    storeLocation:  user?.storeLocation || "",
   });
 
   const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" });
@@ -58,6 +60,8 @@ export default function VendorSettings() {
             profilePicture: res.data.profilePicture || "",
             bio:            res.data.bio || "Passionate vendor on HamroMobileHub.",
             storeName:      res.data.storeName || "My Store",
+            panNumber:      res.data.panNumber || "",
+            storeLocation:  res.data.storeLocation || "",
           }));
         }
       } catch (err) { console.error("Profile fetch failed", err); }
@@ -109,6 +113,35 @@ export default function VendorSettings() {
     } catch (err) { console.error(err); }
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const { api } = await import("../../utils/api");
+      // Use the dedicated profile upload endpoint
+      const res = await api.post("/upload/profile", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+
+      if (res.success) {
+        // The backend returns the URL directly in res.data
+        const imageUrl = res.data; 
+        
+        setForm(prev => ({ ...prev, profilePicture: imageUrl }));
+        updateUser({ profilePicture: imageUrl });
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      }
+    } catch (err) {
+      console.error("Image upload failed", err);
+      alert("Failed to upload image. Please try again.");
+    }
+  };
+
   const inputStyle = (editable) => ({
     width: "100%", border: `1px solid ${P.mist}`, borderRadius: 14,
     padding: "12px 16px", fontSize: 14, color: P.navy, fontFamily: P.font,
@@ -135,12 +168,21 @@ export default function VendorSettings() {
         <div style={{ position: "relative", flexShrink: 0 }}>
           <div style={{ width: 100, height: 100, borderRadius: 28, background: P.white, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 10px 30px rgba(0,0,0,0.2)", border: "4px solid rgba(255,255,255,0.1)", overflow: "hidden" }}>
             {form.profilePicture ? (
-              <img src={form.profilePicture} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src={form.profilePicture.startsWith("http") ? form.profilePicture : `http://localhost:5000${form.profilePicture}`} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             ) : (
               <span style={{ color: P.navy, fontWeight: 900, fontSize: 36, fontFamily: P.fontHeading }}>{form.name?.charAt(0)?.toUpperCase() || "V"}</span>
             )}
           </div>
-          <div style={{ position: "absolute", bottom: -6, right: -6, width: 32, height: 32, borderRadius: 12, background: P.accent, border: `3px solid ${P.navy}`, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "scale(1.1)"} onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}>
+          <input 
+            type="file" 
+            id="profilePicInput" 
+            hidden 
+            accept="image/*" 
+            onChange={handleImageUpload} 
+          />
+          <div 
+            onClick={() => document.getElementById("profilePicInput").click()}
+            style={{ position: "absolute", bottom: -6, right: -6, width: 32, height: 32, borderRadius: 12, background: P.accent, border: `3px solid ${P.navy}`, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "scale(1.1)"} onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}>
             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           </div>
         </div>
@@ -236,8 +278,19 @@ export default function VendorSettings() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
               <div style={{ gridColumn: "1/-1" }}>
                 <label style={{ display: "block", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>Primary Store Name</label>
-                <input type="text" value={form.storeName} onChange={e => setForm(v => ({ ...v, storeName: e.target.value }))} placeholder="The Gadget Hub" style={inputStyle(true)} />
+                <input type="text" value={form.storeName} onChange={e => setForm(v => ({ ...v, storeName: e.target.value }))} placeholder="Your Business Name" style={inputStyle(true)} />
               </div>
+              
+              <div>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>PAN / Tax Number</label>
+                <input type="text" value={form.panNumber} onChange={e => setForm(v => ({ ...v, panNumber: e.target.value }))} placeholder="123456789" style={inputStyle(true)} />
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>Full Store Location (Address)</label>
+                <input type="text" value={form.storeLocation} onChange={e => setForm(v => ({ ...v, storeLocation: e.target.value }))} placeholder="Street, City, Nepal" style={inputStyle(true)} />
+              </div>
+
               <div>
                 <label style={{ display: "block", fontSize: 11, fontWeight: 900, color: P.muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>Operating Currency</label>
                 <select style={{ ...inputStyle(true), appearance: "none" }}>

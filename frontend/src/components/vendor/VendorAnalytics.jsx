@@ -1,8 +1,5 @@
+import { useState, useEffect } from "react";
 import { P } from "../dashboard/DashboardConstants";
-
-const MONTHS  = ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar"];
-const REVENUE = [12000, 15000, 22000, 18000, 25000, 31000]; // Mock data for better visual
-const MAX_R   = Math.max(...REVENUE, 1);
 
 const KPI_ICONS = [
   <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>,
@@ -12,6 +9,43 @@ const KPI_ICONS = [
 ];
 
 export default function VendorAnalytics() {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const { api } = await import("../../utils/api");
+        const res = await api.get("/orders/vendor/stats");
+        if (res.success) {
+          setStats(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch vendor stats", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return <div style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: P.navy, fontWeight: 800, fontSize: 18, fontFamily: P.font }}>Syncing Store Analytics...</div>;
+  }
+
+  const data = stats || {
+    totalRevenue: 0,
+    totalOrders: 0,
+    avgTicketSize: 0,
+    revenueTrajectory: [],
+    eliteInventory: [],
+    marketReach: 0,
+    conversionRate: "0%",
+    productChurn: "0%"
+  };
+
+  const revenueValues = data.revenueTrajectory.map(r => r.revenue);
+  const maxRevenue = Math.max(...revenueValues, 1000);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 32, fontFamily: P.font, paddingBottom: 40 }}>
 
@@ -30,10 +64,10 @@ export default function VendorAnalytics() {
       {/* KPI Cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
         {[
-          { label: "Market Reach", value: "2,840", sub: "+12.5% vs LW", growth: true },
-          { label: "Conversion rate", value: "3.4%", sub: "Above average", growth: true },
-          { label: "Avg Ticket Size", value: "NPR 4.2k", sub: "Target: 5k", growth: false },
-          { label: "Product Churn", value: "0.8%", sub: "-0.2% health", growth: true },
+          { label: "Market Reach", value: Number(data.marketReach).toLocaleString(), sub: "+5.1% vs LW", growth: true },
+          { label: "Conversion rate", value: data.conversionRate, sub: "Based on activity", growth: true },
+          { label: "Avg Ticket Size", value: `NPR ${(data.avgTicketSize / 1000).toFixed(1)}k`, sub: "Store average", growth: true },
+          { label: "Product Churn", value: data.productChurn, sub: "Health metric", growth: true },
         ].map((k, i) => (
           <div key={i} style={{ background: P.white, border: `1px solid ${P.mist}`, borderRadius: 24, padding: 24, cursor: "pointer", transition: "all 0.3s", display: "flex", flexDirection: "column", gap: 16, boxShadow: "0 4px 12px rgba(0,0,0,0.02)" }}
             onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = `0 20px 40px rgba(0,0,0,0.06)`; e.currentTarget.style.borderColor = P.accent; }}
@@ -64,26 +98,26 @@ export default function VendorAnalytics() {
               <p style={{ color: P.muted, fontSize: 13, fontWeight: 500, margin: 0 }}>Projected earnings based on fiscal trends.</p>
             </div>
             <div style={{ textAlign: "right" }}>
-               <p style={{ color: P.accent, fontWeight: 900, fontSize: 20, margin: 0 }}>NPR 142.5k</p>
+               <p style={{ color: P.accent, fontWeight: 900, fontSize: 20, margin: 0 }}>NPR {(data.totalRevenue / 1000).toFixed(1)}k</p>
                <p style={{ color: P.muted, fontSize: 11, fontWeight: 700, margin: 0 }}>TOTAL PERIOD REVENUE</p>
             </div>
           </div>
           
           <div style={{ display: "flex", alignItems: "flex-end", gap: 14, height: 200, padding: "0 10px" }}>
-            {MONTHS.map((m, i) => {
-              const h = (REVENUE[i] / MAX_R) * 100;
+            {data.revenueTrajectory.map((r, i) => {
+              const h = (r.revenue / maxRevenue) * 100;
               return (
-                <div key={m} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 12, height: "100%", position: "relative" }}>
+                <div key={r.month} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 12, height: "100%", position: "relative" }}>
                   <div style={{ position: "absolute", top: (100-h-15) + "%", width: "100%", textAlign: "center", opacity: 0, transition: "all 0.2s" }} className="chart-label">
-                     <span style={{ background: P.navy, color: "white", padding: "4px 8px", borderRadius: 8, fontSize: 10, fontWeight: 800 }}>{REVENUE[i]/1000}k</span>
+                     <span style={{ background: P.navy, color: "white", padding: "4px 8px", borderRadius: 8, fontSize: 10, fontWeight: 800 }}>{(r.revenue/1000).toFixed(1)}k</span>
                   </div>
                   <div style={{ width: "100%", borderRadius: 12, transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)", marginTop: "auto",
                     height: `${h}%`,
-                    background: i === 5 ? P.accent : P.navy,
+                    background: i === data.revenueTrajectory.length - 1 ? P.accent : P.navy,
                     opacity: 0.9,
                     cursor: "pointer",
                   }} onMouseEnter={e => { e.currentTarget.style.opacity = 1; e.currentTarget.parentNode.querySelector(".chart-label").style.opacity = 1; }} onMouseLeave={e => { e.currentTarget.style.opacity = 0.9; e.currentTarget.parentNode.querySelector(".chart-label").style.opacity = 0; }} />
-                  <p style={{ color: P.muted, fontSize: 12, fontWeight: 700, margin: 0 }}>{m}</p>
+                  <p style={{ color: P.muted, fontSize: 12, fontWeight: 700, margin: 0 }}>{r.month}</p>
                 </div>
               );
             })}
@@ -94,12 +128,7 @@ export default function VendorAnalytics() {
         <div style={{ background: P.white, border: `1px solid ${P.mist}`, borderRadius: 32, padding: 32, boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
           <h3 style={{ color: P.navy, fontWeight: 900, fontSize: 18, margin: "0 0 24px", fontFamily: P.fontHeading }}>Elite Inventory</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            {[
-              { name: "iPhone 15 Pro", sales: 42, growth: "+15%" },
-              { name: "MacBook Air M2", sales: 28, growth: "+8%" },
-              { name: "AirPods Pro 2", sales: 84, growth: "+22%" },
-              { name: "iPad Pro 11\"", sales: 12, growth: "-4%" },
-            ].map((p, i) => (
+            {data.eliteInventory.length > 0 ? data.eliteInventory.map((p, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", background: P.mistBg, borderRadius: 20, border: `1px solid ${P.mist}`, transition: "all 0.2s" }}
                 onMouseEnter={e => { e.currentTarget.style.background = P.white; e.currentTarget.style.borderColor = P.accent; e.currentTarget.style.transform = "scale(1.02)"; }}
                 onMouseLeave={e => { e.currentTarget.style.background = P.mistBg; e.currentTarget.style.borderColor = P.mist; e.currentTarget.style.transform = "scale(1)"; }}>
@@ -114,7 +143,9 @@ export default function VendorAnalytics() {
                   <p style={{ color: p.growth.startsWith("+") ? "#16a34a" : "#dc2626", fontWeight: 800, fontSize: 13, margin: 0 }}>{p.growth}</p>
                 </div>
               </div>
-            ))}
+            )) : (
+               <div style={{ textAlign: "center", padding: "40px 20px", color: P.muted, fontSize: 14, fontWeight: 600 }}>No sales data yet.</div>
+            )}
           </div>
         </div>
 

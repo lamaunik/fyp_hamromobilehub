@@ -9,6 +9,7 @@ import {
   getMyOrders,
   getOrders,
   getMyVendorOrders,
+  getVendorStats,
   initiateKhaltiPayment,
   verifyKhaltiPayment,
 } from "../controllers/orderController.js";
@@ -18,6 +19,9 @@ const router = express.Router();
 
 router.route("/vendor/myorders")
   .get(protect, restrictTo("vendor"), getMyVendorOrders);
+
+router.route("/vendor/stats")
+  .get(protect, restrictTo("vendor"), getVendorStats);
 
 router.post("/khalti/initiate", protect, initiateKhaltiPayment);
 router.post("/khalti/verify", protect, verifyKhaltiPayment);

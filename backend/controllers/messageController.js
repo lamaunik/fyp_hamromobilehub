@@ -73,3 +73,57 @@ export const sendMessage = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+// @desc    Delete a conversation
+export const deleteConversation = async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+
+    // Verify conversation exists and user is a participant
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return res.status(404).json({ success: false, message: "Conversation not found" });
+    }
+
+    if (!conversation.participants.includes(req.user._id)) {
+      return res.status(403).json({ success: false, message: "Not authorized to delete this conversation" });
+    }
+
+    // Delete all messages in the conversation
+    await Message.deleteMany({ conversationId: conversationId });
+
+    // Delete the conversation itself
+    await Conversation.findByIdAndDelete(conversationId);
+
+    res.json({ success: true, message: "Conversation deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleteConversation:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// @desc    Toggle pin status of a conversation
+export const togglePinConversation = async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return res.status(404).json({ success: false, message: "Conversation not found" });
+    }
+
+    if (!conversation.participants.includes(req.user._id)) {
+      return res.status(403).json({ success: false, message: "Not authorized" });
+    }
+
+    conversation.isPinned = !conversation.isPinned;
+    await conversation.save();
+
+    res.json({ success: true, isPinned: conversation.isPinned });
+  } catch (error) {
+    console.error("Error in togglePinConversation:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+

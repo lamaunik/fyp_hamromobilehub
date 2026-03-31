@@ -2,6 +2,7 @@ import { useState } from "react";
 import { P, pct, BADGE_COLORS } from "./DashboardConstants";
 import { Icon } from "./DashboardIcons";
 import { Btn, Stars, ProductThumb } from "./DashboardUI";
+import ProductCard from "../common/ProductCard";
 
 export default function DashboardProductDetail({ product, viewProduct, addToCart, wishlist, toggleWish, setTab, products }) {
   const [qty, setQty] = useState(1);
@@ -20,12 +21,18 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
   const isWishlisted = wishlist.includes(pId);
   const bs = product.badge ? BADGE_COLORS[product.badge] : null;
 
+  // Related: same category, different vendor, max 6
+  const vendorId = product.vendor?._id || product.vendor?.id || product.vendor;
+  const related = (products || [])
+    .filter(p => {
+      const pVendorId = p.vendor?._id || p.vendor?.id || p.vendor;
+      const pid = p._id || p.id;
+      return pid !== pId && p.category === product.category && pVendorId !== vendorId;
+    })
+    .slice(0, 6);
+
   const handleAdd = () => {
-    // You might want to update the addToCart signature in Dashboard to pass qty in the future.
-    // For now, it just adds the product. If cart logic handles it by ID, multiple clicks adds multiples.
-    for (let i = 0; i < qty; i++) {
-      addToCart(product);
-    }
+    addToCart(product, qty);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -83,7 +90,9 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
               }}
               className="icon-btn"
             >
-              {Icon.heart(isWishlisted)}
+              <svg width="22" height="22" fill={isWishlisted ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
             </button>
             
             {bs && (
@@ -145,18 +154,59 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
               {product.description || `Experience the ultimate in mobile technology with the ${product.name}. Featuring a stunning display, lightning-fast processor, and an advanced camera system that captures every detail. Designed to keep up with your busy lifestyle while providing premium elegance.`}
             </p>
           </div>
+          
+          {/* Vendor Info & Date */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32, padding: "12px 16px", background: P.mistBg, borderRadius: 16, border: `1px solid ${P.mist}`, width: "fit-content" }}>
+            <div style={{ width: 36, height: 36, borderRadius: "50%", background: P.white, border: `1px solid ${P.mist}`, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              {product.vendor?.profilePicture ? (
+                <img src={product.vendor.profilePicture.startsWith("http") ? product.vendor.profilePicture : `http://localhost:5000${product.vendor.profilePicture}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                <span style={{ color: P.ocean, fontWeight: 900, fontSize: 14 }}>{product.vendor?.name?.[0] || "V"}</span>
+              )}
+            </div>
+            <div>
+              <p style={{ margin: 0, fontSize: 12, color: P.navy, fontWeight: 800 }}>Posted by <span style={{ color: P.ocean }}>{product.vendor?.storeName || product.vendor?.name || "Official Store"}</span></p>
+              <p style={{ margin: 0, fontSize: 10, color: P.muted, fontWeight: 700 }}>{product.createdAt ? new Date(product.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : "Recently listed"}</p>
+            </div>
+          </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 20, marginTop: "auto" }}>
             {/* Quantity Selector */}
-            <div style={{ display: "flex", alignItems: "center", background: P.mistBg, border: `1.5px solid ${P.mist}`, borderRadius: 14, height: 52, padding: "0 6px" }}>
-              <button onClick={() => setQty(Math.max(1, qty - 1))} style={{ width: 40, height: 40, borderRadius: 10, background: "transparent", border: "none", cursor: "pointer", color: P.navy, fontSize: 20, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center" }} className="icon-btn">-</button>
-              <span style={{ width: 40, textAlign: "center", color: P.navy, fontWeight: 800, fontSize: 16 }}>{qty}</span>
-              <button onClick={() => setQty(qty + 1)} style={{ width: 40, height: 40, borderRadius: 10, background: "transparent", border: "none", cursor: "pointer", color: P.navy, fontSize: 20, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center" }} className="icon-btn">+</button>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <div style={{ display: "flex", alignItems: "center", background: P.mistBg, border: `1.5px solid ${P.mist}`, borderRadius: 14, height: 52, padding: "0 6px" }}>
+                <button onClick={() => setQty(Math.max(1, qty - 1))} style={{ width: 40, height: 40, borderRadius: 10, background: "transparent", border: "none", cursor: "pointer", color: P.navy, fontSize: 20, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center" }} className="icon-btn">-</button>
+                <span style={{ width: 40, textAlign: "center", color: P.navy, fontWeight: 800, fontSize: 16 }}>{qty}</span>
+                <button 
+                  onClick={() => setQty(prev => Math.min(product.stock, prev + 1))} 
+                  disabled={qty >= product.stock}
+                  style={{ 
+                    width: 40, height: 40, borderRadius: 10, background: "transparent", 
+                    border: "none", cursor: qty >= product.stock ? "not-allowed" : "pointer", 
+                    color: qty >= product.stock ? P.muted : P.navy, fontSize: 20, 
+                    fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center" 
+                  }} 
+                  className="icon-btn"
+                >+</button>
+              </div>
+              {qty >= product.stock && product.stock > 0 && <p style={{ color: P.red, fontSize: 10, fontWeight: 700, margin: 0, textAlign: "center" }}>Max stock reached</p>}
             </div>
             
             {/* Add to Cart Button */}
-            <Btn onClick={handleAdd} style={{ flex: 1, height: 52, background: added ? `linear-gradient(135deg,#16a34a,${P.green})` : `linear-gradient(135deg,${P.royal},${P.ocean})`, color: P.white, fontSize: 16, fontWeight: 800, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, boxShadow: added ? "0 8px 24px rgba(34,197,94,.3)" : "0 8px 24px rgba(40, 43, 74, .25)", transition: "all .3s" }} className="btn">
-              {added ? <>{Icon.check} Added to Cart</> : <><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Add to Cart</>}
+            <Btn 
+              onClick={product.stock > 0 ? handleAdd : undefined} 
+              disabled={product.stock <= 0}
+              style={{ 
+                flex: 1, height: 52, 
+                background: product.stock <= 0 ? P.mist : (added ? `linear-gradient(135deg,#16a34a,${P.green})` : `linear-gradient(135deg,${P.royal},${P.ocean})`), 
+                color: product.stock <= 0 ? P.muted : P.white, 
+                fontSize: 16, fontWeight: 800, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, 
+                boxShadow: added ? "0 8px 24px rgba(34,197,94,.3)" : (product.stock <= 0 ? "none" : "0 8px 24px rgba(40, 43, 74, .25)"), 
+                transition: "all .3s",
+                cursor: product.stock <= 0 ? "not-allowed" : "pointer"
+              }} 
+              className="btn"
+            >
+              {product.stock <= 0 ? "Out of Stock" : (added ? <>{Icon.check} Added to Cart</> : <><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Add to Cart</>)}
             </Btn>
           </div>
           
@@ -174,6 +224,39 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
 
         </div>
       </div>
+
+      {/* Related Products Section */}
+      {related.length > 0 && (
+        <div style={{ marginTop: 40, paddingTop: 32, borderTop: `2px solid ${P.mist}` }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+            <div>
+              <h2 style={{ color: P.navy, fontWeight: 900, fontSize: 20, margin: 0, letterSpacing: "-.02em" }}>Related Products</h2>
+              <p style={{ color: P.muted, fontSize: 13, margin: "4px 0 0", fontWeight: 600 }}>More {product.category} from other vendors</p>
+            </div>
+            <span style={{ background: P.mistBg, border: `1px solid ${P.mist}`, color: P.ocean, fontWeight: 800, fontSize: 12, padding: "4px 12px", borderRadius: 999 }}>{related.length} items</span>
+          </div>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(185px, 1fr))",
+            gap: 16
+          }}>
+            {related.map((p, i) => {
+              const relId = p._id || p.id;
+              return (
+                <ProductCard
+                  key={relId}
+                  product={p}
+                  onView={() => viewProduct(p)}
+                  onAddToCart={() => addToCart(p)}
+                  wishlisted={wishlist.includes(relId)}
+                  onToggleWish={() => toggleWish(relId)}
+                  delay={`${Math.min(i * 0.06, 0.3)}s`}
+                />
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

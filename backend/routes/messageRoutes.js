@@ -1,5 +1,5 @@
 import express from "express";
-import { getConversations, getMessages, sendMessage } from "../controllers/messageController.js";
+import { getConversations, getMessages, sendMessage, deleteConversation, togglePinConversation } from "../controllers/messageController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -11,6 +11,9 @@ router.route("/")
   .post(sendMessage);
 
 router.route("/:conversationId")
-  .get(getMessages);
+  .get(getMessages)
+  .delete(deleteConversation);
+
+router.put("/:conversationId/pin", togglePinConversation);
 
 export default router;

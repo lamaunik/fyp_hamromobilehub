@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../utils/api";
 import { CSS, P } from "../components/dashboard/DashboardConstants";
@@ -14,6 +14,7 @@ import DashboardWishlist      from "../components/dashboard/DashboardWishlist";
 import DashboardProfile       from "../components/dashboard/DashboardProfile";
 import MarketplacePage        from "../components/dashboard/MarketplacePage";
 import SellProductPage        from "../components/dashboard/SellProductPage";
+import DashboardCheckout      from "../components/dashboard/DashboardCheckout";
 import { socket }             from "../utils/socket";
 
 // Read/write localStorage safely
@@ -23,8 +24,9 @@ const writeLS = (key, value)    => { try { localStorage.setItem(key, JSON.string
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [tab,             setTab]            = useState("home");
-  const [sidebarOpen,     setSidebarOpen]    = useState(true);
+  const [searchParams]    = useSearchParams();
+  const [tab,             setTab]            = useState(() => searchParams.get("tab") || "home");
+  const [sidebarOpen,     setSidebarOpen]    = useState(false);
   const [selectedProduct, setSelectedProduct]= useState(null);
   const [products,        setProducts]       = useState([]);
   const [loadingProducts, setLoadingProducts]= useState(false);
@@ -86,17 +88,20 @@ export default function Dashboard() {
     } catch (err) { console.error(err); }
   }, []);
 
-  // Initial load
+  // Fetch products — only if not already loaded, or if it's the primary tabs
   useEffect(() => {
-    fetchProducts();
-    fetchOrders();
-  }, []);
+    const isPrimaryTab = tab === "products" || tab === "home";
+    if (isPrimaryTab && products.length === 0) {
+      fetchProducts();
+    }
+  }, [tab, products.length, fetchProducts]);
 
-  // Re-fetch when switching to relevant tabs
+  // Fetch orders — only if not already loaded and on orders tab
   useEffect(() => {
-    if (tab === "products" || tab === "home") fetchProducts();
-    if (tab === "orders") fetchOrders();
-  }, [tab]);
+    if (tab === "orders" && orders.length === 0) {
+      fetchOrders();
+    }
+  }, [tab, orders.length, fetchOrders]);
 
   // Sync Wishlist from DB on mount
   useEffect(() => {
@@ -116,7 +121,7 @@ export default function Dashboard() {
   }, [user]);
 
   const switchTab   = (t) => { 
-    if (!user && ["orders", "profile", "cart", "wishlist", "sell"].includes(t)) {
+    if (!user && ["orders", "profile", "cart", "wishlist", "sell", "checkout"].includes(t)) {
       alert("Please sign in or create an account to access this feature.");
       navigate("/signup");
       return;
@@ -126,7 +131,7 @@ export default function Dashboard() {
   const viewProduct = (p) => { setSelectedProduct(p); setTab("detail"); setPageKey(k => k + 1); };
 
   // Cart helpers
-  const addToCart = (p) => {
+  const addToCart = (p, count = 1) => {
     if (!user) {
       alert("Please sign up first to add items to your cart.");
       navigate("/signup");
@@ -135,12 +140,38 @@ export default function Dashboard() {
     setCart(prev => {
       const pId = p._id || p.id;
       const ex  = prev.find(x => (x._id || x.id) === pId);
-      if (ex) return prev.map(x => (x._id || x.id) === pId ? { ...x, qty: x.qty + 1 } : x);
-      return [...prev, { ...p, qty: 1 }];
+      if (ex) {
+        if (ex.qty + count > p.stock) {
+          addNotif({ title: "Stock Limit Reached", time: "Just now", type: "error" });
+          return prev;
+        }
+        return prev.map(x => (x._id || x.id) === pId ? { ...x, qty: x.qty + count } : x);
+      }
+      if (p.stock <= 0) {
+        addNotif({ title: "Product Out of Stock", time: "Just now", type: "error" });
+        return prev;
+      }
+      if (count > p.stock) {
+        addNotif({ title: "Stock Limit Reached", time: "Just now", type: "error" });
+        return [...prev, { ...p, qty: p.stock }];
+      }
+      return [...prev, { ...p, qty: count }];
     });
   };
   const removeFromCart = (id)       => setCart(prev => prev.filter(p => (p._id || p.id) !== id));
-  const updateQty      = (id, qty)  => { if (qty < 1) return removeFromCart(id); setCart(prev => prev.map(p => (p._id || p.id) === id ? { ...p, qty } : p)); };
+  const updateQty      = (id, qty)  => { 
+    if (qty < 1) return removeFromCart(id); 
+    setCart(prev => prev.map(p => {
+      if ((p._id || p.id) === id) {
+        if (qty > p.stock) {
+          addNotif({ title: "Stock Limit Reached", time: "Just now", type: "error" });
+          return p;
+        }
+        return { ...p, qty };
+      }
+      return p;
+    })); 
+  };
   const clearCart      = ()         => { setCart([]); writeLS("hmh_cart", []); };
 
   // Order helpers — these keep sidebar count in sync immediately
@@ -196,6 +227,7 @@ export default function Dashboard() {
               {tab === "profile"     && <DashboardProfile     addNotif={addNotif} />}
               {tab === "marketplace" && <MarketplacePage      setTab={switchTab} />}
               {tab === "sell"        && <SellProductPage      setTab={switchTab} />}
+              {tab === "checkout"    && <DashboardCheckout    cart={cart} user={user} setTab={switchTab} addOrder={addOrder} clearCart={clearCart} addNotif={addNotif} />}
             </div>
           </main>
         </div>

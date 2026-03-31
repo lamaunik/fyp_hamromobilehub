@@ -20,9 +20,12 @@ export default function Navbar() {
   return (
     <nav style={{ position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(255,255,255,0.9)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${P.mist}`,fontFamily:P.font }}>
       <div style={{ maxWidth:1280,margin:"0 auto",padding:"0 24px",height:64,display:"flex",alignItems:"center",justifyContent:"space-between" }}>
-        <Link to="/" style={{ display:"flex",alignItems:"center",height:64,overflow:"hidden",textDecoration:"none" }}>
-          <img src="/logo.png" alt="HamroMobile Hub" style={{ width:180,height:180,minWidth:180,minHeight:180,objectFit:"contain",marginLeft:-14,filter:"hue-rotate(225deg) saturate(1.6) brightness(1.1)" }} />
-        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <img src="/logo.png" alt="Logo icon" style={{ height: 38, width: "auto" }} />
+          <span style={{ fontSize: 22, fontWeight: 900, color: "#18181b", letterSpacing: "-0.02em", fontFamily: "'Barlow Condensed', sans-serif" }}>
+            HamroMobile<span style={{ color: "#f43f5e" }}>Hub</span>
+          </span>
+        </div>
 
         <div style={{ display:"flex",alignItems:"center",gap:32 }}>
           {[{l:"Home",h:"#home"},{l:"Products",h:"#products"},{l:"Vendors",h:"#vendors"},{l:"About",h:"#about"},{l:"Contact",h:"#contact"}].map(item => (

@@ -1,26 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const P = {
-  navy:  "#282B4A",
-  royal: "#282B4A",
-  ocean: "#282B4A",
-  sky:   "#D4D2C3",
-  mist:  "#E5E3D5",
-  white: "#FFFFFF",
-  muted: "#7A7C8E",
-  mistBg:"#EEEBDA",
-  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
-  purple:"#282B4A",
-  purpleLight:"#E5E3D5"
+  navy:  "#18181b",
+  royal: "#27272a",
+  ocean: "#3f3f46",
+  sky:   "#e4e4e7",
+  mist:  "#f4f4f5",
+  white: "#ffffff",
+  muted: "#71717a",
+  mistBg:"#fafafa",
+  font:  "'DM Sans', 'Inter', sans-serif",
+  fontHeading: "'Barlow Condensed', 'Inter', sans-serif",
+  accent: "#f43f5e"
 };
 
 const inputStyle = {
-  width:"100%", background:"rgba(40, 43, 74, 0.35)", border:`1px solid rgba(212, 210, 195, 0.2)`,
-  outline:"none", color:P.white, fontSize:14, borderRadius:14,
+  width:"100%", background:P.white, border:`1px solid ${P.sky}`,
+  outline:"none", color:P.navy, fontSize:14, borderRadius:12,
   paddingLeft:44, paddingRight:16, paddingTop:12, paddingBottom:12,
-  transition:"border-color 0.2s, background 0.2s", boxSizing:"border-box",
+  transition:"all 0.2s", boxSizing:"border-box",
   fontFamily:P.font,
 };
 
@@ -35,8 +35,17 @@ export default function SignIn() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { login, verifyEmail, resendVerification, forgotPassword, resetPassword } = useAuth();
+  const { user, login, verifyEmail, resendVerification, forgotPassword, resetPassword } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      if (user.role === "admin") navigate("/admin/dashboard", { replace: true });
+      else if (user.role === "vendor") navigate("/vendor/dashboard", { replace: true });
+      else navigate("/dashboard", { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleLoginSubmit = async () => {
     setError("");
@@ -117,31 +126,31 @@ export default function SignIn() {
   };
 
   return (
-    <div style={{ minHeight:"100vh", background:`linear-gradient(135deg,${P.navy} 0%,${P.royal} 55%,#282B4A 100%)`, display:"flex", alignItems:"center", justifyContent:"center", padding:"24px", position:"relative", overflow:"hidden", fontFamily:P.font }}>
+    <div style={{ minHeight:"100vh", background:P.mistBg, display:"flex", alignItems:"center", justifyContent:"center", padding:"24px", position:"relative", overflow:"hidden", fontFamily:P.font }}>
       {/* bg blobs */}
       <div style={{ position:"absolute", inset:0, pointerEvents:"none" }}>
-        <div style={{ position:"absolute", top:80, left:40, width:288, height:288, borderRadius:"50%", background:"rgba(40, 43, 74, 0.18)", filter:"blur(64px)" }}/>
-        <div style={{ position:"absolute", bottom:80, right:40, width:384, height:384, borderRadius:"50%", background:"rgba(212, 210, 195, 0.1)", filter:"blur(64px)" }}/>
-        <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:800, height:800, borderRadius:"50%", border:"1px solid rgba(40, 43, 74, 0.12)" }}/>
-        <div style={{ position:"absolute", inset:0, opacity:0.04, backgroundImage:`linear-gradient(rgba(212, 210, 195, 0.4) 1px,transparent 1px),linear-gradient(90deg,rgba(212, 210, 195, 0.4) 1px,transparent 1px)`, backgroundSize:"60px 60px" }}/>
+        <div style={{ position:"absolute", top:80, left:40, width:288, height:288, borderRadius:"50%", background:"rgba(244, 63, 94, 0.05)", filter:"blur(64px)" }}/>
+        <div style={{ position:"absolute", bottom:80, right:40, width:384, height:384, borderRadius:"50%", background:"rgba(24, 24, 27, 0.03)", filter:"blur(64px)" }}/>
+        <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:800, height:800, borderRadius:"50%", border:`1px solid ${P.sky}` }}/>
+        <div style={{ position:"absolute", inset:0, opacity:1, backgroundImage:`radial-gradient(${P.sky} 1px, transparent 1px)`, backgroundSize:"40px 40px" }}/>
       </div>
 
       <div style={{ width:"100%", maxWidth:440, position:"relative" }}>
         {/* Back button */}
         <div style={{ marginBottom:24 }}>
           {step === 1 ? (
-            <Link to="/" style={{ display:"inline-flex", alignItems:"center", gap:8, color:"rgba(212, 210, 195, 0.6)", textDecoration:"none", fontSize:14, fontWeight:600, transition:"color 0.2s" }}
-              onMouseEnter={e=>e.currentTarget.style.color=P.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(212, 210, 195, 0.6)"}>
-              <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(212, 210, 195, 0.2)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+            <Link to="/" style={{ display:"inline-flex", alignItems:"center", gap:8, color:P.muted, textDecoration:"none", fontSize:14, fontWeight:600, transition:"color 0.2s" }}
+              onMouseEnter={e=>e.currentTarget.style.color=P.navy} onMouseLeave={e=>e.currentTarget.style.color=P.muted}>
+              <div style={{ width:32, height:32, borderRadius:"50%", background:P.white, border:`1px solid ${P.sky}`, display:"flex", alignItems:"center", justifyContent:"center" }}>
                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7"/></svg>
               </div>
               Back
             </Link>
           ) : (
             <button onClick={()=>{setStep(1); setError(""); setMessage(""); setOtp(""); setNewPassword("");}} 
-              style={{ display:"inline-flex", alignItems:"center", gap:8, color:"rgba(212, 210, 195, 0.6)", background:"none", border:"none", cursor:"pointer", fontSize:14, fontWeight:600, padding:0, fontFamily:P.font, transition:"color 0.2s" }}
-              onMouseEnter={e=>e.currentTarget.style.color=P.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(212, 210, 195, 0.6)"}>
-              <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(212, 210, 195, 0.2)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+              style={{ display:"inline-flex", alignItems:"center", gap:8, color:P.muted, background:"none", border:"none", cursor:"pointer", fontSize:14, fontWeight:600, padding:0, fontFamily:P.font, transition:"color 0.2s" }}
+              onMouseEnter={e=>e.currentTarget.style.color=P.navy} onMouseLeave={e=>e.currentTarget.style.color=P.muted}>
+              <div style={{ width:32, height:32, borderRadius:"50%", background:P.white, border:`1px solid ${P.sky}`, display:"flex", alignItems:"center", justifyContent:"center" }}>
                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7"/></svg>
               </div>
               Back to Login
@@ -149,32 +158,29 @@ export default function SignIn() {
           )}
         </div>
 
-        {/* Logo */}
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:10, marginBottom:32 }}>
-          <div style={{ width:40, height:40, borderRadius:12, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 6px 20px rgba(40, 43, 74, 0.35)" }}>
-            <span style={{ color:P.white, fontWeight:900, fontSize:20 }}>M</span>
-          </div>
-          <span style={{ fontSize:22, fontWeight:900, color:P.white, letterSpacing:"-0.02em" }}>
-            HamroMobile<span style={{ color:P.sky }}>Hub</span>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:12, marginBottom:32 }}>
+          <img src="/logo.png" alt="Logo" style={{ height:42, width:"auto" }} />
+          <span style={{ fontSize:24, fontWeight:900, color:P.navy, letterSpacing:"-0.02em", fontFamily:P.fontHeading }}>
+            HamroMobile<span style={{ color:P.accent }}>Hub</span>
           </span>
         </div>
 
         {/* Card */}
-        <div style={{ background:"rgba(40, 43, 74, 0.5)", backdropFilter:"blur(20px)", border:"1px solid rgba(212, 210, 195, 0.15)", borderRadius:24, padding:32, boxShadow:"0 24px 64px rgba(0,0,0,0.35)" }}>
+        <div style={{ background:P.white, border:`1px solid ${P.sky}`, borderRadius:24, padding:32, boxShadow:"0 24px 64px rgba(0,0,0,0.04)" }}>
 
           {step === 1 && (
             <>
               {/* Header */}
               <div style={{ textAlign:"center", marginBottom:32 }}>
-                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(40, 43, 74, 0.18)", border:"1px solid rgba(40, 43, 74, 0.35)", borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
-                  <span style={{ width:7, height:7, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
-                  <span style={{ color:P.sky, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Welcome Back</span>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:P.white, border:`1px solid ${P.sky}`, borderRadius:999, padding:"5px 14px", marginBottom:14 }}>
+                  <span style={{ width:7, height:7, borderRadius:"50%", background:P.accent, display:"inline-block" }}/>
+                  <span style={{ color:P.navy, fontSize:11, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Welcome Back</span>
                 </div>
-                <h1 style={{ fontSize:28, fontWeight:900, color:P.white, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Sign In</h1>
-                <p style={{ color:"rgba(212, 210, 195, 0.6)", fontSize:14, margin:0 }}>
+                <h1 style={{ fontSize:28, fontWeight:900, color:P.navy, margin:"0 0 8px", letterSpacing:"-0.02em", fontFamily:P.fontHeading }}>Sign In</h1>
+                <p style={{ color:P.muted, fontSize:14, margin:0 }}>
                   Don't have an account?{" "}
-                  <Link to="/signup" style={{ color:P.sky, fontWeight:700, textDecoration:"none" }}
-                    onMouseEnter={e=>e.target.style.color=P.mist} onMouseLeave={e=>e.target.style.color=P.sky}>Get Started</Link>
+                  <Link to="/signup" style={{ color:P.accent, fontWeight:700, textDecoration:"none" }}
+                    onMouseEnter={e=>e.target.style.opacity=0.8} onMouseLeave={e=>e.target.style.opacity=1}>Get Started</Link>
                 </p>
               </div>
 
@@ -195,30 +201,30 @@ export default function SignIn() {
               <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
                 {/* Email */}
                 <div>
-                  <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Email Address</label>
+                  <label style={{ display:"block", color:P.muted, fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Email Address</label>
                   <div style={{ position:"relative" }}>
                     <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
                       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
                     </div>
                     <input type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleLoginSubmit()} placeholder="you@example.com"
                       style={inputStyle}
-                      onFocus={e=>{ e.target.style.borderColor=`rgba(40, 43, 74, 0.6)`; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}
-                      onBlur={e=>{ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}
+                      onFocus={e=>{ e.target.style.borderColor=P.navy; e.target.style.background=P.white; }}
+                      onBlur={e=>{ e.target.style.borderColor=P.sky; e.target.style.background=P.white; }}
                     />
                   </div>
                 </div>
 
                 {/* Password */}
                 <div>
-                  <label style={{ display:"block", color:"rgba(212, 210, 195, 0.7)", fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Password</label>
+                  <label style={{ display:"block", color:P.muted, fontSize:11, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Password</label>
                   <div style={{ position:"relative" }}>
                     <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:P.muted, pointerEvents:"none" }}>
                       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                     </div>
                     <input type={showPassword?"text":"password"} value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleLoginSubmit()} placeholder="Enter your password"
                       style={{ ...inputStyle, paddingRight:44 }}
-                      onFocus={e=>{ e.target.style.borderColor="rgba(40, 43, 74, 0.6)"; e.target.style.background="rgba(40, 43, 74, 0.1)"; }}
-                      onBlur={e=>{ e.target.style.borderColor="rgba(212, 210, 195, 0.2)"; e.target.style.background="rgba(40, 43, 74, 0.35)"; }}
+                      onFocus={e=>{ e.target.style.borderColor=P.navy; e.target.style.background=P.white; }}
+                      onBlur={e=>{ e.target.style.borderColor=P.sky; e.target.style.background=P.white; }}
                     />
                     <button onClick={()=>setShowPassword(!showPassword)} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", color:P.muted, padding:0 }}>
                       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -234,18 +240,18 @@ export default function SignIn() {
                 {/* Remember & Forgot */}
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                   <label style={{ display:"flex", alignItems:"center", gap:8, cursor:"pointer" }}>
-                    <div style={{ width:16, height:16, borderRadius:4, border:`1px solid rgba(212, 210, 195, 0.3)`, background:"rgba(40, 43, 74, 0.4)" }}/>
-                    <span style={{ color:"rgba(212, 210, 195, 0.55)", fontSize:12, fontWeight:600 }}>Remember me</span>
+                    <div style={{ width:16, height:16, borderRadius:4, border:`1px solid ${P.sky}`, background:P.white }}/>
+                    <span style={{ color:P.muted, fontSize:12, fontWeight:600 }}>Remember me</span>
                   </label>
-                  <button onClick={()=>{setStep(3); setError(""); setMessage("");}} style={{ color:P.sky, fontSize:12, fontWeight:700, background:"none", border:"none", cursor:"pointer", padding:0, fontFamily:P.font, transition:"color 0.2s" }}
-                    onMouseEnter={e=>e.currentTarget.style.color=P.mist} onMouseLeave={e=>e.currentTarget.style.color=P.sky}>Forgot password?</button>
+                  <button onClick={()=>{setStep(3); setError(""); setMessage("");}} style={{ color:P.navy, fontSize:12, fontWeight:700, background:"none", border:"none", cursor:"pointer", padding:0, fontFamily:P.font, transition:"color 0.2s" }}
+                    onMouseEnter={e=>e.currentTarget.style.color=P.accent} onMouseLeave={e=>e.currentTarget.style.color=P.navy}>Forgot password?</button>
                 </div>
 
                 {/* Submit */}
                 <button onClick={handleLoginSubmit} disabled={loading}
-                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:14, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 24px rgba(40, 43, 74, 0.35)", transition:"transform 0.15s, opacity 0.15s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
-                  onMouseEnter={e=>{ if(!loading) e.currentTarget.style.transform="translateY(-2px)"; }}
-                  onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
+                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, background:P.navy, color:P.white, fontWeight:700, fontSize:15, padding:"13px 0", borderRadius:12, border:"none", cursor:loading?"not-allowed":"pointer", boxShadow:"0 8px 16px rgba(24, 24, 27, 0.1)", transition:"all 0.2s", opacity:loading?0.65:1, marginTop:4, fontFamily:P.font }}
+                  onMouseEnter={e=>{ if(!loading) { e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 12px 20px rgba(24, 24, 27, 0.15)"; } }}
+                  onMouseLeave={e=>{ if(!loading) { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 8px 16px rgba(24, 24, 27, 0.1)"; } }}>
                   {loading ? (
                     <>
                       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style={{ animation:"spin 1s linear infinite" }}>
@@ -430,13 +436,13 @@ export default function SignIn() {
         {/* Trust badges */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:24, marginTop:24 }}>
           {[
-            { label:"Verified Secure", icon:<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke={P.sky} strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg> },
-            { label:"256-bit SSL", icon:<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke={P.sky} strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg> },
-            { label:"Trusted Platform", icon:<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke={P.sky} strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg> },
+            { label:"Verified Secure", icon:<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke={P.accent} strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg> },
+            { label:"256-bit SSL", icon:<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke={P.accent} strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg> },
+            { label:"Trusted Platform", icon:<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke={P.accent} strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg> },
           ].map(b=>(
             <div key={b.label} style={{ display:"flex", alignItems:"center", gap:6 }}>
               {b.icon}
-              <span style={{ color:"rgba(212, 210, 195, 0.45)", fontSize:12, fontWeight:600 }}>{b.label}</span>
+              <span style={{ color:P.muted, fontSize:12, fontWeight:600 }}>{b.label}</span>
             </div>
           ))}
         </div>

@@ -23,7 +23,7 @@ export default function DashboardCart({ cart, removeFromCart, updateQty, setTab,
   };
 
   const handleProceedToCheckout = () => {
-    navigate("/checkout");
+    setTab("checkout");
   };
 
   /* Empty state */
@@ -73,18 +73,33 @@ export default function DashboardCart({ cart, removeFromCart, updateQty, setTab,
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ fontSize: 10, color: P.ocean, fontWeight: 800, margin: "0 0 3px", textTransform: "uppercase" }}>{item.brand}</p>
                 <h3 style={{ color: P.navy, fontWeight: 800, fontSize: 15, margin: "0 0 4px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.name}</h3>
-                <p style={{ color: P.navy, fontWeight: 900, fontSize: 17, margin: 0 }}>Rs. ${item.price} <span style={{ color: P.muted, fontSize: 11, fontWeight: 400 }}>per unit</span></p>
+                <p style={{ color: P.navy, fontWeight: 900, fontSize: 17, margin: 0 }}>Rs. {item.price} <span style={{ color: P.muted, fontSize: 11, fontWeight: 400 }}>per unit</span></p>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}>
                 {/* Qty stepper */}
-                <div style={{ display: "flex", alignItems: "center", border: `1.5px solid ${P.mist}`, borderRadius: 12, overflow: "hidden", background: P.mistBg }}>
-                  <button onClick={() => updateQty(item._id || item.id, item.qty - 1)} style={{ padding: "8px 13px", background: "transparent", border: "none", color: P.navy, fontWeight: 800, fontSize: 15, cursor: "pointer", transition: "background .15s" }} onMouseEnter={(e) => (e.currentTarget.style.background = P.sky)} onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}>−</button>
-                  <span style={{ padding: "8px 14px", fontWeight: 900, color: P.navy, fontSize: 14, borderLeft: `1px solid ${P.mist}`, borderRight: `1px solid ${P.mist}`, minWidth: 38, textAlign: "center" }}>{item.qty}</span>
-                  <button onClick={() => updateQty(item._id || item.id, item.qty + 1)} style={{ padding: "8px 13px", background: "transparent", border: "none", color: P.navy, fontWeight: 800, fontSize: 15, cursor: "pointer", transition: "background .15s" }} onMouseEnter={(e) => (e.currentTarget.style.background = P.sky)} onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}>+</button>
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  <div style={{ display: "flex", alignItems: "center", border: `1.5px solid ${P.mist}`, borderRadius: 12, overflow: "hidden", background: P.mistBg }}>
+                    <button onClick={() => updateQty(item._id || item.id, item.qty - 1)} style={{ padding: "8px 13px", background: "transparent", border: "none", color: P.navy, fontWeight: 800, fontSize: 15, cursor: "pointer", transition: "background .15s" }} onMouseEnter={(e) => (e.currentTarget.style.background = P.sky)} onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}>−</button>
+                    <span style={{ padding: "8px 14px", fontWeight: 900, color: P.navy, fontSize: 14, borderLeft: `1px solid ${P.mist}`, borderRight: `1px solid ${P.mist}`, minWidth: 38, textAlign: "center" }}>{item.qty}</span>
+                    <button 
+                      onClick={() => updateQty(item._id || item.id, item.qty + 1)} 
+                      disabled={item.qty >= item.stock}
+                      style={{ 
+                        padding: "8px 13px", background: "transparent", border: "none", 
+                        color: item.qty >= item.stock ? P.muted : P.navy, 
+                        fontWeight: 800, fontSize: 15, 
+                        cursor: item.qty >= item.stock ? "not-allowed" : "pointer", 
+                        transition: "background .15s" 
+                      }} 
+                      onMouseEnter={(e) => { if (item.qty < item.stock) e.currentTarget.style.background = P.sky; }} 
+                      onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                    >+</button>
+                  </div>
+                  {item.qty >= item.stock && <p style={{ color: P.red, fontSize: 10, fontWeight: 700, margin: 0, textAlign: "center" }}>Max stock reached</p>}
                 </div>
                 <div style={{ textAlign: "right", minWidth: 80 }}>
-                  <p style={{ color: P.navy, fontWeight: 900, fontSize: 17, margin: 0 }}>Rs. ${item.price * item.qty}</p>
-                  {item.qty > 1 && <p style={{ color: P.muted, fontSize: 11, margin: "2px 0 0" }}>{item.qty}×Rs.${item.price}</p>}
+                  <p style={{ color: P.navy, fontWeight: 900, fontSize: 17, margin: 0 }}>Rs. {item.price * item.qty}</p>
+                  {item.qty > 1 && <p style={{ color: P.muted, fontSize: 11, margin: "2px 0 0" }}>{item.qty}×Rs.{item.price}</p>}
                 </div>
                 {/* Remove */}
                 <button onClick={() => removeFromCart(item._id || item.id)} style={{ width: 36, height: 36, borderRadius: 10, border: `1.5px solid ${P.mist}`, background: P.mistBg, display: "flex", alignItems: "center", justifyContent: "center", color: P.muted, cursor: "pointer", transition: "all .17s" }}
@@ -119,7 +134,7 @@ export default function DashboardCart({ cart, removeFromCart, updateQty, setTab,
             ))}
             <div style={{ borderTop: `1.5px solid ${P.mist}`, paddingTop: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span style={{ color: P.navy, fontWeight: 900, fontSize: 15 }}>Total</span>
-              <span style={{ color: P.navy, fontWeight: 900, fontSize: 24, letterSpacing: "-.02em" }}>Rs. ${total}</span>
+              <span style={{ color: P.navy, fontWeight: 900, fontSize: 24, letterSpacing: "-.02em" }}>Rs. {total}</span>
             </div>
           </div>
 

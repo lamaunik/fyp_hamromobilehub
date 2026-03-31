@@ -24,8 +24,8 @@ export default function Footer() {
       <div style={{ maxWidth:1280,margin:"0 auto" }}>
         <div style={{ display:"grid",gridTemplateColumns:"1.5fr 1fr 1fr 1fr",gap:48,marginBottom:48 }}>
           <div>
-            <div style={{ display:"flex",alignItems:"center",height:64,overflow:"hidden",marginBottom:12 }}>
-              <img src="/logo.png" alt="HamroMobile Hub" style={{ width:190,height:190,minWidth:190,minHeight:190,objectFit:"contain",marginLeft:-14,filter:"hue-rotate(225deg) saturate(1.6) brightness(1.1)" }} />
+            <div style={{ display:"flex",alignItems:"center",marginBottom:12 }}>
+              <img src="/logo.png" alt="HamroMobile Hub" style={{ height:40, width:"auto", objectFit:"contain" }} />
             </div>
             <p style={{ color:P.muted,fontSize:14,lineHeight:1.7,margin:"0 0 24px",maxWidth:260 }}>
               The trusted marketplace for buying, selling, and trading smartphones. Join thousands of happy customers.

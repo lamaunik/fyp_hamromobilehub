@@ -5,7 +5,7 @@ import Product from "../models/Product.js";
 // @access  Public
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({}).populate("vendor", "name email");
+    const products = await Product.find({}).populate("vendor", "name email storeName profilePicture");
     res.json({ success: true, count: products.length, data: products });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -29,7 +29,7 @@ export const getMyProducts = async (req, res) => {
 // @access  Public
 export const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).populate("vendor", "name email");
+    const product = await Product.findById(req.params.id).populate("vendor", "name email storeName profilePicture");
     if (!product) {
       return res.status(404).json({ success: false, message: "Product not found" });
     }

@@ -43,7 +43,7 @@ function ComingSoon({ label }) {
 export default function VendorDashboard() {
   const { user } = useAuth();
   const [tab, setTab]   = useState("overview");
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [unreadChat, setUnreadChat] = useState(false);
 
   // Global socket for vendor notifications

@@ -47,8 +47,11 @@ export default function VendorSidebar({ tab, setTab, open, setOpen }) {
       {/* Logo */}
       <div style={{ padding: "0 22px", borderBottom: `1px solid ${P.mist}`, display: "flex", alignItems: "center", justifyContent: open ? "space-between" : "center", flexShrink: 0, height: 80, overflow: "hidden" }}>
         {open ? (
-          <Link to="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-            <img src="/logo.png" alt="HamroMobile Hub" style={{ width: 180, height: 180, minWidth: 180, minHeight: 180, objectFit: "contain", marginLeft: -14, filter: "hue-rotate(225deg) saturate(1.6) brightness(1.1)" }} />
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap:10, textDecoration: "none" }}>
+            <img src="/logo.png" alt="Logo" style={{ height: 36, width: "auto" }} />
+            <span style={{ fontSize:18, fontWeight:900, color:P.navy, letterSpacing:"-0.02em", fontFamily: "'Barlow Condensed', sans-serif" }}>
+              HamroMobile<span style={{ color:"#f43f5e" }}>Hub</span>
+            </span>
           </Link>
         ) : (
           <Link to="/">

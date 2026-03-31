@@ -14,8 +14,9 @@ const P = {
   muted: "#7A7C8E",
   mistBg:"#EEEBDA",
   font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
-  purple:"#282B4A",
-  purpleLight:"#E5E3D5"
+  purple: "#282B4A",
+  purpleLight: "#E5E3D5",
+  red: "#ef4444"
 };
 
 export default function MessagesPage() {
@@ -27,6 +28,7 @@ export default function MessagesPage() {
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [menuOpenId, setMenuOpenId] = useState(null); // Track which "three dots" menu is open
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -150,9 +152,43 @@ export default function MessagesPage() {
     }
   };
 
+  const handleDeleteConversation = async (e, conversationId) => {
+    e.stopPropagation(); // Prevent selecting the chat when clicking delete
+    if (!window.confirm("Are you sure you want to delete this conversation? This cannot be undone.")) return;
+
+    try {
+      const res = await api.delete(`/messages/${conversationId}`);
+      if (res.success) {
+        setConversations(prev => prev.filter(c => c._id !== conversationId));
+        if (activeChat?._id === conversationId) {
+          setActiveChat(null);
+          setMessages([]);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to delete conversation", err);
+    }
+  };
+
+  const handleTogglePin = async (e, conversationId) => {
+    e.stopPropagation();
+    try {
+      const res = await api.put(`/messages/${conversationId}/pin`);
+      if (res.success) {
+        setConversations(prev => prev.map(c => 
+          c._id === conversationId ? { ...c, isPinned: res.isPinned } : c
+        ));
+        setMenuOpenId(null);
+      }
+    } catch (err) {
+      console.error("Failed to toggle pin", err);
+    }
+  };
+
   const getOtherParticipant = (chat) => {
     if (!chat || !user) return null;
-    return chat.participants.find(p => p._id !== user._id) || chat.participants[0];
+    const myId = user._id || user.id;
+    return chat.participants.find(p => (p._id || p) !== myId) || chat.participants[0];
   };
 
   return (
@@ -169,34 +205,68 @@ export default function MessagesPage() {
           {conversations.length === 0 ? (
              <div style={{ padding:20, textAlign:"center", color:P.muted, fontSize:14 }}>No conversations yet.</div>
           ) : (
-             conversations.map(c => {
-               const other = getOtherParticipant(c);
-               const isActive = activeChat?._id === c._id;
-               return (
-                 <div key={c._id} onClick={() => setActiveChat(c)}
-                   style={{ padding:"16px 20px", borderBottom:`1px solid ${P.mist}`, cursor:"pointer", background: isActive ? P.mistBg : P.white, transition:"background 0.2s" }}
-                   onMouseEnter={e => { if(!isActive) e.currentTarget.style.background = "#fafafa"; }}
-                   onMouseLeave={e => { if(!isActive) e.currentTarget.style.background = P.white; }}>
-                   <div style={{ display:"flex", alignItems:"center", gap:14 }}>
-                     <div style={{ width:42, height:42, borderRadius:"50%", background:`linear-gradient(135deg, ${P.royal}, ${P.ocean})`, color:P.white, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, fontSize:16, boxShadow:"0 2px 8px rgba(40, 43, 74, 0.3)", flexShrink:0, overflow:"hidden" }}>
-                       {other?.profilePicture ? (
-                         <img src={other.profilePicture.startsWith("http") ? other.profilePicture : `http://localhost:5000${other.profilePicture}`} alt={other.name} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-                       ) : (
-                         other?.name?.charAt(0).toUpperCase() || "U"
+             conversations
+               .sort((a,b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0) || new Date(b.updatedAt) - new Date(a.updatedAt))
+               .map(c => {
+                 const other = getOtherParticipant(c);
+                 const isActive = activeChat?._id === c._id;
+                 const isMenuOpen = menuOpenId === c._id;
+                 return (
+                   <div key={c._id} onClick={() => { setActiveChat(c); setMenuOpenId(null); }}
+                     style={{ padding:"16px 20px", borderBottom:`1px solid ${P.mist}`, cursor:"pointer", background: isActive ? P.mistBg : P.white, transition:"all 0.2s", position:"relative" }}
+                     onMouseEnter={e => { if(!isActive) e.currentTarget.style.background = "#fafafa"; }}
+                     onMouseLeave={e => { if(!isActive) e.currentTarget.style.background = P.white; }}>
+                     <div style={{ display:"flex", alignItems:"center", gap:14 }}>
+                       <div style={{ position: "relative", flexShrink: 0 }}>
+                         <div style={{ width:42, height:42, borderRadius:"50%", background:`linear-gradient(135deg, ${P.royal}, ${P.ocean})`, color:P.white, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, fontSize:16, boxShadow:"0 2px 8px rgba(40, 43, 74, 0.3)", overflow:"hidden" }}>
+                           {other?.profilePicture ? (
+                             <img src={other.profilePicture.startsWith("http") ? other.profilePicture : `http://localhost:5000${other.profilePicture}`} alt={other.name} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                           ) : (
+                             other?.name?.charAt(0).toUpperCase() || "U"
+                           )}
+                         </div>
+                         {c.isPinned && (
+                           <div style={{ position: "absolute", bottom: -2, right: -2, width: 14, height: 14, borderRadius: "50%", background: P.royal, color: P.white, display: "flex", alignItems: "center", justifyContent: "center", border: `2px solid ${P.white}` }}>
+                             <svg width="8" height="8" fill="currentColor" viewBox="0 0 24 24"><path d="M16 9V4l1 0V2H7v2h1v5l-2 2v2h5v7l1 1 1-1v-7h5v-2l-2-2z"/></svg>
+                           </div>
+                         )}
+                       </div>
+                       <div style={{ flex:1, overflow:"hidden", paddingRight: 24 }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                            <div style={{ fontWeight:700, color:P.navy, fontSize:15, marginBottom:4, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
+                              {other?.name || "Unknown User"}
+                            </div>
+                          </div>
+                         <div style={{ color:P.muted, fontSize:13, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
+                           {c.lastMessage || "Started a conversation"}
+                         </div>
+                       </div>
+                       
+                       {/* Three dots menu button */}
+                       <button 
+                         onClick={(e) => { e.stopPropagation(); setMenuOpenId(isMenuOpen ? null : c._id); }}
+                         style={{ position:"absolute", right: 8, top: "50%", transform: "translateY(-50%)", background:"none", border:"none", cursor:"pointer", color:P.muted, padding: 8, borderRadius: "50%" }}
+                       >
+                         <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                       </button>
+
+                       {/* Dropdown Menu */}
+                       {isMenuOpen && (
+                         <div style={{ position: "absolute", top: "70%", right: 12, background: P.white, border: `1px solid ${P.mist}`, borderRadius: 12, boxShadow: "0 10px 25px rgba(0,0,0,0.1)", zIndex: 100, width: 140, overflow: "hidden" }}>
+                           <button onClick={(e) => handleTogglePin(e, c._id)} style={{ width: "100%", padding: "10px 14px", border: "none", background: "none", textAlign: "left", cursor: "pointer", fontSize: 13, color: P.navy, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, transition: "background 0.2s" }} onMouseEnter={e => e.currentTarget.style.background = P.mistBg} onMouseLeave={e => e.currentTarget.style.background = "none"}>
+                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16 9V4l1 0V2H7v2h1v5l-2 2v2h5v7l1 1 1-1v-7h5v-2l-2-2z"/></svg>
+                             {c.isPinned ? "Unpin" : "Pin Chat"}
+                           </button>
+                           <button onClick={(e) => { setMenuOpenId(null); handleDeleteConversation(e, c._id); }} style={{ width: "100%", padding: "10px 14px", border: "none", borderTop: `1px solid ${P.mist}`, background: "none", textAlign: "left", cursor: "pointer", fontSize: 13, color: P.red, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, transition: "background 0.2s" }} onMouseEnter={e => e.currentTarget.style.background = "#fff5f5"} onMouseLeave={e => e.currentTarget.style.background = "none"}>
+                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                             Delete Chat
+                           </button>
+                         </div>
                        )}
                      </div>
-                     <div style={{ flex:1, overflow:"hidden" }}>
-                       <div style={{ fontWeight:700, color:P.navy, fontSize:15, marginBottom:4, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
-                         {other?.name || "Unknown User"}
-                       </div>
-                       <div style={{ color:P.muted, fontSize:13, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
-                         {c.lastMessage || "Started a conversation"}
-                       </div>
-                     </div>
                    </div>
-                 </div>
-               );
-             })
+                 );
+               })
           )}
         </div>
       </div>
@@ -214,9 +284,9 @@ export default function MessagesPage() {
                    getOtherParticipant(activeChat)?.name?.charAt(0).toUpperCase() || "U"
                  )}
               </div>
-              <h3 style={{ margin:0, color:P.navy, fontSize:17, fontWeight:800 }}>
-                 {getOtherParticipant(activeChat)?.name || "Unknown User"}
-              </h3>
+                <h3 style={{ margin:0, color:P.navy, fontSize:17, fontWeight:800 }}>
+                   {getOtherParticipant(activeChat)?.name || "Unknown User"}
+                </h3>
             </div>
 
             {/* Messages List */}

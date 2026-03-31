@@ -30,7 +30,7 @@ export default function PaymentSuccessPage() {
           <div style={{ background: P.mistBg, border: `1px solid ${P.mist}`, borderRadius: 16, padding: "16px 20px", marginBottom: 32, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <span style={{ color: P.muted, fontSize: 13, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em" }}>Payment Method</span>
             <span style={{ display: "flex", alignItems: "center", gap: 8, color: P.navy, fontWeight: 800, fontSize: 14 }}>
-              {method === "Khalti" ? "💜 Khalti ePayment" : "🚚 Cash On Delivery"}
+              {method === "Khalti" ? " Khalti ePayment" : "Cash On Delivery"}
             </span>
           </div>
 
@@ -40,7 +40,7 @@ export default function PaymentSuccessPage() {
               borderRadius: 14, border: "none", cursor: "pointer", boxShadow: "0 6px 20px rgba(40,43,74,0.3)",
               transition: "transform 0.15s"
             }} onMouseEnter={e => e.currentTarget.style.transform="translateY(-2px)"} onMouseLeave={e => e.currentTarget.style.transform="translateY(0)"}>
-              Back to Dashboard
+              Back to Home
             </button>
             <button onClick={() => navigate("/dashboard")} style={{
               width: "100%", padding: "15px 0", background: "transparent", color: P.navy, fontSize: 14, fontWeight: 800,

@@ -83,7 +83,10 @@ export default function ProductCard({ product: p, onView, onAddToCart, wishliste
             </span>
           )}
         </div>
-        <p style={{ fontSize: 11, color: P.muted, fontWeight: 600, margin: "0 0 4px", textTransform: "uppercase", letterSpacing: "0.5px" }}>{p.brand}</p>
+        <p style={{ fontSize: 11, color: P.muted, fontWeight: 600, margin: "0 0 4px", textTransform: "uppercase", letterSpacing: "0.5px", display: "flex", justifyContent: "space-between" }}>
+          <span>{p.brand || "Generic"}</span>
+          <span style={{ color: P.ocean }}>{p.vendor?.storeName || p.vendor?.name || ""}</span>
+        </p>
         <h3 style={{ color: P.navy, fontWeight: 700, fontSize: 14, margin: "0 0 8px", lineHeight: 1.4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{p.name}</h3>
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 12 }}>
           <Stars n={p.rating} />
@@ -97,19 +100,21 @@ export default function ProductCard({ product: p, onView, onAddToCart, wishliste
 
       {/* Add to Cart */}
       <button
-        onClick={handleAdd}
+        onClick={p.stock > 0 ? handleAdd : undefined}
+        disabled={p.stock <= 0}
         style={{
           width: "100%", marginTop: 14, padding: "10px 0",
-          background: added ? "#10b981" : P.navy,
-          color: P.white, fontSize: 12, fontWeight: 700, borderRadius: 10, border: "none",
-          cursor: "pointer",
-          opacity: hovered || added ? 1 : 0,
+          background: p.stock <= 0 ? P.mist : (added ? "#10b981" : P.navy),
+          color: p.stock <= 0 ? P.muted : P.white, 
+          fontSize: 12, fontWeight: 700, borderRadius: 10, border: "none",
+          cursor: p.stock <= 0 ? "not-allowed" : "pointer",
+          opacity: (hovered || added || p.stock <= 0) ? 1 : 0,
           transition: "opacity .2s ease, background .3s ease",
           fontFamily: P.font, textTransform: "uppercase", letterSpacing: "0.5px",
           display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
         }}
       >
-        {added ? <>{Icon.check} Added!</> : "+ Add to Cart"}
+        {p.stock <= 0 ? "Out of Stock" : (added ? <>{Icon.check} Added!</> : "+ Add to Cart")}
       </button>
     </div>
   );

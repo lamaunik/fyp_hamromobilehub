@@ -65,6 +65,7 @@ export default function AdminDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [activeNav, setActiveNav] = useState("overview");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState({ users: 0, vendors: 0, products: 0, revenue: 0 });
@@ -155,11 +156,26 @@ export default function AdminDashboard() {
     <div style={{ minHeight:"100vh", display:"flex", background:P.mistBg, fontFamily:P.font }}>
 
       {/* ── SIDEBAR ── */}
-      <aside style={{ width:220, flexShrink:0, display:"flex", flexDirection:"column", height:"100vh", position:"sticky", top:0, background:P.white, borderRight:`1px solid ${P.mist}` }}>
+      <aside style={{ 
+        width: sidebarOpen ? 220 : 0, 
+        flexShrink: 0, 
+        display: "flex", 
+        flexDirection: "column", 
+        height: "100vh", 
+        position: "sticky", 
+        top: 0, 
+        background: P.white, 
+        borderRight: sidebarOpen ? `1px solid ${P.mist}` : "none",
+        transition: "width .32s cubic-bezier(.4,0,.2,1)",
+        overflow: "hidden"
+      }}>
 
         {/* Logo */}
-        <div style={{ padding:"0 22px", borderBottom:`1px solid ${P.mist}`, display:"flex", alignItems:"center", flexShrink:0, height:80, overflow:"hidden" }}>
-          <img src="/logo.png" alt="HamroMobile Hub" style={{ width: 180, height: 180, minWidth: 180, minHeight: 180, objectFit: "contain", marginLeft: -14, filter: "hue-rotate(225deg) saturate(1.6) brightness(1.1)" }} />
+        <div style={{ padding:"0 22px", borderBottom:`1px solid ${P.mist}`, display:"flex", alignItems:"center", gap:10, flexShrink:0, height:80, whiteSpace: "nowrap" }}>
+          <img src="/logo.png" alt="Logo" style={{ height: 40, width: "auto" }} />
+          <span style={{ fontSize:20, fontWeight:900, color:P.navy, letterSpacing:"-0.02em", fontFamily: "'Barlow Condensed', sans-serif" }}>
+            HamroMobile<span style={{ color:"#f43f5e" }}>Hub</span>
+          </span>
         </div>
 
 
@@ -200,8 +216,23 @@ export default function AdminDashboard() {
       <div style={{ flex:1, display:"flex", flexDirection:"column", minWidth:0 }}>
 
         {/* Topbar */}
-        <header style={{ height:56, display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 32px", flexShrink:0, position:"sticky", top:0, zIndex:20, background:"rgba(0,15,40,0.88)", backdropFilter:"blur(16px)", borderBottom:"1px solid rgba(40, 43, 74, 0.1)" }}>
-          <h1 style={{ color:P.white, fontWeight:900, fontSize:15, margin:0, textTransform:"capitalize" }}>
+        <header style={{ height:56, display:"flex", alignItems:"center", gap:16, padding:"0 24px", flexShrink:0, position:"sticky", top:0, zIndex:20, background:"rgba(0,15,40,0.88)", backdropFilter:"blur(16px)", borderBottom:"1px solid rgba(40, 43, 74, 0.1)" }}>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{ 
+              width: 32, height: 32, borderRadius: 8, border: "1px solid rgba(212, 210, 195, 0.2)", 
+              background: "rgba(255,255,255,0.05)", color: P.white, cursor: "pointer", 
+              display: "flex", alignItems: "center", justifyContent: "center" 
+            }}
+          >
+            {sidebarOpen ? (
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            ) : (
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            )}
+          </button>
+          
+          <h1 style={{ color:P.white, fontWeight:900, fontSize:15, margin:0, textTransform:"capitalize", flex:1 }}>
             {NAV.find(n=>n.id===activeNav)?.label || "Overview"}
           </h1>
           <div style={{ display:"flex", alignItems:"center", gap:10 }}>

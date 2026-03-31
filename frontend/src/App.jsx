@@ -11,7 +11,6 @@ import VendorDashboard from "./pages/VendorDashboard";
 import AdminDashboard  from "./pages/AdminDashboard";
 import MessagesPage    from "./pages/MessagesPage";
 import KhaltiVerify    from "./pages/KhaltiVerify";
-import CheckoutPage    from "./pages/CheckoutPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
@@ -73,15 +72,7 @@ export default function App() {
             }
           />
 
-          {/* Checkout Page */}
-          <Route
-            path="/checkout"
-            element={
-              <ProtectedRoute>
-                <CheckoutPage />
-              </ProtectedRoute>
-            }
-          />
+          {/* Payment Success Page */}
 
           {/* Payment Success Page */}
           <Route

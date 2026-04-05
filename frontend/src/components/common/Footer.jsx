@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const P = {
   navy:  "#18181b",
   royal: "#27272a",
@@ -13,9 +15,24 @@ const P = {
 };
 
 const links = {
-  Company:     ["About Us","Careers","Press","Blog"],
-  Support:     ["Help Center","How It Works","Privacy Policy","Terms of Service"],
-  Marketplace: ["Browse Phones","Sell a Phone","Vendor Portal","Admin Login"],
+  Company:     [
+    { label: "About Us", href: "#about" },
+    { label: "Careers", href: "#" },
+    { label: "Press", href: "#" },
+    { label: "Blog", href: "#" }
+  ],
+  Support:     [
+    { label: "Help Center", href: "#" },
+    { label: "How It Works", href: "#" },
+    { label: "Privacy Policy", href: "#" },
+    { label: "Terms of Service", href: "#" }
+  ],
+  Marketplace: [
+    { label: "Browse Phones", href: "/dashboard" },
+    { label: "Sell a Phone", href: "/signup" },
+    { label: "Vendor Portal", href: "/vendor/dashboard" },
+    { label: "Admin Login", href: "/signin" }
+  ],
 };
 
 export default function Footer() {
@@ -31,8 +48,13 @@ export default function Footer() {
               The trusted marketplace for buying, selling, and trading smartphones. Join thousands of happy customers.
             </p>
             <div style={{ display:"flex",gap:10 }}>
-              {["f","t","in","yt"].map(s=>(
-                <a key={s} href="#" style={{ width:34,height:34,borderRadius:"50%",background:P.mist,display:"flex",alignItems:"center",justifyContent:"center",color:P.navy,fontSize:11,fontWeight:700,textDecoration:"none",transition:"all 0.2s" }}
+              {[
+                { s: "f", url: "https://facebook.com/MobiHub" },
+                { s: "t", url: "https://twitter.com/MobiHub" },
+                { s: "in", url: "https://linkedin.com/company/MobiHub" },
+                { s: "yt", url: "https://youtube.com/MobiHub" }
+              ].map(({s, url})=>(
+                <a key={s} href={url} target="_blank" rel="noopener noreferrer" style={{ width:34,height:34,borderRadius:"50%",background:P.mist,display:"flex",alignItems:"center",justifyContent:"center",color:P.navy,fontSize:11,fontWeight:700,textDecoration:"none",transition:"all 0.2s" }}
                   onMouseEnter={e=>{ e.currentTarget.style.background=P.navy;e.currentTarget.style.color=P.white; }}
                   onMouseLeave={e=>{ e.currentTarget.style.background=P.mist;e.currentTarget.style.color=P.navy; }}
                 >{s}</a>
@@ -45,10 +67,16 @@ export default function Footer() {
               <h4 style={{ color:P.navy,fontWeight:800,fontSize:13,letterSpacing:"0.5px",textTransform:"uppercase",margin:"0 0 20px" }}>{title}</h4>
               <ul style={{ listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:12 }}>
                 {items.map(item=>(
-                  <li key={item}>
-                    <a href="#" style={{ color:P.muted,fontSize:14,textDecoration:"none",transition:"color 0.2s" }}
-                      onMouseEnter={e=>e.target.style.color=P.navy} onMouseLeave={e=>e.target.style.color=P.muted}
-                    >{item}</a>
+                  <li key={item.label}>
+                    {item.href.startsWith("/") ? (
+                      <Link to={item.href} style={{ color:P.muted,fontSize:14,textDecoration:"none",transition:"color 0.2s" }}
+                        onMouseEnter={e=>e.target.style.color=P.navy} onMouseLeave={e=>e.target.style.color=P.muted}
+                      >{item.label}</Link>
+                    ) : (
+                      <a href={item.href} style={{ color:P.muted,fontSize:14,textDecoration:"none",transition:"color 0.2s" }}
+                        onMouseEnter={e=>e.target.style.color=P.navy} onMouseLeave={e=>e.target.style.color=P.muted}
+                      >{item.label}</a>
+                    )}
                   </li>
                 ))}
               </ul>

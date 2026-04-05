@@ -132,7 +132,11 @@ export default function DashboardOrders({ setTab, viewProduct, orders: initialOr
   }, [initialOrders]);
 
   const statuses = ["All", "Pending", "Paid", "Delivered", "Cancelled", "Failed"];
-  const filtered = filter === "All" ? localOrders : localOrders.filter((o) => o.paymentStatus === filter);
+  const filtered = localOrders.filter((o) => {
+    if (filter === "All") return true;
+    const status = o.isDelivered ? "Delivered" : o.paymentStatus;
+    return status === filter;
+  });
 
   const openModal = (type, orderId, e) => {
     e.stopPropagation();
@@ -238,12 +242,13 @@ export default function DashboardOrders({ setTab, viewProduct, orders: initialOr
 
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {filtered.map((order, i) => {
-          const sc = STATUS_COLORS[order.paymentStatus] || { bg: "#f3f4f6", border: "#d1d5db", text: "#4b5563" };
+          const displayStatus = order.isDelivered ? "Delivered" : order.paymentStatus;
+          const sc = STATUS_COLORS[displayStatus] || { bg: "#f3f4f6", border: "#d1d5db", text: "#4b5563" };
           const isOpen = expanded === order._id;
           const items = order.orderItems || [];
           const firstItem = items[0];
           const hasMore = items.length > 1;
-          const canCancel = order.paymentStatus === "Pending";
+          const canCancel = !order.isPaid && order.paymentStatus === "Pending" && !order.isDelivered;
           const canDelete = order.paymentStatus === "Cancelled" || order.paymentStatus === "Failed";
 
           return (
@@ -282,13 +287,13 @@ export default function DashboardOrders({ setTab, viewProduct, orders: initialOr
                       {firstItem?.name || "Order Items"} {hasMore && <span style={{ color: P.muted, fontWeight: 600, fontSize: 14 }}>& {items.length - 1} more</span>}
                     </h3>
                     <span style={{ fontSize: 12, fontWeight: 800, padding: "3px 12px", borderRadius: 999, background: sc.bg, color: sc.text, border: `1px solid ${sc.border}` }}>
-                      {order.paymentStatus}
+                      {displayStatus}
                     </span>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 16, color: P.muted, fontSize: 13 }}>
                     <span>Order #{order._id.substring(order._id.length - 8)}</span>
                     <span style={{ width: 4, height: 4, borderRadius: "50%", background: P.mist }} />
-                    <span>{new Date(order.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    <span>{new Date(order.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                     <span style={{ width: 4, height: 4, borderRadius: "50%", background: P.mist }} />
                     <span style={{ color: P.navy, fontWeight: 800 }}>Rs. {order.totalPrice?.toLocaleString() || 0}</span>
                   </div>

@@ -22,100 +22,116 @@ export default function ProductCard({ product: p, onView, onAddToCart, wishliste
       onMouseLeave={() => setHovered(false)}
       style={{
         background: P.white,
-        border: `1px solid ${P.mist}`,
-        borderRadius: 16,
-        padding: 14,
+        borderRadius: 24,
         cursor: "pointer",
         position: "relative",
         animationName: "fadeUp",
-        animationDuration: ".4s",
+        animationDuration: ".5s",
         animationTimingFunction: "ease",
         animationFillMode: "both",
         animationDelay: delay,
         fontFamily: P.font,
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        boxShadow: "0 10px 40px rgba(0,0,0,0.04)"
       }}
     >
-      {/* Wishlist btn */}
-      <button
-        onClick={(e) => { e.stopPropagation(); onToggleWish(); }}
-        style={{
-          position: "absolute", top: 12, right: 12, zIndex: 2,
-          background: wishlisted ? "rgba(244, 63, 94, 0.1)" : P.white,
-          border: `1px solid ${wishlisted ? "rgba(244, 63, 94, 0.3)" : P.mist}`,
-          borderRadius: "50%", width: 32, height: 32,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          cursor: "pointer", transition: "all .2s ease", color: wishlisted ? P.accent : P.muted
-        }}
-        onMouseEnter={(e) => { if(!wishlisted) { e.currentTarget.style.background = P.mistBg; e.currentTarget.style.color = P.navy; } }}
-        onMouseLeave={(e) => { if(!wishlisted) { e.currentTarget.style.background = P.white; e.currentTarget.style.color = P.muted; } }}
-      >
-        <svg width="18" height="18" fill={wishlisted ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-        </svg>
-      </button>
-
-      {/* Image area */}
-      <div onClick={onView}>
+      <div onClick={onView} style={{ position: "relative" }}>
+        {/* Full-Bleed Image Section */}
         <div style={{
           position: "relative",
-          background: P.mistBg,
-          borderRadius: 12, height: 160,
+          height: 220,
+          background: "#fdfdfd",
+          width: "100%",
           display: "flex", alignItems: "center", justifyContent: "center",
-          marginBottom: 16, overflow: "hidden", color: P.sky
+          overflow: "hidden"
         }}>
           {p.images && p.images.length > 0 ? (
             <img 
               src={p.images[0].startsWith("http") ? p.images[0] : `http://localhost:5000${p.images[0]}`} 
               alt={p.name} 
-              style={{ width: "100%", height: "100%", objectFit: "contain", padding: 12, transition: "transform 0.4s ease", transform: hovered ? "scale(1.05)" : "scale(1)" }} 
+              style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s ease", transform: hovered ? "scale(1.08)" : "scale(1)" }} 
             />
           ) : (
-            <div style={{ transition: "transform 0.4s ease", transform: hovered ? "scale(1.05)" : "scale(1)" }}><ProductThumb cat={p.cat} size={38} /></div>
+            <div style={{ transition: "transform 0.6s ease", transform: hovered ? "scale(1.08)" : "scale(1)" }}><ProductThumb cat={p.cat} size={48} /></div>
           )}
-          {bs && (
-            <span style={{ position: "absolute", top: 10, left: 10, fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", padding: "4px 10px", borderRadius: 8, background: bs.bg, color: bs.text, border: `1px solid ${bs.border}` }}>
-              {p.badge}
+
+          {/* Floating Badges */}
+          <div style={{ position: "absolute", top: 12, left: 12, display: "flex", gap: 8 }}>
+            <span style={{ background: "rgba(255,255,255,0.95)", color: P.navy, fontSize: 10, fontWeight: 800, padding: "5px 12px", borderRadius: 100, boxShadow: "0 2px 8px rgba(0,0,0,0.05)", backdropFilter:"blur(4px)" }}>
+              {p.badge || "Good"}
             </span>
-          )}
-          {p.old && (
-            <span style={{ position: "absolute", top: 10, right: wishlisted ? 50 : 10, fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", padding: "4px 8px", borderRadius: 8, background: P.mist, color: P.muted, border: `1px solid ${P.sky}` }}>
-              -{pct(p.price, p.old)}%
+          </div>
+          <div style={{ position: "absolute", top: 12, right: 12 }}>
+            <span style={{ background: "rgba(255,255,255,0.95)", color: P.navy, fontSize: 10, fontWeight: 700, padding: "5px 12px", borderRadius: 100, boxShadow: "0 2px 8px rgba(0,0,0,0.05)", backdropFilter:"blur(4px)" }}>
+              {p.category || "Smartphones"}
             </span>
-          )}
+          </div>
+
+          {/* Wishlist Floating Btn - Moved here to image corner */}
+          <button
+            onClick={(e) => { e.stopPropagation(); onToggleWish(); }}
+            style={{
+              position: "absolute", bottom: 12, right: 12, zIndex: 10,
+              background: wishlisted ? "#ef4444" : "rgba(255,255,255,0.9)",
+              border: "none", borderRadius: "50%", width: 36, height: 36,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", transition: "all .2s ease", color: wishlisted ? "white" : P.muted,
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+            }}
+          >
+            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+          </button>
         </div>
-        <p style={{ fontSize: 11, color: P.muted, fontWeight: 600, margin: "0 0 4px", textTransform: "uppercase", letterSpacing: "0.5px", display: "flex", justifyContent: "space-between" }}>
-          <span>{p.brand || "Generic"}</span>
-          <span style={{ color: P.ocean }}>{p.vendor?.storeName || p.vendor?.name || ""}</span>
-        </p>
-        <h3 style={{ color: P.navy, fontWeight: 700, fontSize: 14, margin: "0 0 8px", lineHeight: 1.4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{p.name}</h3>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 12 }}>
-          <Stars n={p.rating} />
-          <span style={{ fontSize: 11, color: P.muted, fontWeight: 600 }}>({p.reviews})</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ color: P.navy, fontFamily: P.fontHeading, fontWeight: 800, fontSize: 18, letterSpacing: "0.5px" }}>Rs. {p.price.toLocaleString()}</span>
-          {p.old && <span style={{ color: P.muted, fontSize: 12, textDecoration: "line-through", fontWeight: 500 }}>Rs. {p.old.toLocaleString()}</span>}
+
+
+        {/* Text Content */}
+        <div style={{ padding: "20px 20px 24px" }}>
+          <h3 style={{ color: P.navy, fontWeight: 800, fontSize: 19, margin: "0 0 8px", lineHeight: 1.2 }}>{p.name}</h3>
+          
+          <p style={{ color: P.muted, fontSize: 12, lineHeight: 1.5, margin: "0 0 16px", minHeight: 36, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+             {p.description || "Top performance, premium condition, and officially verified local warranty included."}
+          </p>
+
+          {/* Meta Info */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, color: P.muted, fontSize: 11, fontWeight: 500 }}>
+              {Icon.map}
+              <span>{p.vendor?.storeLocation || "Baneshwor, Kathmandu"}</span>
+              <span style={{ margin: "0 4px", opacity: 0.3 }}>•</span>
+              <span style={{ fontSize: 11 }}>by <b style={{ color: P.navy }}>{p.vendor?.storeName || p.vendor?.name || "Official Hub"}</b></span>
+            </div>
+          </div>
+
+          {/* Footer Area */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+               <span style={{ color: P.navy, fontWeight: 900, fontSize: 24 }}>Rs. {p.price.toLocaleString()}</span>
+            </div>
+            
+            <button
+              onClick={handleAdd}
+              disabled={p.stock <= 0}
+              style={{
+                background: P.navy, color: P.white, 
+                fontSize: 13, fontWeight: 800, borderRadius: 12, border: "none",
+                cursor: "pointer", transition: "all .2s ease",
+                padding: "10px 20px", display: "flex", alignItems: "center", gap: 8,
+                boxShadow: "0 4px 14px rgba(40, 43, 74, 0.2)"
+              }}
+              onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
+              onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+            >
+              {Icon.cart}
+              <span>{added ? "Added" : "Add to Cart"}</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Add to Cart */}
-      <button
-        onClick={p.stock > 0 ? handleAdd : undefined}
-        disabled={p.stock <= 0}
-        style={{
-          width: "100%", marginTop: 14, padding: "10px 0",
-          background: p.stock <= 0 ? P.mist : (added ? "#10b981" : P.navy),
-          color: p.stock <= 0 ? P.muted : P.white, 
-          fontSize: 12, fontWeight: 700, borderRadius: 10, border: "none",
-          cursor: p.stock <= 0 ? "not-allowed" : "pointer",
-          opacity: (hovered || added || p.stock <= 0) ? 1 : 0,
-          transition: "opacity .2s ease, background .3s ease",
-          fontFamily: P.font, textTransform: "uppercase", letterSpacing: "0.5px",
-          display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-        }}
-      >
-        {p.stock <= 0 ? "Out of Stock" : (added ? <>{Icon.check} Added!</> : "+ Add to Cart")}
-      </button>
     </div>
   );
 }

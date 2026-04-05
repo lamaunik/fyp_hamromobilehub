@@ -50,8 +50,12 @@ export default function Team() {
                 <p style={{ color:P.accent,fontSize:11,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",margin:"0 0 12px" }}>{member.role}</p>
                 <p style={{ color:P.muted,fontSize:13,lineHeight:1.7,margin:"0 0 16px" }}>{member.bio}</p>
                 <div style={{ display:"flex",gap:8 }}>
-                  {["in","tw","gh"].map(s=>(
-                    <a key={s} href="#" style={{ width:28,height:28,borderRadius:"50%",background:P.mistBg,display:"flex",alignItems:"center",justifyContent:"center",color:P.muted,fontSize:11,fontWeight:700,textDecoration:"none",transition:"all 0.2s",border:`1px solid ${P.sky}` }}
+                  {[
+                    { s: "in", url: `https://linkedin.com/in/${member.name.replace(' ', '')}` },
+                    { s: "tw", url: `https://twitter.com/${member.name.replace(' ', '')}` },
+                    { s: "gh", url: `https://github.com/${member.name.replace(' ', '')}` }
+                  ].map(({s, url})=>(
+                    <a key={s} href={url} target="_blank" rel="noopener noreferrer" style={{ width:28,height:28,borderRadius:"50%",background:P.mistBg,display:"flex",alignItems:"center",justifyContent:"center",color:P.muted,fontSize:11,fontWeight:700,textDecoration:"none",transition:"all 0.2s",border:`1px solid ${P.sky}` }}
                       onMouseEnter={e=>{ e.currentTarget.style.background=P.navy;e.currentTarget.style.color=P.white; }}
                       onMouseLeave={e=>{ e.currentTarget.style.background=P.mistBg;e.currentTarget.style.color=P.muted; }}
                     >{s}</a>

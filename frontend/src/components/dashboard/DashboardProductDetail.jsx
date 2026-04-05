@@ -43,7 +43,7 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
       {/* Top Nav: Back Button and Breadcrumb */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <button 
-          onClick={() => setTab("home")} 
+          onClick={() => setTab("products")} 
           style={{ 
             display: "flex", alignItems: "center", gap: 8, 
             background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 12, padding: "8px 16px",
@@ -237,8 +237,8 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
           </div>
           <div style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(185px, 1fr))",
-            gap: 16
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 24
           }}>
             {related.map((p, i) => {
               const relId = p._id || p.id;

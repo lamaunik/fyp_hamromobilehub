@@ -186,7 +186,7 @@ export default function DashboardHome({ setTab, viewProduct, addToCart, wishlist
           <h3 style={{ color: P.navy, fontFamily: P.fontHeading, fontWeight: 800, fontSize: 22, margin: 0, letterSpacing: "0.5px" }}>Featured Products</h3>
           <Btn onClick={() => setTab("products")} style={{ background: "none", border: "none", color: P.navy, fontSize: 13, fontWeight: 700, padding: 0 }}>View All →</Btn>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(6,1fr)", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
           {featured.map((p, i) => {
             const pId = p._id || p.id;
             return <ProductCard key={pId} product={p} onView={() => viewProduct(p)} onAddToCart={() => addToCart(p)} wishlisted={wishlist.includes(pId)} onToggleWish={() => toggleWish(pId)} delay={`${i * .06}s`} />

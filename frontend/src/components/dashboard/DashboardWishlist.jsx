@@ -30,7 +30,7 @@ export default function DashboardWishlist({ wishlist, toggleWish, addToCart, vie
           Add All to Cart
         </Btn>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
         {items.map((p, i) => {
           const pId = p._id || p.id; // FIX: always use _id first (MongoDB)
           return (

@@ -54,8 +54,11 @@ export const BADGE_COLORS = {
 export const STATUS_COLORS = {
   Delivered: {bg:"#f0fdf4",  text:"#16a34a",  border:"#bbf7d0"},
   Shipped:   {bg:"#f4f4f5",  text:"#18181b",  border:"#e4e4e7"},
-  Processing:{bg:"#fffbeb", text:"#d97706",  border:"#fde68a"},
+  Paid:      {bg:"#eff6ff",  text:"#2563eb",  border:"#bfdbfe"},
+  Pending:   {bg:"#fffbeb",  text:"#d97706",  border:"#fde68a"},
+  Processing:{bg:"#fffbeb",  text:"#d97706",  border:"#fde68a"},
   Cancelled: {bg:"#fff1f2",  text:"#ef4444",  border:"#fecdd3"},
+  Failed:    {bg:"#fef2f2",  text:"#dc2626",  border:"#fecaca"},
 };
 
 export const pct = (p, o) => Math.round((1 - p / o) * 100);

@@ -122,16 +122,16 @@ export default function DashboardProducts({ viewProduct, addToCart, wishlist, to
 
         {/* Loading skeleton */}
         {loading && products.length === 0 && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(185px,1fr))", gap: 14 }}>
-            {[...Array(8)].map((_, i) => (
-              <div key={i} style={{ background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 16, height: 240, animation: "pulse 1.5s ease-in-out infinite" }} />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 24 }}>
+            {[...Array(6)].map((_, i) => (
+              <div key={i} style={{ background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 16, height: 350, animation: "pulse 1.5s ease-in-out infinite" }} />
             ))}
           </div>
         )}
 
         {/* Grid View */}
         {!loading && view === "grid" && (
-          <div key={`g${gridKey}`} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(185px,1fr))", gap: 14 }}>
+          <div key={`g${gridKey}`} style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
             {filtered.map((p, i) => {
               const pId = p._id || p.id;
               return <ProductCard key={pId} product={p} onView={() => viewProduct(p)} onAddToCart={() => addToCart(p)} wishlisted={wishlist.includes(pId)} onToggleWish={() => toggleWish(pId)} delay={`${Math.min(i * .04, .3)}s`} />

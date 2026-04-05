@@ -1,49 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { P } from "../components/dashboard/DashboardConstants";
+import AdminSidebar from "../components/admin/AdminSidebar";
+import AdminTopbar  from "../components/admin/AdminTopbar";
 
-const P = {
-  navy:  "#18181b",
-  royal: "#27272a",
-  ocean: "#3f3f46",
-  sky:   "#e4e4e7",
-  mist:  "#f4f4f5",
-  white: "#ffffff",
-  muted: "#71717a",
-  mistBg:"#fafafa",
-  font:  "'DM Sans', 'Inter', sans-serif",
-  fontHeading: "'Barlow Condensed', 'Inter', sans-serif",
-  accent: "#f43f5e"
-};
 
-const STATS = [
-  { label:"Total Users",    value:"—",  color:P.ocean,
-    icon:<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg> },
-  { label:"Total Vendors",  value:"—",  color:P.royal,
-    icon:<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg> },
-  { label:"Total Products", value:"—",  color:"#0ea5e9",
-    icon:<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg> },
-  { label:"Total Revenue",  value:"Rs. —", color:P.sky,
-    icon:<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> },
-];
-
-const MOCK_USERS = [
-  { name:"Alice Sharma",  email:"alice@example.com",  role:"user",   status:"Active",    joined:"Mar 1, 2026" },
-  { name:"Bob Thapa",     email:"bob@example.com",    role:"vendor", status:"Active",    joined:"Feb 28, 2026" },
-  { name:"Carol Magar",   email:"carol@example.com",  role:"user",   status:"Active",    joined:"Feb 20, 2026" },
-  { name:"Dev Karki",     email:"dev@example.com",    role:"vendor", status:"Suspended", joined:"Feb 15, 2026" },
-  { name:"Eve Rai",       email:"eve@example.com",    role:"user",   status:"Active",    joined:"Feb 10, 2026" },
-];
 
 const ROLE_STYLE = {
-  user:   { bg:P.mistBg,  border:P.sky,  text:P.muted },
-  vendor: { bg:"#fff1f2", border:"#ffe4e6", text:P.accent },
-  admin:  { bg:"#f8fafc", border:"#e2e8f0", text:P.navy },
+  user:   { bg: "#f4f4f5", border: "#e4e4e7", text: "#71717a" },
+  vendor: { bg: "#fff1f2", border: "#fecdd3", text: "#f43f5e" },
+  admin:  { bg: "#f0f9ff", border: "#bae6fd", text: "#0369a1" },
 };
 
 const STATUS_STYLE = {
-  Active:    { bg:"#f0fdf4", border:"#bbf7d0", text:"#16a34a" },
-  Suspended: { bg:"#fef2f2", border:"#fecaca", text:"#ef4444" },
+  Active:    { bg: "#f0fdf4", border: "#bbf7d0", text: "#16a34a" },
+  Suspended: { bg: "#fef2f2", border: "#fecaca", text: "#ef4444" },
 };
 
 const NAV = [
@@ -68,8 +40,10 @@ export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [users, setUsers] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [stats, setStats] = useState({ users: 0, vendors: 0, products: 0, revenue: 0 });
-  const [kycReviewData, setKycReviewData] = useState(null); // Data for the vendor being reviewed
+  const [kycReviewData, setKycReviewData] = useState(null); 
   
   useEffect(() => {
     const fetchAllData = async () => {
@@ -101,10 +75,11 @@ export default function AdminDashboard() {
         }
 
         if (productsRes.success && productsRes.data) {
+          setProducts(productsRes.data);
           setStats(prev => ({ ...prev, products: productsRes.data.length }));
         }
-
         if (ordersRes.success && ordersRes.data) {
+          setOrders(ordersRes.data);
           const rev = ordersRes.data.reduce((sum, o) => sum + (o.totalPrice || 0), 0);
           setStats(prev => ({ ...prev, revenue: rev }));
         }
@@ -182,137 +157,88 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div style={{ minHeight:"100vh", display:"flex", background:P.mistBg, fontFamily:P.font }}>
-
-      {/* ── SIDEBAR ── */}
-      <aside style={{ 
-        width: sidebarOpen ? 220 : 0, 
-        flexShrink: 0, 
-        display: "flex", 
-        flexDirection: "column", 
-        height: "100vh", 
-        position: "sticky", 
-        top: 0, 
-        background: P.white, 
-        borderRight: sidebarOpen ? `1px solid ${P.mist}` : "none",
-        transition: "width .32s cubic-bezier(.4,0,.2,1)",
-        overflow: "hidden"
-      }}>
-
-        {/* Logo */}
-        <div style={{ padding:"0 22px", borderBottom:`1px solid ${P.mist}`, display:"flex", alignItems:"center", gap:10, flexShrink:0, height:80, whiteSpace: "nowrap" }}>
-          <img src="/logo.png" alt="Logo" style={{ height: 40, width: "auto" }} />
-          <span style={{ fontSize:20, fontWeight:900, color:P.navy, letterSpacing:"-0.02em", fontFamily: "'Barlow Condensed', sans-serif" }}>
-            HamroMobile<span style={{ color:"#f43f5e" }}>Hub</span>
-          </span>
-        </div>
-
-
-
-        {/* Nav */}
-        <nav style={{ flex:1, padding:"24px 12px", display:"flex", flexDirection:"column", gap:6, overflowY:"auto" }}>
-          <p style={{ fontSize:10, fontWeight:800, color:P.muted, letterSpacing:"0.1em", textTransform:"uppercase", padding:"0 12px", marginBottom:4 }}>Menu</p>
-          {NAV.map(item => {
-            const active = activeNav === item.id;
-            return (
-              <button key={item.id} onClick={()=>setActiveNav(item.id)}
-                style={{ width:"100%", display:"flex", alignItems:"center", gap:10, padding:"10px 12px", borderRadius:12, fontSize:13, fontWeight:700, cursor:"pointer", border:"none", textAlign:"left", transition:"all 0.2s", fontFamily:P.font,
-                  background: active ? P.navy : "transparent",
-                  color: active ? P.white : P.muted,
-                }}
-                onMouseEnter={e=>{ if(!active){ e.currentTarget.style.background=P.mistBg; e.currentTarget.style.color=P.navy; }}}
-                onMouseLeave={e=>{ if(!active){ e.currentTarget.style.background="transparent"; e.currentTarget.style.color=P.muted; }}}>
-                <span style={{ color: active ? P.white : P.muted, flexShrink:0 }}>{item.icon}</span>
-                {item.label}
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Logout */}
-        <div style={{ padding:"16px 12px", borderTop:`1px solid ${P.mist}` }}>
-          <button onClick={handleLogout}
-            style={{ width:"100%", display:"flex", alignItems:"center", gap:10, padding:"10px 12px", borderRadius:12, fontSize:13, fontWeight:700, cursor:"pointer", background:"transparent", border:"none", color:P.muted, fontFamily:P.font, transition:"all 0.2s" }}
-            onMouseEnter={e=>{ e.currentTarget.style.background="#fee2e2"; e.currentTarget.style.color="#ef4444"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.color=P.muted; }}>
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-            Sign Out
-          </button>
-        </div>
-      </aside>
-
-      {/* ── MAIN ── */}
-      <div style={{ flex:1, display:"flex", flexDirection:"column", minWidth:0 }}>
-
-        {/* Topbar */}
-        <header style={{ height:56, display:"flex", alignItems:"center", gap:16, padding:"0 24px", flexShrink:0, position:"sticky", top:0, zIndex:20, background:"rgba(0,15,40,0.88)", backdropFilter:"blur(16px)", borderBottom:"1px solid rgba(40, 43, 74, 0.1)" }}>
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            style={{ 
-              width: 32, height: 32, borderRadius: 8, border: "1px solid rgba(212, 210, 195, 0.2)", 
-              background: "rgba(255,255,255,0.05)", color: P.white, cursor: "pointer", 
-              display: "flex", alignItems: "center", justifyContent: "center" 
-            }}
-          >
-            {sidebarOpen ? (
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            ) : (
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-            )}
-          </button>
-          
-          <h1 style={{ color:P.white, fontWeight:900, fontSize:15, margin:0, textTransform:"capitalize", flex:1 }}>
-            {NAV.find(n=>n.id===activeNav)?.label || "Overview"}
-          </h1>
-          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-            <span style={{ fontSize:12, fontWeight:800, padding:"4px 12px", borderRadius:999, background:"rgba(40, 43, 74, 0.15)", border:`1px solid rgba(40, 43, 74, 0.3)`, color:P.sky, letterSpacing:"0.05em", display:"flex", alignItems:"center", gap:6 }}>
-              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-              Admin
-            </span>
-          </div>
-        </header>
-
-        {/* Content */}
-        <main style={{ flex:1, padding:"28px 32px", overflowY:"auto" }}>
+    <div style={{ height: "100vh", display: "flex", background: P.mistBg, fontFamily: P.font, overflow: "hidden" }}>
+      <AdminSidebar tab={activeNav} setTab={setActiveNav} open={sidebarOpen} setOpen={setSidebarOpen} />
+      
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
+        <AdminTopbar tab={activeNav} onMenu={() => setSidebarOpen(!sidebarOpen)} />
+        
+        <main style={{ flex: 1, overflowY: "auto", padding: "40px" }}>
+          <div style={{ maxWidth: "1600px", margin: "0 auto" }}>
 
           {/* ── OVERVIEW ── */}
           {activeNav === "overview" && (
             <div style={{ display:"flex", flexDirection:"column", gap:28 }}>
 
-              {/* Welcome banner */}
-              <div style={{ position:"relative", borderRadius:20, overflow:"hidden", padding:"32px 36px", background:`linear-gradient(135deg,${P.navy},${P.royal})`, border:`1px solid rgba(40, 43, 74, 0.25)` }}>
-                <div style={{ position:"absolute", inset:0, opacity:0.06, backgroundImage:`linear-gradient(rgba(40, 43, 74, 1) 1px,transparent 1px),linear-gradient(90deg,rgba(40, 43, 74, 1) 1px,transparent 1px)`, backgroundSize:"36px 36px" }}/>
-                <div style={{ position:"absolute", top:-40, right:-40, width:160, height:160, borderRadius:"50%", background:"rgba(40, 43, 74, 0.15)", filter:"blur(40px)" }}/>
-                <div style={{ position:"relative", zIndex:1 }}>
-                  <span style={{ display:"inline-flex", alignItems:"center", gap:6, borderRadius:999, padding:"4px 12px", marginBottom:14, background:"rgba(40, 43, 74, 0.2)", border:`1px solid rgba(40, 43, 74, 0.35)` }}>
-                    <span style={{ width:6, height:6, borderRadius:"50%", background:P.sky, display:"inline-block" }}/>
-                    <span style={{ fontSize:10, fontWeight:800, letterSpacing:"0.12em", color:P.sky }}>ADMIN DASHBOARD</span>
-                  </span>
-                  <h2 style={{ color:P.white, fontWeight:900, fontSize:28, margin:"0 0 6px", letterSpacing:"-0.02em" }}>
-                    Welcome back, {user?.name?.split(" ")[0] || "Admin"}
+              {/* Hero Welcome Banner */}
+              <div style={{
+                background: `linear-gradient(135deg, ${P.navy}, ${P.royal})`,
+                borderRadius: 28, padding: "48px 56px",
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                boxShadow: "0 20px 50px rgba(0,0,0,0.1)",
+                position: "relative", overflow: "hidden"
+              }}>
+                <div style={{ position: "absolute", top: -40, right: -20, width: 220, height: 220, borderRadius: "50%", background: "rgba(255,255,255,0.03)", filter: "blur(60px)" }} />
+                
+                <div style={{ flex: 1, position: "relative" }}>
+                  <div style={{
+                    display: "inline-flex", alignItems: "center", gap: 8,
+                    background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)",
+                    borderRadius: 12, padding: "6px 14px", marginBottom: 20,
+                  }}>
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: P.accent }} />
+                    <span style={{ color: P.white, fontSize: 10, fontWeight: 900, letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                      System Authority Center
+                    </span>
+                  </div>
+                  <h2 style={{ color: P.white, fontWeight: 900, fontSize: 36, margin: "0 0 12px", fontFamily: P.fontHeading, letterSpacing: "0.5px" }}>
+                    Welcome, {user?.name?.split(" ")[0] || "Administrator"}
                   </h2>
-                  <p style={{ color:"rgba(212, 210, 195, 0.6)", fontSize:14, margin:0 }}>You have full administrative access to HamroHub platform.</p>
+                  <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 16, maxWidth: 520, margin: 0, lineHeight: 1.6, fontWeight: 500 }}>
+                    Platform synchronization complete. You have full oversight of users, inventory, and fiscal trajectories.
+                  </p>
+                </div>
+                
+                <div style={{
+                  width: 90, height: 90, borderRadius: 24, flexShrink: 0,
+                  background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+                }}>
+                  <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
                 </div>
               </div>
 
-              {/* Stats grid */}
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16 }}>
-                {dynamicStats.map((s,i)=>(
-                  <div key={i} style={{ padding:"20px", borderRadius:16, display:"flex", alignItems:"center", gap:16, background:`rgba(0,15,40,0.6)`, border:`1px solid rgba(40, 43, 74, 0.15)`, backdropFilter:"blur(8px)" }}>
-                    <div style={{ width:44, height:44, borderRadius:12, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, color:P.white, boxShadow:"0 4px 14px rgba(40, 43, 74, 0.25)" }}>
+              {/* KPI Stats Grid */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
+                {dynamicStats.map((s, i) => (
+                  <div key={i} style={{
+                    background: P.white, border: `1px solid ${P.mist}`,
+                    borderRadius: 28, padding: 24, cursor: "pointer",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.02)",
+                    transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                  }}
+                    onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 20px 40px rgba(0,0,0,0.06)"; e.currentTarget.style.transform = "translateY(-6px)"; e.currentTarget.style.borderColor = P.accent; }}
+                    onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.02)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = P.mist; }}
+                  >
+                    <div style={{
+                      width: 44, height: 44, borderRadius: 12,
+                      background: P.mistBg, display: "flex", alignItems: "center", justifyContent: "center",
+                      marginBottom: 16, color: P.navy
+                    }}>
                       {s.icon}
                     </div>
-                    <div>
-                      <p style={{ color:P.white, fontWeight:900, fontSize:22, lineHeight:1, margin:0 }}>{s.value}</p>
-                      <p style={{ color:P.muted, fontSize:12, margin:"4px 0 0" }}>{s.label}</p>
-                    </div>
+                    <p style={{ color: P.navy, fontWeight: 900, fontSize: 28, margin: "0 0 2px", fontFamily: P.fontHeading, letterSpacing: "-0.5px" }}>{s.value}</p>
+                    <p style={{ color: P.muted, fontSize: 11, fontWeight: 800, margin: 0, textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.label}</p>
                   </div>
                 ))}
               </div>
 
-              {/* Recent users */}
-              <div>
-                <h2 style={{ color:P.white, fontWeight:900, fontSize:15, margin:"0 0 16px" }}>Recent Users</h2>
+              {/* Recent Activity / Table */}
+              <div style={{ background: P.white, border: `1px solid ${P.mist}`, borderRadius: 28, padding: 32, boxShadow: "0 10px 40px rgba(0,0,0,0.03)" }}>
+                <h2 style={{ color: P.navy, fontWeight: 900, fontSize: 18, margin: "0 0 20px", fontFamily: P.fontHeading, letterSpacing: "0.5px" }}>System Integrity: Recent Users</h2>
                 <UsersTable 
                   users={users.filter(u => u.role !== "vendor" || u.kycSubmitted).slice(0, 5)} 
                   onToggleBan={handleToggleBan} 
@@ -358,14 +284,56 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {/* ── PLACEHOLDER TABS ── */}
-          {["products","orders"].includes(activeNav) && (
-            <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", minHeight:"40vh", textAlign:"center" }}>
-              <div style={{ width:64, height:64, borderRadius:18, background:`linear-gradient(135deg,${P.royal},${P.ocean})`, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:20, boxShadow:"0 8px 24px rgba(40, 43, 74, 0.3)", color:P.white }}>
-                {NAV.find(n=>n.id===activeNav)?.icon}
+          {/* ── PRODUCTS ── */}
+          {activeNav === "products" && (
+            <div style={{ display:"flex", flexDirection:"column", gap:24 }}>
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+                <div>
+                  <h2 style={{ color:P.navy, fontWeight:900, fontSize:24, fontFamily:P.fontHeading }}>Products Authority</h2>
+                  <p style={{ color:P.muted, fontSize:14 }}>Manage every listed product across the marketplace.</p>
+                </div>
               </div>
-              <h2 style={{ color:P.white, fontWeight:900, fontSize:20, margin:"0 0 8px" }}>{NAV.find(n=>n.id===activeNav)?.label}</h2>
-              <p style={{ color:P.muted, fontSize:14, margin:0 }}>This section is coming soon.</p>
+              <ProductsTable 
+                products={products} 
+                onDelete={async (id) => {
+                  if(!window.confirm("Permanent removal of product #"+id.substr(-6)+"?")) return;
+                  try {
+                    const { api } = await import("../utils/api");
+                    const res = await api.delete(`/products/${id}`);
+                    if(res.success) setProducts(prev => prev.filter(p => p._id !== id));
+                  } catch(e) { console.error(e); }
+                }} 
+              />
+            </div>
+          )}
+ 
+          {/* ── ORDERS ── */}
+          {activeNav === "orders" && (
+            <div style={{ display:"flex", flexDirection:"column", gap:24 }}>
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+                <div>
+                  <h2 style={{ color:P.navy, fontWeight:900, fontSize:24, fontFamily:P.fontHeading }}>Fulfillment Oversight</h2>
+                  <p style={{ color:P.muted, fontSize:14 }}>Track every transaction and override order states.</p>
+                </div>
+              </div>
+              <OrdersTable 
+                orders={orders}
+                onUpdateStatus={async (id) => {
+                  try {
+                    const { api } = await import("../utils/api");
+                    const res = await api.put(`/orders/${id}/deliver`);
+                    if(res.success) setOrders(prev => prev.map(o => o._id === id ? { ...o, isDelivered: true, paymentStatus: "Delivered" } : o));
+                  } catch(e) { console.error(e); }
+                }}
+                onDelete={async (id) => {
+                  if(!window.confirm("Archive transaction #"+id.substr(-6)+"?")) return;
+                  try {
+                    const { api } = await import("../utils/api");
+                    const res = await api.delete(`/orders/${id}`);
+                    if(res.success) setOrders(prev => prev.filter(o => o._id !== id));
+                  } catch(e) { console.error(e); }
+                }} 
+              />
             </div>
           )}
 
@@ -441,6 +409,7 @@ export default function AdminDashboard() {
             </div>
           )}
 
+          </div>
         </main>
       </div>
 
@@ -577,92 +546,179 @@ function KYCReviewModal({ vendor, onClose, onApprove }) {
 
 // ─── Users Table ─────────────────────────────────────────────────────────────
 function UsersTable({ users, showActions = false, onToggleBan, onToggleApprove, onReview }) {
-  const cols = showActions ? "1.5fr 1.8fr 1fr 0.8fr 1fr 1.2fr 1fr 1.4fr" : "1.8fr 2fr 1.2fr 1fr 1fr 1.5fr 1.8fr";
+  const cols = showActions ? "1.5fr 1.8fr 1fr 0.8fr 1fr 1.2fr 1fr 1.4fr" : "1.8fr 2fr 1.2fr 1.2fr 1.2fr 1.5fr 1.8fr";
   return (
-    <div style={{ borderRadius:16, overflow:"hidden", background:P.white, border:`1px solid ${P.mist}`, boxShadow:"0 2px 12px rgba(24,24,27,0.03)" }}>
+    <div style={{ borderRadius: 24, overflow: "hidden", background: P.white, border: `1px solid ${P.mist}`, boxShadow: "0 4px 12px rgba(0,0,0,0.02)" }}>
       {/* Header row */}
-      <div style={{ display:"grid", gridTemplateColumns:cols, padding:"10px 20px", color:P.muted, fontSize:10, fontWeight:800, letterSpacing:"0.08em", textTransform:"uppercase", borderBottom:`1px solid ${P.mist}`, background:P.mistBg }}>
+      <div style={{ display: "grid", gridTemplateColumns: cols, padding: "14px 24px", color: P.muted, fontSize: 10, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", borderBottom: `1px solid ${P.mist}`, background: P.mistBg }}>
         <span>Name</span>
         <span>Email</span>
         <span>Phone</span>
         <span>Role</span>
         <span>Status</span>
         <span>Joined</span>
-        <span style={{ paddingLeft: 10 }}>Address</span>
+        <span>Address</span>
         {showActions && <span>Actions</span>}
       </div>
 
-      {users.map((u,i)=>{
-        const rs = ROLE_STYLE[u.role] || ROLE_STYLE.user;
-        const ss = STATUS_STYLE[u.status] || STATUS_STYLE.Active;
-        
-        let customStatusUI = (
-          <span style={{ fontSize:11, fontWeight:700, padding:"3px 8px", borderRadius:999, display:"inline-block", background:ss.bg, border:`1px solid ${ss.border}`, color:ss.text }}>
-            {u.status}
-          </span>
-        );
-        
-        if (u.role === "vendor" && !u.isApproved) {
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {users.length > 0 ? users.map((u, i) => {
+          const rs = ROLE_STYLE[u.role] || ROLE_STYLE.user;
+          const ss = STATUS_STYLE[u.status] || STATUS_STYLE.Active;
+          
+          let customStatusUI = (
+            <span style={{ fontSize: 11, fontWeight: 750, padding: "4px 10px", borderRadius: 8, display: "inline-block", background: ss.bg, border: `1px solid ${ss.border}`, color: ss.text }}>
+              {u.status}
+            </span>
+          );
+          
+          if (u.role === "vendor" && !u.isApproved) {
             customStatusUI = (
-                <span style={{ fontSize:11, fontWeight:700, padding:"3px 8px", borderRadius:999, display:"inline-block", background:"#fefce8", border:"1px solid #fef08a", color:"#eab308" }}>
-                  Pending
-                </span>
+              <span style={{ fontSize: 11, fontWeight: 750, padding: "4px 10px", borderRadius: 8, display: "inline-block", background: "#fffbeb", border: "1px solid #fde68a", color: "#d97706" }}>
+                Pending
+              </span>
             );
-        }
+          }
 
-        return (
-          <div key={i} style={{ display:"grid", gridTemplateColumns:cols, alignItems:"center", padding:"12px 20px", borderBottom: i < users.length-1 ? `1px solid ${P.mist}` : "none", transition:"background 0.15s" }}
-            onMouseEnter={e=>e.currentTarget.style.background=P.mistBg}
-            onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+          return (
+            <div key={i} style={{ display: "grid", gridTemplateColumns: cols, alignItems: "center", padding: "16px 24px", borderBottom: i < users.length - 1 ? `1px solid ${P.mist}` : "none", transition: "all 0.2s" }}
+              onMouseEnter={e => e.currentTarget.style.background = P.mistBg}
+              onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
 
-            <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-              <div style={{ width:32, height:32, borderRadius:"50%", background:P.mistBg, border:`1px solid ${P.mist}`, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900, fontSize:13, color:P.navy, flexShrink:0 }}>
-                {u.name?.charAt(0) || "U"}
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 12, background: P.mistBg, border: `1px solid ${P.mist}`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14, color: P.navy, flexShrink: 0 }}>
+                  {u.name?.charAt(0) || "U"}
+                </div>
+                <span style={{ color: P.navy, fontWeight: 750, fontSize: 14 }}>{u.name || "Unknown"}</span>
               </div>
-              <span style={{ color:P.navy, fontWeight:600, fontSize:13 }}>{u.name || "Unknown"}</span>
-            </div>
 
-            <span style={{ color:P.muted, fontSize:13 }}>{u.email}</span>
-            <span style={{ color:P.navy, fontSize:12, fontWeight: 700 }}>{u.phone}</span>
+              <span style={{ color: P.muted, fontSize: 13, fontWeight: 500 }}>{u.email}</span>
+              <span style={{ color: P.navy, fontSize: 12, fontWeight: 800 }}>{u.phone}</span>
 
-            <span style={{ fontSize:11, fontWeight:700, padding:"3px 8px", borderRadius:999, display:"inline-block", background:rs.bg, border:`1px solid ${rs.border}`, color:rs.text, textAlign: "center" }}>
-              {u.role}
-            </span>
+              <div style={{ display: "flex" }}>
+                <span style={{ fontSize: 10, fontWeight: 800, padding: "4px 10px", borderRadius: 8, background: rs.bg, border: `1px solid ${rs.border}`, color: rs.text, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  {u.role}
+                </span>
+              </div>
 
-            {customStatusUI}
+              <div style={{ display: "flex" }}>{customStatusUI}</div>
 
-            <span style={{ color:P.muted, fontSize:12 }}>{u.joined}</span>
+              <span style={{ color: P.muted, fontSize: 12, fontWeight: 600 }}>{u.joined}</span>
 
-            <span style={{ color:P.muted, fontSize:12, paddingLeft: 10, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={u.address}>
-               {u.address}
-            </span>
+              <span style={{ color: P.muted, fontSize: 12, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={u.address}>
+                {u.address}
+              </span>
 
-            {showActions && (
-              <div style={{ display:"flex", gap:6 }}>
-                {u.role === "vendor" && (
+              {showActions && (
+                <div style={{ display: "flex", gap: 8 }}>
+                  {u.role === "vendor" && (
                     <>
-                    <button onClick={() => onReview(u)} 
-                        title="Review KYC Documents"
-                        style={{ width:32, height:31, display:"flex", alignItems:"center", justifyContent:"center", borderRadius:8, background:P.mistBg, border:`1px solid ${P.mist}`, color:P.navy, cursor:"pointer" }}>
-                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                    </button>
-                    <button onClick={() => onToggleApprove(u.id, u.isApproved)}
-                        style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background: u.isApproved ? "#fef2f2" : "#f0fdf4", border: u.isApproved ? "1px solid #fecaca" : "1px solid #bbf7d0", color: u.isApproved ? "#ef4444" : "#16a34a", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}>
+                      <button onClick={() => onReview(u)} 
+                        title="Review KYC"
+                        style={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 10, background: P.mistBg, border: `1px solid ${P.mist}`, color: P.navy, cursor: "pointer", transition: "all 0.2s" }}
+                        onMouseEnter={e => { e.currentTarget.style.background = P.white; e.currentTarget.style.borderColor = P.accent; e.currentTarget.style.color = P.accent; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = P.mistBg; e.currentTarget.style.borderColor = P.mist; e.currentTarget.style.color = P.navy; }}
+                      >
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                      </button>
+                      <button onClick={() => onToggleApprove(u.id, u.isApproved)}
+                        style={{ fontSize: 11, fontWeight: 800, padding: "6px 14px", borderRadius: 10, border: "none", background: u.isApproved ? "#fee2e2" : "#f0fdf4", color: u.isApproved ? "#ef4444" : "#16a34a", cursor: "pointer", transition: "all 0.2s" }}
+                      >
                         {u.isApproved ? "Revoke" : "Approve"}
-                    </button>
+                      </button>
                     </>
-                )}
-                <button onClick={() => onToggleBan(u.id, u.status)}
-                  style={{ fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:8, background:"#fef2f2", border:"1px solid #fecaca", color:"#ef4444", cursor:"pointer", fontFamily:"inherit", transition:"all 0.15s" }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background="#fee2e2"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background="#fef2f2"; }}>
-                  {u.status === "Active" ? "Ban" : "Unban"}
-                </button>
-              </div>
-            )}
+                  )}
+                  <button onClick={() => onToggleBan(u.id, u.status)}
+                    style={{ fontSize: 11, fontWeight: 800, padding: "6px 14px", borderRadius: 10, border: "none", background: "#f4f4f5", color: P.navy, cursor: "pointer", transition: "all 0.2s" }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "#fee2e2"; e.currentTarget.style.color = "#ef4444"; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = "#f4f4f5"; e.currentTarget.style.color = P.navy; }}
+                  >
+                    {u.status === "Active" ? "Ban" : "Unban"}
+                  </button>
+                </div>
+              )}
+            </div>
+          );
+        }) : (
+          <div style={{ padding: 40, textAlign: "center", color: P.muted, fontWeight: 600 }}>Zero users registered in directory.</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Products Table (Admin) ──────────────────────────────────────────────────
+function ProductsTable({ products, onDelete }) {
+  const cols = "1fr 2fr 1.2fr 1.2fr 1fr 1fr 1.2fr 0.8fr";
+  return (
+    <div style={{ borderRadius: 24, overflow: "hidden", background: P.white, border: `1px solid ${P.mist}`, boxShadow: "0 4px 12px rgba(0,0,0,0.02)" }}>
+      <div style={{ display: "grid", gridTemplateColumns: cols, padding: "14px 24px", color: P.muted, fontSize: 10, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", borderBottom: `1px solid ${P.mist}`, background: P.mistBg }}>
+        <span>Thumbnail</span>
+        <span>Product Name</span>
+        <span>Brand</span>
+        <span>Category</span>
+        <span>Price</span>
+        <span>Stock</span>
+        <span>Vendor</span>
+        <span>Actions</span>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {products.length > 0 ? products.map((p, i) => (
+          <div key={p._id} style={{ display: "grid", gridTemplateColumns: cols, alignItems: "center", padding: "12px 24px", borderBottom: i < products.length - 1 ? `1px solid ${P.mist}` : "none" }}>
+            <div style={{ width: 44, height: 44, borderRadius: 10, background: P.mistBg, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {p.images?.[0] ? <img src={p.images[0].startsWith("http") ? p.images[0] : `http://localhost:5000${p.images[0]}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} /> : "—"}
+            </div>
+            <span style={{ color: P.navy, fontWeight: 750, fontSize: 13 }}>{p.name}</span>
+            <span style={{ color: P.muted, fontSize: 12, fontWeight: 700 }}>{p.brand}</span>
+            <span style={{ color: P.muted, fontSize: 12, fontWeight: 600 }}>{p.category}</span>
+            <span style={{ color: P.navy, fontWeight: 800, fontSize: 13 }}>Rs. {p.price?.toLocaleString()}</span>
+            <span style={{ color: p.stock < 5 ? P.accent : P.muted, fontWeight: 800, fontSize: 12 }}>{p.stock} units</span>
+            <span style={{ color: P.ocean, fontWeight: 700, fontSize: 12 }}>{p.vendor?.name || "Official Store"}</span>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => onDelete(p._id)} style={{ padding: "6px 12px", borderRadius: 8, border: "none", background: "#fee2e2", color: "#ef4444", fontSize: 10, fontWeight: 800, cursor: "pointer" }}>Delete</button>
+            </div>
           </div>
-        );
-      })}
+        )) : <div style={{ padding: 40, textAlign: "center", color: P.muted }}>No products listed.</div>}
+      </div>
+    </div>
+  );
+}
+
+// ─── Orders Table (Admin) ────────────────────────────────────────────────────
+function OrdersTable({ orders, onUpdateStatus, onDelete }) {
+  const cols = "1.2fr 1.8fr 1.5fr 1.5fr 1.2fr 1fr 1fr";
+  return (
+    <div style={{ borderRadius: 24, overflow: "hidden", background: P.white, border: `1px solid ${P.mist}`, boxShadow: "0 4px 12px rgba(0,0,0,0.02)" }}>
+      <div style={{ display: "grid", gridTemplateColumns: cols, padding: "14px 24px", color: P.muted, fontSize: 10, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", borderBottom: `1px solid ${P.mist}`, background: P.mistBg }}>
+        <span>Reference</span>
+        <span>Customer</span>
+        <span>Transaction Date</span>
+        <span>Total Value</span>
+        <span>Payment</span>
+        <span>Shipping</span>
+        <span>Actions</span>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {orders.length > 0 ? orders.map((o, i) => (
+          <div key={o._id} style={{ display: "grid", gridTemplateColumns: cols, alignItems: "center", padding: "16px 24px", borderBottom: i < orders.length - 1 ? `1px solid ${P.mist}` : "none" }}>
+            <span style={{ color: P.accent, fontWeight: 900, fontSize: 12 }}>#{o._id.substr(-8).toUpperCase()}</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <span style={{ color: P.navy, fontWeight: 800, fontSize: 13 }}>{o.user?.name || "Guest User"}</span>
+              <span style={{ color: P.muted, fontSize: 11 }}>{o.user?.email}</span>
+            </div>
+            <span style={{ color: P.muted, fontSize: 12, fontWeight: 600 }}>{new Date(o.createdAt).toLocaleDateString(undefined, { day:"numeric", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" })}</span>
+            <span style={{ color: P.navy, fontWeight: 950, fontSize: 14 }}>Rs. {o.totalPrice?.toLocaleString()}</span>
+            <span style={{ color: o.isPaid ? "#16a34a" : "#d97706", fontSize: 11, fontWeight: 800 }}>{o.paymentStatus}</span>
+            <span style={{ color: o.isDelivered ? "#16a34a" : "#4b5563", fontSize: 11, fontWeight: 800 }}>{o.isDelivered ? "Delivered" : "Processing"}</span>
+            <div style={{ display: "flex", gap: 8 }}>
+              {!o.isDelivered && (
+                <button onClick={() => onUpdateStatus(o._id)} style={{ padding: "6px 12px", borderRadius: 8, border: "none", background: "#f0fdf4", color: "#16a34a", fontSize: 10, fontWeight: 800, cursor: "pointer" }}>Mark Delivered</button>
+              )}
+              <button onClick={() => onDelete(o._id)} style={{ padding: "6px 12px", borderRadius: 8, border: "none", background: "#f4f4f5", color: P.navy, fontSize: 10, fontWeight: 800, cursor: "pointer" }}>Archive</button>
+            </div>
+          </div>
+        )) : <div style={{ padding: 40, textAlign: "center", color: P.muted }}>No orders processed recently.</div>}
+      </div>
     </div>
   );
 }

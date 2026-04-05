@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const P = {
   navy:  "#18181b",
   royal: "#27272a",
@@ -39,7 +41,7 @@ export default function Stats() {
 
           <p style={{ position:"relative",textAlign:"center",color:P.muted,fontSize:14,marginTop:40,fontWeight:600 }}>
             Impressed? Choose MobiHub to handle your complete mobile buying and selling needs.{" "}
-            <a href="#" style={{ color:P.accent,fontWeight:700,textDecoration:"none" }}>Get Started &rarr;</a>
+            <Link to="/signup" style={{ color:P.accent,fontWeight:700,textDecoration:"none" }}>Get Started &rarr;</Link>
           </p>
         </div>
       </div>

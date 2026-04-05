@@ -1,3 +1,5 @@
+import { Link, useNavigate } from "react-router-dom";
+
 const P = {
   navy:  "#18181b",
   royal: "#27272a",
@@ -22,6 +24,7 @@ const features = [
 ];
 
 export default function Features() {
+  const navigate = useNavigate();
   return (
     <section id="products" style={{ background:P.mistBg,padding:"96px 24px",fontFamily:P.font }}>
       <div style={{ maxWidth:1280,margin:"0 auto" }}>
@@ -40,7 +43,7 @@ export default function Features() {
 
         <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:24 }}>
           {features.map((f,i)=>(
-            <div key={i} style={{ background:P.white,border:`1px solid ${P.sky}`,borderRadius:20,padding:28,cursor:"pointer",transition:"all 0.2s",boxShadow:"0 4px 12px rgba(24, 24, 27, 0.02)",position:"relative",overflow:"hidden" }}
+            <div key={i} onClick={() => navigate('/dashboard')} style={{ background:P.white,border:`1px solid ${P.sky}`,borderRadius:20,padding:28,cursor:"pointer",transition:"all 0.2s",boxShadow:"0 4px 12px rgba(24, 24, 27, 0.02)",position:"relative",overflow:"hidden" }}
               onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 16px 40px rgba(24, 24, 27, 0.08)"; }}
               onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 4px 12px rgba(24, 24, 27, 0.02)"; }}
             >
@@ -49,10 +52,10 @@ export default function Features() {
               </div>
               <h3 style={{ color:P.navy,fontWeight:700,fontSize:17,margin:"0 0 8px" }}>{f.title}</h3>
               <p style={{ color:P.muted,fontSize:14,lineHeight:1.7,margin:"0 0 20px" }}>{f.desc}</p>
-              <div style={{ display:"flex",alignItems:"center",gap:4,fontSize:13,fontWeight:700,color:P.accent }}>
+              <Link to="/dashboard" style={{ display:"flex",alignItems:"center",gap:4,fontSize:13,fontWeight:700,color:P.accent,textDecoration:"none" }}>
                 Learn more
                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-              </div>
+              </Link>
               <div style={{ position:"absolute",bottom:-16,right:-16,width:80,height:80,borderRadius:"50%",background:P.mistBg }}/>
             </div>
           ))}

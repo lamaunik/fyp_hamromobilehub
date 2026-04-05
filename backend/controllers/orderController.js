@@ -97,6 +97,7 @@ export const updateOrderToDelivered = async (req, res) => {
 
     order.isDelivered = true;
     order.deliveredAt = Date.now();
+    order.paymentStatus = "Delivered";
 
     const updatedOrder = await order.save();
     res.json({ success: true, data: updatedOrder });

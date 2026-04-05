@@ -137,8 +137,14 @@ export default function Dashboard() {
       navigate("/signup");
       return;
     }
+    
+    const pId = p._id || p.id;
+    const exCheck = cart.find(x => (x._id || x.id) === pId);
+    let shouldNavigate = true;
+    if (exCheck && exCheck.qty + count > p.stock) shouldNavigate = false;
+    else if (!exCheck && p.stock <= 0) shouldNavigate = false;
+
     setCart(prev => {
-      const pId = p._id || p.id;
       const ex  = prev.find(x => (x._id || x.id) === pId);
       if (ex) {
         if (ex.qty + count > p.stock) {
@@ -157,6 +163,8 @@ export default function Dashboard() {
       }
       return [...prev, { ...p, qty: count }];
     });
+
+    if (shouldNavigate) switchTab("cart");
   };
   const removeFromCart = (id)       => setCart(prev => prev.filter(p => (p._id || p.id) !== id));
   const updateQty      = (id, qty)  => { 

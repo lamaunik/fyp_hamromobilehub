@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { socket } from "../utils/socket";
 import { P } from "../components/dashboard/DashboardConstants";
 import VendorSidebar   from "../components/vendor/VendorSidebar";
@@ -44,7 +44,21 @@ function ComingSoon({ label }) {
 export default function VendorDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [tab, setTab]   = useState("overview");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [tab, _setTab] = useState(() => searchParams.get("tab") || "overview");
+  
+  const setTab = (t) => {
+    _setTab(t);
+    setSearchParams({ tab: t });
+  };
+
+  useEffect(() => {
+    const urlTab = searchParams.get("tab") || "overview";
+    if (urlTab !== tab) {
+      _setTab(urlTab);
+    }
+  }, [searchParams]);
+
   const [open, setOpen] = useState(false);
   const [unreadChat, setUnreadChat] = useState(false);
 

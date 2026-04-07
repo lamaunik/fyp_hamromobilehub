@@ -24,8 +24,21 @@ const writeLS = (key, value)    => { try { localStorage.setItem(key, JSON.string
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [searchParams]    = useSearchParams();
-  const [tab,             setTab]            = useState(() => searchParams.get("tab") || "home");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [tab, _setTab] = useState(() => searchParams.get("tab") || "home");
+
+  const setTab = (t) => {
+    _setTab(t);
+    setSearchParams({ tab: t });
+  };
+
+  useEffect(() => {
+    const urlTab = searchParams.get("tab") || "home";
+    if (urlTab !== tab) {
+      _setTab(urlTab);
+    }
+  }, [searchParams]);
+
   const [sidebarOpen,     setSidebarOpen]    = useState(false);
   const [selectedProduct, setSelectedProduct]= useState(null);
   const [products,        setProducts]       = useState([]);

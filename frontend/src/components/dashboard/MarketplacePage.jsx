@@ -1,19 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const P = {
-  navy:  "#282B4A",
-  royal: "#282B4A",
-  ocean: "#282B4A",
-  sky:   "#D4D2C3",
-  mist:  "#E5E3D5",
-  white: "#FFFFFF",
-  muted: "#7A7C8E",
-  mistBg:"#EEEBDA",
-  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
-  purple:"#282B4A",
-  purpleLight:"#E5E3D5"
-};
+import { P, CSS } from "./DashboardConstants";
 
 const CONDITION_COLORS = {
   "Like New":{ bg:"rgba(34,197,94,0.1)",  border:"rgba(34,197,94,0.3)",  text:"#16a34a" },
@@ -55,13 +43,13 @@ const CAT_ICONS = {
 
 const DefaultPlaceholder = ({ category, title }) => (
   <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", height:"100%", gap:10 }}>
-    <div style={{ color:"rgba(124,58,237,0.3)", width:52, height:52 }}>
+    <div style={{ color:"rgba(24, 24, 27, 0.3)", width:52, height:52 }}>
       {CAT_ICONS[category] || CAT_ICONS.Smartphones}
     </div>
-    <span style={{ color:"rgba(124,58,237,0.4)", fontSize:11, fontWeight:700, textAlign:"center", padding:"0 12px", lineHeight:1.4 }}>
+    <span style={{ color:"rgba(24, 24, 27, 0.4)", fontSize:11, fontWeight:700, textAlign:"center", padding:"0 12px", lineHeight:1.4 }}>
       {title?.split(" ").slice(0,3).join(" ")}
     </span>
-    <span style={{ fontSize:10, color:"rgba(124,58,237,0.3)", fontWeight:600 }}>No photo yet</span>
+    <span style={{ fontSize:10, color:"rgba(24, 24, 27, 0.3)", fontWeight:600 }}>No photo yet</span>
   </div>
 );
 
@@ -79,13 +67,13 @@ function ContactModal({ product, onClose }) {
 
         {/* Product preview in modal */}
         <div style={{ display:"flex", gap:14, alignItems:"center", marginBottom:20, padding:14, background:P.mistBg, borderRadius:14, border:`1.5px solid ${P.mist}` }}>
-          <div style={{ width:64, height:64, borderRadius:12, background:"rgba(124,58,237,0.08)", overflow:"hidden", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", border:"1px solid rgba(124,58,237,0.15)" }}>
+          <div style={{ width:64, height:64, borderRadius:12, background:"${P.mist}", overflow:"hidden", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", border:"1px solid ${P.sky}" }}>
             {imgSrc
               ? <img src={imgSrc} alt={product.title} style={{ width:"100%", height:"100%", objectFit:"cover" }}
                   onError={e => { e.target.style.display="none"; e.target.nextSibling.style.display="flex"; }}
                 />
               : null}
-            <div style={{ display: imgSrc ? "none" : "flex", alignItems:"center", justifyContent:"center", width:"100%", height:"100%", color:"rgba(124,58,237,0.4)" }}>
+            <div style={{ display: imgSrc ? "none" : "flex", alignItems:"center", justifyContent:"center", width:"100%", height:"100%", color:"rgba(24, 24, 27, 0.4)" }}>
               {CAT_ICONS[product.category] || CAT_ICONS.Smartphones}
             </div>
           </div>
@@ -115,7 +103,7 @@ function ContactModal({ product, onClose }) {
         <div style={{ display:"flex", gap:10 }}>
           {seller && (
             <button onClick={() => { onClose(); navigate("/messages", { state: { sellerId: seller._id } }); }}
-              style={{ flex:1, padding:"11px 0", background:`linear-gradient(135deg,${P.purple},#a855f7)`, color:P.white, borderRadius:11, fontSize:13, fontWeight:700, textAlign:"center", border:"none", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:6 }}>
+              style={{ flex:1, padding:"11px 0", background:P.navy, color:P.white, borderRadius:11, fontSize:13, fontWeight:700, textAlign:"center", border:"none", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:6 }}>
               <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
               Chat Seller
             </button>
@@ -148,11 +136,11 @@ function ListingCard({ p, onContact }) {
 
   return (
     <div style={{ background:P.white, border:`1.5px solid ${P.mist}`, borderRadius:18, overflow:"hidden", boxShadow:"0 4px 16px rgba(40, 43, 74, .05)", transition:"all .2s", display:"flex", flexDirection:"column" }}
-      onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 12px 32px rgba(124,58,237,.12)"; e.currentTarget.style.borderColor="#c4b5fd"; }}
+      onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 12px 32px rgba(24, 24, 27, 0.05)"; e.currentTarget.style.borderColor="${P.mist}"; }}
       onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 4px 16px rgba(40, 43, 74, .05)"; e.currentTarget.style.borderColor=P.mist; }}>
 
       {/* Image area */}
-      <div style={{ height:200, background:`linear-gradient(135deg,rgba(124,58,237,0.06),rgba(124,58,237,0.03))`, position:"relative", overflow:"hidden", flexShrink:0 }}>
+      <div style={{ height:200, background:`linear-gradient(135deg,${P.mistBg},${P.mistBg})`, position:"relative", overflow:"hidden", flexShrink:0 }}>
         {showImg ? (
           <img
             src={imgSrc}
@@ -169,7 +157,7 @@ function ListingCard({ p, onContact }) {
           {p.condition}
         </span>
         {/* Category badge */}
-        <span style={{ position:"absolute", top:10, right:10, fontSize:10, fontWeight:700, padding:"4px 9px", borderRadius:999, background:P.white, border:"1px solid rgba(124,58,237,0.25)", color:P.purple, boxShadow:"0 2px 8px rgba(0,0,0,.08)" }}>
+        <span style={{ position:"absolute", top:10, right:10, fontSize:10, fontWeight:700, padding:"4px 9px", borderRadius:999, background:P.white, border:"1px solid rgba(24, 24, 27, 0.1)", color:P.navy, boxShadow:"0 2px 8px rgba(0,0,0,.08)" }}>
           {p.category}
         </span>
       </div>
@@ -194,9 +182,9 @@ function ListingCard({ p, onContact }) {
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", paddingTop:12, borderTop:`1px solid ${P.mist}` }}>
           <span style={{ color:P.navy, fontWeight:900, fontSize:22 }}>Rs. {p.price?.toLocaleString()}</span>
           <button onClick={() => onContact(p)}
-            style={{ padding:"9px 18px", background:`linear-gradient(135deg,${P.purple},#a855f7)`, color:P.white, border:"none", borderRadius:11, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:P.font, display:"flex", alignItems:"center", gap:6, boxShadow:"0 3px 10px rgba(124,58,237,.3)", transition:"all .15s" }}
-            onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-1px)"; e.currentTarget.style.boxShadow="0 6px 16px rgba(124,58,237,.4)"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 3px 10px rgba(124,58,237,.3)"; }}>
+            style={{ padding:"9px 18px", background:P.navy, color:P.white, border:"none", borderRadius:11, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:P.font, display:"flex", alignItems:"center", gap:6, boxShadow:"0 3px 10px rgba(24, 24, 27, 0.1)", transition:"all .15s" }}
+            onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-1px)"; e.currentTarget.style.boxShadow="0 6px 16px rgba(24, 24, 27, 0.15)"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 3px 10px rgba(24, 24, 27, 0.1)"; }}>
             <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
             Contact
           </button>
@@ -241,15 +229,15 @@ export default function MarketplacePage({ setTab }) {
       <div style={{ padding:"28px 32px", fontFamily:P.font }}>
 
         {/* Header Banner */}
-        <div style={{ background:`linear-gradient(135deg,#4c1d95,${P.purple},#a855f7)`, borderRadius:22, padding:"28px 32px", marginBottom:28, position:"relative", overflow:"hidden" }}>
+        <div style={{ background:`linear-gradient(135deg, ${P.navy}, ${P.ocean})`, borderRadius:22, padding:"28px 32px", marginBottom:28, position:"relative", overflow:"hidden" }}>
           <div style={{ position:"absolute", top:-40, right:-20, width:180, height:180, borderRadius:"50%", background:"rgba(255,255,255,.07)", filter:"blur(30px)", pointerEvents:"none" }} />
           <div style={{ position:"relative" }}>
             <div style={{ display:"inline-flex", alignItems:"center", gap:6, background:"rgba(255,255,255,0.15)", border:"1px solid rgba(255,255,255,0.25)", borderRadius:999, padding:"4px 14px", marginBottom:14 }}>
-              <span style={{ width:6, height:6, borderRadius:"50%", background:"#c4b5fd", display:"inline-block" }} />
-              <span style={{ color:"#e9d5ff", fontSize:10, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Second-hand Marketplace</span>
+              <span style={{ width:6, height:6, borderRadius:"50%", background:"${P.mist}", display:"inline-block" }} />
+              <span style={{ color:"${P.sky}", fontSize:10, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Second-hand Marketplace</span>
             </div>
             <h2 style={{ color:"white", fontWeight:900, fontSize:26, margin:"0 0 8px", letterSpacing:"-.02em" }}>Buy Used Devices</h2>
-            <p style={{ color:"rgba(233,213,255,.75)", fontSize:14, margin:"0 0 20px" }}>Genuine listings from real users - verified by community trust.</p>
+            <p style={{ color:"rgba(255, 255, 255, 0.6)", fontSize:14, margin:"0 0 20px" }}>Genuine listings from real users - verified by community trust.</p>
             <button onClick={() => setTab("sell")}
               style={{ padding:"10px 22px", background:"rgba(255,255,255,0.18)", border:"1px solid rgba(255,255,255,0.3)", borderRadius:11, color:"white", fontWeight:700, fontSize:13, cursor:"pointer", fontFamily:P.font, display:"inline-flex", alignItems:"center", gap:8 }}>
               <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"/></svg>
@@ -316,12 +304,12 @@ export default function MarketplacePage({ setTab }) {
         {/* Empty state */}
         {!loading && filtered.length === 0 && (
           <div style={{ textAlign:"center", padding:"72px 0", background:P.white, borderRadius:22, border:`1.5px dashed ${P.mist}` }}>
-            <div style={{ width:64, height:64, borderRadius:18, background:P.purpleLight, display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 16px" }}>
-              <svg width="30" height="30" fill="none" viewBox="0 0 24 24" stroke={P.purple} strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            <div style={{ width:64, height:64, borderRadius:18, background:P.mist, display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 16px" }}>
+              <svg width="30" height="30" fill="none" viewBox="0 0 24 24" stroke={P.navy} strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
             </div>
             <h3 style={{ color:P.navy, fontWeight:800, fontSize:18, margin:"0 0 8px" }}>No listings found</h3>
             <p style={{ color:P.muted, fontSize:14, margin:"0 0 20px" }}> Be the first one to List a used device!</p>
-            <button onClick={() => setTab("sell")} style={{ padding:"11px 26px", background:`linear-gradient(135deg,${P.purple},#a855f7)`, color:P.white, border:"none", borderRadius:12, fontSize:14, fontWeight:700, cursor:"pointer", fontFamily:P.font }}>
+            <button onClick={() => setTab("sell")} style={{ padding:"11px 26px", background:P.navy, color:P.white, border:"none", borderRadius:12, fontSize:14, fontWeight:700, cursor:"pointer", fontFamily:P.font }}>
               + List Your Device
             </button>
           </div>

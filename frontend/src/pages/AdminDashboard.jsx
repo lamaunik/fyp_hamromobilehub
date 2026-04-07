@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { P } from "../components/dashboard/DashboardConstants";
 import AdminSidebar from "../components/admin/AdminSidebar";
@@ -36,7 +36,21 @@ const NAV = [
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [activeNav, setActiveNav] = useState("overview");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeNav, _setActiveNav] = useState(() => searchParams.get("tab") || "overview");
+  
+  const setActiveNav = (t) => {
+    _setActiveNav(t);
+    setSearchParams({ tab: t });
+  };
+
+  useEffect(() => {
+    const urlTab = searchParams.get("tab") || "overview";
+    if (urlTab !== activeNav) {
+      _setActiveNav(urlTab);
+    }
+  }, [searchParams]);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [users, setUsers] = useState([]);

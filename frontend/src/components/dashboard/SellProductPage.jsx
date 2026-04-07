@@ -1,19 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 
-const P = {
-  navy:  "#282B4A",
-  royal: "#282B4A",
-  ocean: "#282B4A",
-  sky:   "#D4D2C3",
-  mist:  "#E5E3D5",
-  white: "#FFFFFF",
-  muted: "#7A7C8E",
-  mistBg:"#EEEBDA",
-  font:  "'Inter', 'Helvetica Neue', Helvetica, sans-serif",
-  purple:"#282B4A",
-  purpleLight:"#E5E3D5"
-};
+import { P, CSS } from "./DashboardConstants";
 
 const CATS  = ["Smartphones","Laptops","Tablets","Accessories","Wearables","Other"];
 const CONDS = ["Like New","Good","Fair","Poor"];
@@ -141,23 +129,23 @@ export default function SellProductPage({ setTab }) {
     color:P.navy, fontSize:14, fontFamily:P.font,
     outline:"none", transition:"all .2s", boxSizing:"border-box",
   };
-  const focusStyle  = e => { e.target.style.borderColor="#a78bfa"; e.target.style.boxShadow="0 0 0 3px rgba(124,58,237,.12)"; };
+  const focusStyle  = e => { e.target.style.borderColor="#a78bfa"; e.target.style.boxShadow="0 0 0 3px rgba(24, 24, 27, 0.05)"; };
   const blurStyle   = e => { e.target.style.borderColor=P.mist;    e.target.style.boxShadow="none"; };
 
   return (
     <div style={{ padding:"28px 32px", fontFamily:P.font }}>
 
       {/* Header */}
-      <div style={{ background:`linear-gradient(135deg,#4c1d95,${P.purple})`, borderRadius:22, padding:"26px 32px", marginBottom:28, position:"relative", overflow:"hidden" }}>
+      <div style={{ background:`linear-gradient(135deg, ${P.navy}, ${P.ocean})`, borderRadius:22, padding:"26px 32px", marginBottom:28, position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", top:-30, right:-10, width:150, height:150, borderRadius:"50%", background:"rgba(255,255,255,.07)", filter:"blur(30px)", pointerEvents:"none" }} />
         <div style={{ position:"relative", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
           <div>
             <div style={{ display:"inline-flex", alignItems:"center", gap:6, background:"rgba(255,255,255,0.15)", border:"1px solid rgba(255,255,255,0.25)", borderRadius:999, padding:"4px 14px", marginBottom:12 }}>
-              <span style={{ width:6, height:6, borderRadius:"50%", background:"#c4b5fd", display:"inline-block" }} />
-              <span style={{ color:"#e9d5ff", fontSize:10, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Sell on HamroMobileHub</span>
+              <span style={{ width:6, height:6, borderRadius:"50%", background:"${P.mist}", display:"inline-block" }} />
+              <span style={{ color:"${P.sky}", fontSize:10, fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase" }}>Sell on HamroMobileHub</span>
             </div>
             <h2 style={{ color:"white", fontWeight:900, fontSize:24, margin:"0 0 6px" }}>List Your Used Device</h2>
-            <p style={{ color:"rgba(233,213,255,.75)", fontSize:13, margin:0 }}>Sell directly to buyers - no vendor approval needed.</p>
+            <p style={{ color:"rgba(255, 255, 255, 0.6)", fontSize:13, margin:0 }}>Sell directly to buyers - no vendor approval needed.</p>
           </div>
           <div style={{ display:"flex", gap:8 }}>
             {[{ id:"form", l:"+ New Listing" }, { id:"listings", l:"My Listings" }].map(v => (
@@ -233,8 +221,8 @@ export default function SellProductPage({ setTab }) {
             {/* Image Upload — FIX: shows real preview */}
             <div style={{ marginBottom:24 }}>
               <label style={{ display:"block", fontSize:11, fontWeight:800, color:P.muted, letterSpacing:".1em", textTransform:"uppercase", marginBottom:8 }}>Product Photo</label>
-              <div style={{ position:"relative", width:"100%", height:180, borderRadius:14, border:`2px dashed ${imageFile ? P.purple : P.sky}`, background: imageFile ? "rgba(124,58,237,0.04)" : P.mistBg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", cursor:"pointer", overflow:"hidden", transition:"all .2s" }}
-                onMouseEnter={e=>{ if(!imageFile){ e.currentTarget.style.borderColor=P.purple; e.currentTarget.style.background=P.purpleLight; }}}
+              <div style={{ position:"relative", width:"100%", height:180, borderRadius:14, border:`2px dashed ${imageFile ? P.navy : P.sky}`, background: imageFile ? "rgba(24, 24, 27, 0.04)" : P.mistBg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", cursor:"pointer", overflow:"hidden", transition:"all .2s" }}
+                onMouseEnter={e=>{ if(!imageFile){ e.currentTarget.style.borderColor=P.navy; e.currentTarget.style.background=P.mist; }}}
                 onMouseLeave={e=>{ if(!imageFile){ e.currentTarget.style.borderColor=P.sky; e.currentTarget.style.background=P.mistBg; }}}>
                 {/* Hidden file input covers the whole area */}
                 <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files[0])}
@@ -244,13 +232,13 @@ export default function SellProductPage({ setTab }) {
                 {preview ? (
                   <>
                     <img src={preview} alt="Preview" style={{ width:"100%", height:"100%", objectFit:"contain", padding:8 }} />
-                    <div style={{ position:"absolute", bottom:8, right:8, background:"rgba(124,58,237,0.9)", color:"white", padding:"4px 12px", borderRadius:8, fontSize:12, fontWeight:700, zIndex:3, pointerEvents:"none" }}>
+                    <div style={{ position:"absolute", bottom:8, right:8, background:"rgba(24, 24, 27, 0.9)", color:"white", padding:"4px 12px", borderRadius:8, fontSize:12, fontWeight:700, zIndex:3, pointerEvents:"none" }}>
                       Change Photo
                     </div>
                   </>
                 ) : (
                   <>
-                    <div style={{ width:48, height:48, borderRadius:"50%", background:P.white, display:"flex", alignItems:"center", justifyContent:"center", color:P.purple, marginBottom:10, boxShadow:"0 4px 12px rgba(124,58,237,.15)", pointerEvents:"none" }}>
+                    <div style={{ width:48, height:48, borderRadius:"50%", background:P.white, display:"flex", alignItems:"center", justifyContent:"center", color:P.navy, marginBottom:10, boxShadow:"0 4px 12px rgba(24, 24, 27, 0.05)", pointerEvents:"none" }}>
                       <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                     </div>
                     <p style={{ color:P.navy, fontWeight:700, fontSize:13, margin:0, pointerEvents:"none" }}>Click to upload photo</p>
@@ -262,7 +250,7 @@ export default function SellProductPage({ setTab }) {
 
             {/* Submit */}
             <button type="submit" disabled={loading}
-              style={{ width:"100%", padding:"14px 0", background:`linear-gradient(135deg,${P.purple},#a855f7)`, color:P.white, border:"none", borderRadius:14, fontSize:15, fontWeight:800, cursor:loading?"not-allowed":"pointer", fontFamily:P.font, opacity:loading?0.75:1, boxShadow:"0 6px 20px rgba(124,58,237,.35)", transition:"all .2s", display:"flex", alignItems:"center", justifyContent:"center", gap:10 }}>
+              style={{ width:"100%", padding:"14px 0", background:P.navy, color:P.white, border:"none", borderRadius:14, fontSize:15, fontWeight:800, cursor:loading?"not-allowed":"pointer", fontFamily:P.font, opacity:loading?0.75:1, boxShadow:"0 6px 20px rgba(24, 24, 27, 0.1)", transition:"all .2s", display:"flex", alignItems:"center", justifyContent:"center", gap:10 }}>
               {loading ? (
                 <>
                   <span style={{ width:16, height:16, border:"2px solid rgba(255,255,255,.4)", borderTopColor:"white", borderRadius:"50%", display:"inline-block", animation:"spin .7s linear infinite" }} />
@@ -288,7 +276,7 @@ export default function SellProductPage({ setTab }) {
               <p style={{ color:P.muted, fontSize:13, margin:"4px 0 0" }}>{myList.length} listing{myList.length !== 1 ? "s" : ""}</p>
             </div>
             <button onClick={() => setTab("marketplace")}
-              style={{ padding:"9px 18px", background:P.purpleLight, border:`1.5px solid rgba(124,58,237,0.3)`, borderRadius:11, color:P.purple, fontWeight:700, fontSize:13, cursor:"pointer", fontFamily:P.font }}>
+              style={{ padding:"9px 18px", background:P.mist, border:`1.5px solid rgba(24, 24, 27, 0.3)`, borderRadius:11, color:P.navy, fontWeight:700, fontSize:13, cursor:"pointer", fontFamily:P.font }}>
               View Marketplace
             </button>
           </div>
@@ -303,7 +291,7 @@ export default function SellProductPage({ setTab }) {
             <div style={{ textAlign:"center", padding:"60px 0", background:P.white, border:`1.5px dashed ${P.mist}`, borderRadius:20 }}>
               <p style={{ color:P.navy, fontWeight:700, fontSize:15, margin:"0 0 8px" }}>No listings yet</p>
               <p style={{ color:P.muted, fontSize:13, margin:"0 0 20px" }}>Create your first listing to start selling!</p>
-              <button onClick={() => setView("form")} style={{ padding:"10px 24px", background:`linear-gradient(135deg,${P.purple},#a855f7)`, color:P.white, border:"none", borderRadius:11, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:P.font }}>
+              <button onClick={() => setView("form")} style={{ padding:"10px 24px", background:P.navy, color:P.white, border:"none", borderRadius:11, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:P.font }}>
                 + Create Listing
               </button>
             </div>
@@ -369,7 +357,7 @@ export default function SellProductPage({ setTab }) {
 
                     {!isSold && (
                       <button onClick={() => handleMarkSold(p._id)}
-                        style={{ padding:"7px 14px", background:P.purpleLight, border:`1.5px solid rgba(124,58,237,0.3)`, borderRadius:9, color:P.purple, fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:P.font }}>
+                        style={{ padding:"7px 14px", background:P.mist, border:`1.5px solid rgba(24, 24, 27, 0.3)`, borderRadius:9, color:P.navy, fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:P.font }}>
                         Mark Sold
                       </button>
                     )}

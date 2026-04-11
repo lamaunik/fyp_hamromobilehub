@@ -1,5 +1,7 @@
 import User from "../models/User.js";
 import Order from "../models/Order.js";
+import Product from "../models/Product.js";
+import UsedProduct from "../models/UsedProduct.js";
 
 // @desc    Get user profile
 // @route   GET /api/users/profile
@@ -133,6 +135,7 @@ export const updateUser = async (req, res) => {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
+    const wasDeactivated = user.isDeactivated;
     user.name         = req.body.name         || user.name;
     user.email        = req.body.email        || user.email;
     user.role         = req.body.role         || user.role;
@@ -141,6 +144,12 @@ export const updateUser = async (req, res) => {
     user.isApproved   = req.body.isApproved   !== undefined ? req.body.isApproved   : user.isApproved;
 
     const updated = await user.save();
+
+    // If banned (became deactivated), delete all their products
+    if (updated.isDeactivated && !wasDeactivated) {
+      await Product.deleteMany({ vendor: updated._id });
+      await UsedProduct.deleteMany({ seller: updated._id });
+    }
     res.json({
       success: true,
       data: {

@@ -6,9 +6,16 @@ import UsedProduct from "../models/UsedProduct.js";
 export const getUsedProducts = async (req, res) => {
   try {
     const products = await UsedProduct.find({ status: "available" })
-      .populate("seller", "name email phone")
+      .populate({
+        path: "seller",
+        match: { isDeactivated: false, isApproved: true },
+        select: "name email phone"
+      })
       .sort({ createdAt: -1 });
-    res.json({ success: true, count: products.length, data: products });
+    
+    // Filter out products where seller doesn't match criteria
+    const visibleProducts = products.filter(p => p.seller);
+    res.json({ success: true, count: visibleProducts.length, data: visibleProducts });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -31,8 +38,14 @@ export const getMyUsedProducts = async (req, res) => {
 // @access Public
 export const getUsedProductById = async (req, res) => {
   try {
-    const product = await UsedProduct.findById(req.params.id).populate("seller", "name email phone");
-    if (!product) return res.status(404).json({ success: false, message: "Product not found" });
+    const product = await UsedProduct.findById(req.params.id).populate({
+      path: "seller",
+      match: { isDeactivated: false, isApproved: true },
+      select: "name email phone"
+    });
+    if (!product || !product.seller) {
+      return res.status(404).json({ success: false, message: "Product not found or seller not active" });
+    }
     res.json({ success: true, data: product });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

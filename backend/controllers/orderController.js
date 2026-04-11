@@ -74,8 +74,9 @@ export const updateOrderToPaid = async (req, res) => {
 
     order.isPaid = true;
     order.paidAt = Date.now();
-    order.paymentStatus = "Paid";
-    // Usually you'd store Stripe/PayPal payment result here
+    order.isDelivered = true;
+    order.deliveredAt = Date.now();
+    order.paymentStatus = "Delivered";
 
     const updatedOrder = await order.save();
     res.json({ success: true, data: updatedOrder });
@@ -375,10 +376,12 @@ export const verifyKhaltiPayment = async (req, res) => {
       if (order) {
         order.isPaid = true;
         order.paidAt = Date.now();
-        order.paymentStatus = "Paid";
+        order.isDelivered = true;
+        order.deliveredAt = Date.now();
+        order.paymentStatus = "Delivered";
         order.paymentMethod = "Khalti";
         await order.save();
-        res.json({ success: true, message: "Payment verified successfully" });
+        res.json({ success: true, message: "Payment verified and order delivered successfully" });
       } else {
         res.status(404).json({ success: false, message: "Order not found" });
       }

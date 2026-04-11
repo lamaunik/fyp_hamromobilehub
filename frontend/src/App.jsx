@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 
 import LandingPage from "./pages/LandingPage";
@@ -27,11 +27,13 @@ export default function App() {
         <Route path="/signup" element={<SignUp />} />
 
         {/* User dashboard / Public browsing */}
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Navigate to="/dashboard/home" replace />} />
+        <Route path="/dashboard/:tab" element={<Dashboard />} />
 
         {/* Vendor dashboard — only role "vendor" */}
+        <Route path="/vendor/dashboard" element={<Navigate to="/vendor/dashboard/overview" replace />} />
         <Route
-          path="/vendor/dashboard"
+          path="/vendor/dashboard/:tab"
           element={
             <ProtectedRoute allowedRoles={["vendor"]}>
               <VendorDashboard />
@@ -48,8 +50,9 @@ export default function App() {
         />
 
         {/* Admin dashboard — only role "admin" */}
+        <Route path="/admin/dashboard" element={<Navigate to="/admin/dashboard/overview" replace />} />
         <Route
-          path="/admin/dashboard"
+          path="/admin/dashboard/:tab"
           element={
             <ProtectedRoute allowedRoles={["admin"]}>
               <AdminDashboard />

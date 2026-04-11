@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../utils/api";
 import { CSS, P } from "../components/dashboard/DashboardConstants";
@@ -24,20 +24,12 @@ const writeLS = (key, value)    => { try { localStorage.setItem(key, JSON.string
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [tab, _setTab] = useState(() => searchParams.get("tab") || "home");
+  const { tab: urlTab } = useParams();
+  const tab = urlTab || "home";
 
   const setTab = (t) => {
-    _setTab(t);
-    setSearchParams({ tab: t });
+    navigate(`/dashboard/${t}`);
   };
-
-  useEffect(() => {
-    const urlTab = searchParams.get("tab") || "home";
-    if (urlTab !== tab) {
-      _setTab(urlTab);
-    }
-  }, [searchParams]);
 
   const [sidebarOpen,     setSidebarOpen]    = useState(false);
   const [selectedProduct, setSelectedProduct]= useState(null);

@@ -80,8 +80,8 @@ export default function DashboardProducts({ viewProduct, addToCart, wishlist, to
       {/* Main Content */}
       <div style={{ flex: 1, padding: "22px 24px", overflowY: "auto", display: "flex", flexDirection: "column", gap: 16 }}>
         {/* Toolbar */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-          <div style={{ position: "relative", flex: 1, minWidth: 200 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}>
+          <div style={{ position: "relative", flex: 1, maxWidth: 320, minWidth: 200 }}>
             <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: P.muted, display: "flex", pointerEvents: "none" }}>{Icon.search}</span>
             <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products..."
               style={{ paddingLeft: 34, paddingRight: 14, paddingTop: 9, paddingBottom: 9, border: `1.5px solid ${P.mist}`, borderRadius: 10, outline: "none", fontFamily: P.font, background: P.mistBg, color: P.navy, fontSize: 13, width: "100%", transition: "all .2s" }}

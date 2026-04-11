@@ -36,6 +36,7 @@ export default function Dashboard() {
   const [products,        setProducts]       = useState([]);
   const [loadingProducts, setLoadingProducts]= useState(false);
   const [globalSearch,    setGlobalSearch]   = useState("");
+  const [globalMarketSearch, setGlobalMarketSearch] = useState("");
 
   // ── Orders — persist count in sync ───────────────────────────────────────
   const [orders, setOrders] = useState([]);
@@ -135,7 +136,14 @@ export default function Dashboard() {
     setTab(t); setSelectedProduct(null); setPageKey(k => k + 1); 
   };
   const viewProduct = (p) => { setSelectedProduct(p); setTab("detail"); setPageKey(k => k + 1); };
-  const handleSearch = (q) => { setGlobalSearch(q); switchTab("products"); };
+  const handleSearch = (q) => { 
+    if (tab === "marketplace") {
+      setGlobalMarketSearch(q);
+    } else {
+      setGlobalSearch(q); 
+      switchTab("products"); 
+    }
+  };
 
   // Cart helpers
   const addToCart = (p, count = 1) => {
@@ -240,7 +248,7 @@ export default function Dashboard() {
               {tab === "orders"      && <DashboardOrders      setTab={switchTab} viewProduct={viewProduct} orders={orders} onDelete={removeOrder} onCancel={updateOrder} />}
               {tab === "wishlist"    && <DashboardWishlist    wishlist={wishlist} toggleWish={toggleWish} addToCart={addToCart} viewProduct={viewProduct} setTab={switchTab} products={products} />}
               {tab === "profile"     && <DashboardProfile     addNotif={addNotif} />}
-              {tab === "marketplace" && <MarketplacePage      setTab={switchTab} />}
+              {tab === "marketplace" && <MarketplacePage      setTab={switchTab} initialSearch={globalMarketSearch} />}
               {tab === "sell"        && <SellProductPage      setTab={switchTab} />}
               {tab === "checkout"    && <DashboardCheckout    cart={cart} user={user} setTab={switchTab} addOrder={addOrder} clearCart={clearCart} addNotif={addNotif} />}
             </div>

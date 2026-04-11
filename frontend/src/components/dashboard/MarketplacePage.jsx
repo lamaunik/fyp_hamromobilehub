@@ -195,13 +195,17 @@ function ListingCard({ p, onContact }) {
 }
 
 // Main Page
-export default function MarketplacePage({ setTab }) {
+export default function MarketplacePage({ setTab, initialSearch = "" }) {
   const [products, setProducts] = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [search,   setSearch]   = useState("");
   const [cat,      setCat]      = useState("All");
   const [cond,     setCond]     = useState("All");
   const [selected, setSelected] = useState(null);
+
+  useEffect(() => {
+    if (initialSearch !== undefined) setSearch(initialSearch);
+  }, [initialSearch]);
 
   useEffect(() => { fetchProducts(); }, []);
 
@@ -247,8 +251,8 @@ export default function MarketplacePage({ setTab }) {
         </div>
 
         {/* Filters */}
-        <div style={{ display:"flex", gap:12, marginBottom:22, flexWrap:"wrap", alignItems:"center" }}>
-          <div style={{ position:"relative", flex:1, minWidth:200 }}>
+        <div style={{ display:"flex", gap:12, marginBottom:22, flexWrap:"wrap", alignItems:"center", justifyContent:"flex-end" }}>
+          <div style={{ position:"relative", flex:1, maxWidth: 320, minWidth:200 }}>
             <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke={P.muted} strokeWidth={2} style={{ position:"absolute", left:12, top:"50%", transform:"translateY(-50%)", pointerEvents:"none" }}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search listings..."
               style={{ paddingLeft:36, paddingRight:14, paddingTop:10, paddingBottom:10, border:`1.5px solid ${P.mist}`, borderRadius:11, outline:"none", fontFamily:P.font, background:P.mistBg, color:P.navy, fontSize:13, width:"100%", boxSizing:"border-box", transition:"border-color .2s" }}

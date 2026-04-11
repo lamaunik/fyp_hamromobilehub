@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../utils/api";
@@ -46,6 +46,11 @@ export default function Dashboard() {
   const [cart,     setCart]     = useState(() => readLS("hmh_cart",     []));
 
   const [pageKey, setPageKey] = useState(0);
+  const mainRef = useRef(null);
+
+  useEffect(() => {
+    if (mainRef.current) mainRef.current.scrollTop = 0;
+  }, [tab, selectedProduct, pageKey]);
   const [notifs,  setNotifs]  = useState([
     { title: "Welcome to HamroMobileHub!", time: "Just now" },
     { title: "Flash Sale: 20% off Samsung devices", time: "2 hours ago" },
@@ -239,7 +244,7 @@ export default function Dashboard() {
         />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           <DashboardTopbar open={sidebarOpen} setOpen={setSidebarOpen} setTab={switchTab} notifs={notifs} setNotifs={setNotifs} products={products} viewProduct={viewProduct} unreadChat={unreadChat} onSearchSubmit={handleSearch} />
-          <main style={{ flex: 1, overflowY: "auto" }}>
+          <main ref={mainRef} style={{ flex: 1, overflowY: "auto" }}>
             <div key={pageKey} className="page">
               {tab === "home"        && <DashboardHome        setTab={switchTab} viewProduct={viewProduct} addToCart={addToCart} wishlist={wishlist} toggleWish={toggleWish} products={products} />}
               {tab === "products"    && <DashboardProducts    viewProduct={viewProduct} addToCart={addToCart} wishlist={wishlist} toggleWish={toggleWish} products={products} loading={loadingProducts} onRefresh={fetchProducts} initialSearch={globalSearch} />}

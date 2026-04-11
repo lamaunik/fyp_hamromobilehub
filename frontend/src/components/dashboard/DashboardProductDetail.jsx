@@ -8,6 +8,8 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
+  const pId = product?._id || product?.id;
+
   if (!product) {
     return (
       <div className="page" style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", flexDirection: "column", gap: 16 }}>
@@ -17,7 +19,6 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
     );
   }
 
-  const pId = product._id || product.id;
   const isWishlisted = wishlist.includes(pId);
   const bs = product.badge ? BADGE_COLORS[product.badge] : null;
 

@@ -5,7 +5,7 @@ import { P } from "./DashboardConstants";
 import { Icon } from "./DashboardIcons";
 import { ProductThumb } from "./DashboardUI";
 
-export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNotifs, products = [], viewProduct, unreadChat }) {
+export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNotifs, products = [], viewProduct, unreadChat, onSearchSubmit }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -34,6 +34,13 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
     setSearch("");
     setFocused(false);
     if (viewProduct) viewProduct(p);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && search.trim()) {
+      onSearchSubmit?.(search);
+      setFocused(false);
+    }
   };
 
   return (
@@ -79,6 +86,7 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
             onChange={(e) => setSearch(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setTimeout(() => setFocused(false), 200)}
+            onKeyDown={handleKeyDown}
             placeholder="Search phones, brands..."
             style={{
               paddingLeft: 34, paddingRight: 14, paddingTop: 8, paddingBottom: 8,
@@ -93,27 +101,39 @@ export default function DashboardTopbar({ open, setOpen, setTab, notifs, setNoti
           />
           {focused && searched && (
             <div style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0, background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 14, boxShadow: "0 8px 32px rgba(40, 43, 74, .12)", zIndex: 99, overflow: "hidden" }}>
-              {searchResults.length > 0 ? searchResults.map((p) => (
-                <div
-                  key={p._id || p.id}
-                  onMouseDown={() => handleSelect(p)}
-                  style={{ padding: "10px 14px", display: "flex", alignItems: "center", gap: 10, cursor: "pointer", borderBottom: `1px solid ${P.mist}`, transition: "background .15s" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = P.mistBg)}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = P.white)}
-                >
-                  <div style={{ width: 36, height: 36, borderRadius: 8, background: P.mistBg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden", border: `1px solid ${P.mist}` }}>
-                    {p.images && p.images.length > 0
-                      ? <img src={p.images[0].startsWith("http") ? p.images[0] : `http://localhost:5000${p.images[0]}`} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "contain", padding: 3 }} />
-                      : <ProductThumb cat={p.category} size={18} />
-                    }
+              {searchResults.length > 0 ? (
+                <>
+                  {searchResults.map((p) => (
+                    <div
+                      key={p._id || p.id}
+                      onMouseDown={() => handleSelect(p)}
+                      style={{ padding: "10px 14px", display: "flex", alignItems: "center", gap: 10, cursor: "pointer", borderBottom: `1px solid ${P.mist}`, transition: "background .15s" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = P.mistBg)}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = P.white)}
+                    >
+                      <div style={{ width: 36, height: 36, borderRadius: 8, background: P.mistBg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden", border: `1px solid ${P.mist}` }}>
+                        {p.images && p.images.length > 0
+                          ? <img src={p.images[0].startsWith("http") ? p.images[0] : `http://localhost:5000${p.images[0]}`} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "contain", padding: 3 }} />
+                          : <ProductThumb cat={p.category} size={18} />
+                        }
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ color: P.navy, fontWeight: 700, fontSize: 12, margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</p>
+                        <p style={{ color: P.muted, fontSize: 11, margin: 0 }}>{p.brand} · Rs. {p.price}</p>
+                      </div>
+                      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke={P.sky} strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6"/></svg>
+                    </div>
+                  ))}
+                  <div
+                    onMouseDown={() => { onSearchSubmit?.(search); setFocused(false); }}
+                    style={{ padding: "10px 14px", textAlign: "center", borderTop: `1px solid ${P.mist}`, cursor: "pointer", background: P.mistBg, transition: "all .2s" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = P.white)}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = P.mistBg)}
+                  >
+                    <span style={{ fontSize: 12, fontWeight: 700, color: P.ocean }}>See all results for "{search}"</span>
                   </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ color: P.navy, fontWeight: 700, fontSize: 12, margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</p>
-                    <p style={{ color: P.muted, fontSize: 11, margin: 0 }}>{p.brand} · Rs. {p.price}</p>
-                  </div>
-                  <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke={P.sky} strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6"/></svg>
-                </div>
-              )) : (
+                </>
+              ) : (
                 <div style={{ padding: "20px 14px", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
                   <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke={P.mist} strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                   <p style={{ color: P.muted, fontSize: 13, fontWeight: 600, margin: 0 }}>No products found for</p>

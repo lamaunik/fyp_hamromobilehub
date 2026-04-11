@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { P } from "./DashboardConstants";
 import { Icon } from "./DashboardIcons";
 import { Btn, Stars, ProductThumb } from "./DashboardUI";
 import ProductCard from "../common/ProductCard";
 
-export default function DashboardProducts({ viewProduct, addToCart, wishlist, toggleWish, products, loading, onRefresh }) {
-  const [search, setSearch] = useState("");
+export default function DashboardProducts({ viewProduct, addToCart, wishlist, toggleWish, products, loading, onRefresh, initialSearch = "" }) {
+  const [search, setSearch] = useState(initialSearch);
+
+  useEffect(() => {
+    setSearch(initialSearch);
+  }, [initialSearch]);
   const [brand,  setBrand]  = useState("All");
   const [cat,    setCat]    = useState("All");
   const [price,  setPrice]  = useState(999999); // FIX: high default so all products show

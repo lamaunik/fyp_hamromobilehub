@@ -4,14 +4,19 @@ import { Icon } from "./DashboardIcons";
 import { Btn, Stars, ProductThumb } from "./DashboardUI";
 import ProductCard from "../common/ProductCard";
 
-export default function DashboardProducts({ viewProduct, addToCart, wishlist, toggleWish, products, loading, onRefresh, initialSearch = "" }) {
+export default function DashboardProducts({ viewProduct, addToCart, wishlist, toggleWish, products, loading, onRefresh, initialSearch = "", initialCategory = "All" }) {
   const [search, setSearch] = useState(initialSearch);
 
   useEffect(() => {
     setSearch(initialSearch);
   }, [initialSearch]);
+
   const [brand,  setBrand]  = useState("All");
-  const [cat,    setCat]    = useState("All");
+  const [cat,    setCat]    = useState(initialCategory);
+
+  useEffect(() => {
+    setCat(initialCategory);
+  }, [initialCategory]);
   const [price,  setPrice]  = useState(999999); // FIX: high default so all products show
   const [sort,   setSort]   = useState("featured");
   const [view,   setView]   = useState("grid");

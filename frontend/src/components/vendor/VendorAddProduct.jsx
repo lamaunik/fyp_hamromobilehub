@@ -38,6 +38,7 @@ export default function VendorAddProduct({ setTab }) {
   const [formData, setFormData] = useState({
     name: "", brand: "", description: "", price: "",
     category: "Smartphones", stock: "", discountPrice: "",
+    storage: "128GB",
   });
 
   const [loading, setLoading] = useState(false);
@@ -96,6 +97,7 @@ export default function VendorAddProduct({ setTab }) {
         discountPrice: formData.discountPrice ? Number(formData.discountPrice) : undefined,
         category: formData.category,
         stock: Number(formData.stock),
+        storage: ["Smartphones", "Laptops", "Tablets"].includes(formData.category) ? formData.storage : "",
         images: imageMeta ? [imageMeta.url] : [], // Send only the URL string
       };
 
@@ -152,6 +154,13 @@ export default function VendorAddProduct({ setTab }) {
 
         <InputField label="Market Category" name="category" value={formData.category} onChange={handleChange} type="select"
           options={["Smartphones", "Laptops", "Tablets", "Accessories", "Wearables"]} required />
+
+        {["Smartphones", "Laptops", "Tablets"].includes(formData.category) && (
+          <div className="fadeDown" style={{ animationDuration: "0.4s" }}>
+             <InputField label="Storage Option" name="storage" value={formData.storage} onChange={handleChange} type="select"
+              options={["64GB", "128GB", "256GB", "512GB", "1TB", "2TB"]} required />
+          </div>
+        )}
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24, marginBottom: 8 }}>
           <InputField label="Price (NPR)" name="price" value={formData.price} onChange={handleChange} type="number" placeholder="0.00" required />

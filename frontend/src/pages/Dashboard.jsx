@@ -37,6 +37,7 @@ export default function Dashboard() {
   const [loadingProducts, setLoadingProducts]= useState(false);
   const [globalSearch,    setGlobalSearch]   = useState("");
   const [globalMarketSearch, setGlobalMarketSearch] = useState("");
+  const [globalCategory,     setGlobalCategory]     = useState("All");
 
   // ── Orders — persist count in sync ───────────────────────────────────────
   const [orders, setOrders] = useState([]);
@@ -146,8 +147,15 @@ export default function Dashboard() {
       setGlobalMarketSearch(q);
     } else {
       setGlobalSearch(q); 
+      setGlobalCategory("All"); // Reset category on search
       switchTab("products"); 
     }
+  };
+
+  const handleCategoryClick = (cat) => {
+    setGlobalCategory(cat);
+    setGlobalSearch(""); // Clear search on category click
+    switchTab("products");
   };
 
   // Cart helpers
@@ -246,8 +254,8 @@ export default function Dashboard() {
           <DashboardTopbar open={sidebarOpen} setOpen={setSidebarOpen} setTab={switchTab} notifs={notifs} setNotifs={setNotifs} products={products} viewProduct={viewProduct} unreadChat={unreadChat} onSearchSubmit={handleSearch} />
           <main ref={mainRef} style={{ flex: 1, overflowY: "auto" }}>
             <div key={pageKey} className="page">
-              {tab === "home"        && <DashboardHome        setTab={switchTab} viewProduct={viewProduct} addToCart={addToCart} wishlist={wishlist} toggleWish={toggleWish} products={products} />}
-              {tab === "products"    && <DashboardProducts    viewProduct={viewProduct} addToCart={addToCart} wishlist={wishlist} toggleWish={toggleWish} products={products} loading={loadingProducts} onRefresh={fetchProducts} initialSearch={globalSearch} />}
+              {tab === "home"        && <DashboardHome        setTab={switchTab} viewProduct={viewProduct} addToCart={addToCart} wishlist={wishlist} toggleWish={toggleWish} products={products} onCategoryClick={handleCategoryClick} />}
+              {tab === "products"    && <DashboardProducts    viewProduct={viewProduct} addToCart={addToCart} wishlist={wishlist} toggleWish={toggleWish} products={products} loading={loadingProducts} onRefresh={fetchProducts} initialSearch={globalSearch} initialCategory={globalCategory} />}
               {tab === "detail"      && selectedProduct && <DashboardProductDetail product={selectedProduct} addToCart={addToCart} viewProduct={viewProduct} setTab={switchTab} wishlist={wishlist} toggleWish={toggleWish} products={products} />}
               {tab === "cart"        && <DashboardCart        cart={cart} removeFromCart={removeFromCart} updateQty={updateQty} setTab={switchTab} addNotif={addNotif} clearCart={clearCart} addOrder={addOrder} wishlist={wishlist} removeFromWishlist={(id) => setWishlist(prev => prev.filter(x => x !== id))} />}
               {tab === "orders"      && <DashboardOrders      setTab={switchTab} viewProduct={viewProduct} orders={orders} onDelete={removeOrder} onCancel={updateOrder} />}

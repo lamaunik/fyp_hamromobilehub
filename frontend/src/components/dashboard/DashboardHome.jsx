@@ -113,7 +113,7 @@ function HeroSlider({ setTab }) {
   );
 }
 
-export default function DashboardHome({ setTab, viewProduct, addToCart, wishlist, toggleWish, products }) {
+export default function DashboardHome({ setTab, viewProduct, addToCart, wishlist, toggleWish, products, onCategoryClick }) {
   const [counts, setCounts] = useState([0, 0, 0, 0]);
   const targets = [500, 120, 10000, 8000];
 
@@ -167,11 +167,11 @@ export default function DashboardHome({ setTab, viewProduct, addToCart, wishlist
       <div>
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 16 }}>
           <h3 style={{ color: P.navy, fontFamily: P.fontHeading, fontWeight: 800, fontSize: 22, margin: 0, letterSpacing: "0.5px" }}>Shop by Category</h3>
-          <Btn onClick={() => setTab("products")} style={{ background: "none", border: "none", color: P.navy, fontSize: 13, fontWeight: 700, padding: 0 }}>View All →</Btn>
+          <Btn onClick={() => onCategoryClick("All")} style={{ background: "none", border: "none", color: P.navy, fontSize: 13, fontWeight: 700, padding: 0 }}>View All →</Btn>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
           {cats.map((c) => (
-            <button key={c.label} className="card" onClick={() => setTab("products")} style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, background: P.white, color: P.navy, border: `1px solid ${P.mist}`, padding: "28px 16px", cursor: "pointer", transition: "all 0.3s ease", fontFamily: P.font, borderRadius: 16 }}
+            <button key={c.label} className="card" onClick={() => onCategoryClick(c.label)} style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, background: P.white, color: P.navy, border: `1px solid ${P.mist}`, padding: "28px 16px", cursor: "pointer", transition: "all 0.3s ease", fontFamily: P.font, borderRadius: 16 }}
             >
               <div style={{ color: P.muted }}>{c.icon}</div>
               <span style={{ fontSize: 13, fontWeight: 700, color: P.navy }}>{c.label}</span>
@@ -184,7 +184,7 @@ export default function DashboardHome({ setTab, viewProduct, addToCart, wishlist
       <div>
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 16 }}>
           <h3 style={{ color: P.navy, fontFamily: P.fontHeading, fontWeight: 800, fontSize: 22, margin: 0, letterSpacing: "0.5px" }}>Featured Products</h3>
-          <Btn onClick={() => setTab("products")} style={{ background: "none", border: "none", color: P.navy, fontSize: 13, fontWeight: 700, padding: 0 }}>View All →</Btn>
+          <Btn onClick={() => onCategoryClick("All")} style={{ background: "none", border: "none", color: P.navy, fontSize: 13, fontWeight: 700, padding: 0 }}>View All →</Btn>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
           {featured.map((p, i) => {

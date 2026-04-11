@@ -136,6 +136,7 @@ export const updateUser = async (req, res) => {
     if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
     const wasDeactivated = user.isDeactivated;
+
     user.name         = req.body.name         || user.name;
     user.email        = req.body.email        || user.email;
     user.role         = req.body.role         || user.role;
@@ -150,6 +151,7 @@ export const updateUser = async (req, res) => {
       await Product.deleteMany({ vendor: updated._id });
       await UsedProduct.deleteMany({ seller: updated._id });
     }
+
     res.json({
       success: true,
       data: {

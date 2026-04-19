@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { P, pct, BADGE_COLORS } from "./DashboardConstants";
+import { useState, useEffect } from "react";
+import { P, pct, BADGE_COLORS, COLOR_MAP } from "./DashboardConstants";
 import { Icon } from "./DashboardIcons";
 import { Btn, Stars, ProductThumb } from "./DashboardUI";
 import ProductCard from "../common/ProductCard";
@@ -7,6 +7,16 @@ import ProductCard from "../common/ProductCard";
 export default function DashboardProductDetail({ product, viewProduct, addToCart, wishlist, toggleWish, setTab, products }) {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  // Ensure we pick up the first color reliably
+  const [selectedColor, setSelectedColor] = useState("");
+
+  useEffect(() => {
+    if (product?.colors?.length > 0) {
+      setSelectedColor(product.colors[0].name);
+    } else {
+      setSelectedColor("");
+    }
+  }, [product]);
 
   const pId = product?._id || product?.id;
 
@@ -33,7 +43,7 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
     .slice(0, 6);
 
   const handleAdd = () => {
-    addToCart(product, qty);
+    addToCart(product, qty, { color: selectedColor });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -161,12 +171,14 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
             )}
           </div>
 
-          <div style={{ background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 16, padding: "18px 24px", marginBottom: 32, boxShadow: "0 4px 16px rgba(40, 43, 74, .02)" }}>
+          <div style={{ background: P.white, border: `1.5px solid ${P.mist}`, borderRadius: 16, padding: "18px 24px", marginBottom: 28, boxShadow: "0 4px 16px rgba(40, 43, 74, .02)" }}>
             <h3 style={{ color: P.navy, fontWeight: 800, fontSize: 15, margin: "0 0 8px" }}>Description</h3>
             <p style={{ color: P.muted, fontSize: 14, lineHeight: 1.7, margin: 0 }}>
               {product.description || `Experience the ultimate in mobile technology with the ${product.name}. Featuring a stunning display, lightning-fast processor, and an advanced camera system that captures every detail. Designed to keep up with your busy lifestyle while providing premium elegance.`}
             </p>
           </div>
+
+
           
           {/* Vendor Info & Date */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32, padding: "12px 16px", background: P.mistBg, borderRadius: 16, border: `1px solid ${P.mist}`, width: "fit-content" }}>
@@ -182,7 +194,40 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
               <p style={{ margin: 0, fontSize: 10, color: P.muted, fontWeight: 700 }}>{product.createdAt ? new Date(product.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : "Recently listed"}</p>
             </div>
           </div>
-
+          {/* Color Selection - Robust Version */}
+          {product.colors && product.colors.length > 0 && (
+            <div style={{ marginBottom: 36, background: "rgba(255,255,255, 0.6)", padding: "24px", borderRadius: 24, border: `1px solid ${P.mist}`, boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+              <h3 style={{ color: P.navy, fontWeight: 900, fontSize: 12, textTransform: "uppercase", letterSpacing: ".2em", margin: "0 0 20px", display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ color: P.ocean }}>●</span> Select Color: <span style={{ color: P.ocean, fontWeight: 900 }}>{selectedColor || "None"}</span>
+              </h3>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
+                {product.colors.map(c => {
+                  const isSelected = selectedColor === c.name;
+                  return (
+                    <button key={c.name} onClick={() => setSelectedColor(c.name)}
+                      title={c.name}
+                      style={{ 
+                        width: 48, height: 48, borderRadius: "50%", 
+                        backgroundColor: c.hex || "#e4e4e7", 
+                        border: isSelected ? `4px solid ${P.navy}` : `2px solid ${P.mist}`, 
+                        cursor: "pointer", transition: "all .3s cubic-bezier(0.4, 0, 0.2, 1)",
+                        boxShadow: isSelected ? `0 0 0 4px rgba(24, 24, 27, 0.1), 0 12px 24px rgba(0,0,0,0.2)` : "0 4px 12px rgba(0,0,0,0.08)",
+                        position: "relative", padding: 0,
+                        transform: isSelected ? "scale(1.2)" : "scale(1)",
+                        zIndex: isSelected ? 2 : 1
+                      }}
+                    >
+                      {isSelected && (
+                        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", color: (c.name.toLowerCase().includes("white") || c.name.toLowerCase().includes("silver")) ? P.navy : P.white }}>
+                          <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4} strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4L19 7" /></svg>
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           <div style={{ display: "flex", alignItems: "center", gap: 20, marginTop: "auto" }}>
             {/* Quantity Selector */}
             <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -224,8 +269,12 @@ export default function DashboardProductDetail({ product, viewProduct, addToCart
           </div>
           
           <div style={{ display: "flex", alignItems: "center", gap: 24, marginTop: 24, paddingTop: 20, borderTop: `1px solid ${P.mist}` }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, color: P.muted, fontSize: 13, fontWeight: 600 }}>
-              <span style={{ color: P.green }}>{Icon.check}</span> In Stock
+            <div style={{ display: "flex", alignItems: "center", gap: 8, color: product.stock > 0 ? P.muted : "#ef4444", fontSize: 13, fontWeight: 600 }}>
+              {product.stock > 0 ? (
+                <><span style={{ color: "#16a34a" }}>{Icon.check}</span> In Stock</>
+              ) : (
+                <><span style={{ color: "#ef4444" }}>{Icon.close}</span> Out of Stock</>
+              )}
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, color: P.muted, fontSize: 13, fontWeight: 600 }}>
               <span style={{ color: P.sky }}>{Icon.truck}</span> Free Shipping

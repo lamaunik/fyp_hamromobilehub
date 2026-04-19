@@ -39,7 +39,10 @@ export default function VendorAddProduct({ setTab }) {
     name: "", brand: "", description: "", price: "",
     category: "Smartphones", stock: "", discountPrice: "",
     storage: "128GB",
+    colors: [],
   });
+  const [customColor, setCustomColor] = useState("");
+  const [customHex, setCustomHex] = useState("#18181b");
 
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
@@ -98,6 +101,7 @@ export default function VendorAddProduct({ setTab }) {
         category: formData.category,
         stock: Number(formData.stock),
         storage: ["Smartphones", "Laptops", "Tablets"].includes(formData.category) ? formData.storage : "",
+        colors: formData.colors,
         images: imageMeta ? [imageMeta.url] : [], // Send only the URL string
       };
 
@@ -213,6 +217,66 @@ export default function VendorAddProduct({ setTab }) {
                 </div>
               ))}
             </div>
+          )}
+        </div>
+
+        {/* Colors Selection */}
+        <div style={{ marginBottom: 32 }}>
+          <label style={{ display: "block", color: P.navy, fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 16, fontFamily: P.font }}>
+            Product Colors
+          </label>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 16 }}>
+            {[
+              {n: "Phantom Black", h: "#1a1a1a"}, {n: "Alpine White", h: "#f8f9fa"}, 
+              {n: "Titanium Gray", h: "#7d7d7d"}, {n: "Cobalt Blue", h: "#2a4d69"}, 
+              {n: "Deep Purple", h: "#4b3d8e"}, {n: "Gold", h: "#d4af37"}, {n: "Silver", h: "#c0c0c0"}
+            ].map(c => {
+              const selected = formData.colors.find(x => x.name === c.n);
+              return (
+                <button key={c.n} type="button" onClick={() => setFormData(prev => ({ 
+                  ...prev, 
+                  colors: selected ? prev.colors.filter(x => x.name !== c.n) : [...prev.colors, { name: c.n, hex: c.h }] 
+                }))}
+                  style={{ 
+                    padding: "8px 16px", borderRadius: 12, border: `1.5px solid ${selected ? P.navy : P.mist}`, 
+                    background: selected ? P.navy : P.white, color: selected ? P.white : P.muted, 
+                    fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all 0.2s",
+                    display: "flex", alignItems: "center", gap: 8
+                  }}
+                >
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: c.h, border: "1px solid rgba(0,0,0,0.1)" }} />
+                  {c.n}
+                </button>
+              );
+            })}
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <div style={{ position: "relative", width: 44, height: 44, borderRadius: 12, overflow: "hidden", border: `1.5px solid ${P.mist}`, flexShrink: 0, background: customHex }}>
+              <input type="color" value={customHex} onChange={e => setCustomHex(e.target.value)} 
+                style={{ position: "absolute", top: -10, left: -10, width: 64, height: 64, cursor: "pointer", border: "none", opacity: 0 }} />
+            </div>
+            <input value={customColor} onChange={e => setCustomColor(e.target.value)} placeholder="Color name (e.g. Midnight Blue)" 
+              style={{ flex: 1, padding: "10px 16px", borderRadius: 12, border: `1px solid ${P.mist}`, background: P.mistBg, color: P.navy, fontSize: 13, fontFamily: P.font }} />
+            <button type="button" onClick={() => { 
+                if (customColor && !formData.colors.find(x => x.name === customColor)) { 
+                  setFormData(prev => ({ ...prev, colors: [...prev.colors, { name: customColor, hex: customHex }] })); 
+                  setCustomColor(""); 
+                } 
+              }}
+              style={{ padding: "0 20px", height: 44, background: P.white, border: `1px solid ${P.mist}`, borderRadius: 12, color: P.navy, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+              Add
+            </button>
+          </div>
+          {formData.colors.length > 0 && (
+             <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 16 }}>
+                {formData.colors.map(c => (
+                  <span key={c.name} style={{ background: P.white, color: P.navy, padding: "6px 12px", borderRadius: 10, fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", gap: 8, border: `1px solid ${P.mist}`, boxShadow: "0 2px 8px rgba(0,0,0,0.02)" }}>
+                    <div style={{ width: 10, height: 10, borderRadius: "50%", background: c.hex, border: "1px solid rgba(0,0,0,0.1)" }} />
+                    {c.name}
+                    <span onClick={() => setFormData(prev => ({ ...prev, colors: prev.colors.filter(x => x.name !== c.name) }))} style={{ cursor: "pointer", color: P.muted, marginLeft: 4 }}>✕</span>
+                  </span>
+                ))}
+             </div>
           )}
         </div>
 

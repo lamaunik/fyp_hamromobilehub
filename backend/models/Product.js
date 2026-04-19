@@ -51,6 +51,12 @@ const productSchema = new mongoose.Schema(
       default: "",
       trim: true,
     },
+    colors: [
+      {
+        name: { type: String, required: true },
+        hex: { type: String, required: true },
+      },
+    ],
   },
   { timestamps: true }
 );

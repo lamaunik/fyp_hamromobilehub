@@ -62,3 +62,21 @@ export const STATUS_COLORS = {
 };
 
 export const pct = (p, o) => Math.round((1 - p / o) * 100);
+
+export const COLOR_MAP = {
+  "Phantom Black": "#1a1a1a",
+  "Alpine White":  "#f8f9fa",
+  "Titanium Gray": "#7d7d7d",
+  "Cobalt Blue":   "#2a4d69",
+  "Deep Purple":   "#4b3d8e",
+  "Gold":          "#d4af37",
+  "Silver":        "#c0c0c0",
+  "Space Gray":    "#343d46",
+  "Midnight":      "#191970",
+  "Sky Blue":      "#87ceeb",
+  "Black":         "#000000",
+  "White":         "#ffffff",
+  "Red":           "#ef4444",
+  "Blue":          "#3b82f6",
+  "Pink Gold":     "#e6b8af",
+};

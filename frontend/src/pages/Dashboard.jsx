@@ -24,8 +24,9 @@ const writeLS = (key, value)    => { try { localStorage.setItem(key, JSON.string
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { tab: urlTab } = useParams();
-  const tab = urlTab || "home";
+  const { tab: urlTab, id: urlId } = useParams();
+  const isProductDetail = window.location.pathname.includes("/dashboard/product/");
+  const tab = isProductDetail ? "detail" : (urlTab || "home");
 
   const setTab = (t) => {
     navigate(`/dashboard/${t}`);
@@ -103,11 +104,19 @@ export default function Dashboard() {
 
   // Fetch products — only if not already loaded, or if it's the primary tabs
   useEffect(() => {
-    const isPrimaryTab = tab === "products" || tab === "home";
-    if (isPrimaryTab && products.length === 0) {
+    const needProducts = tab === "products" || tab === "home" || tab === "detail";
+    if (needProducts && products.length === 0) {
       fetchProducts();
     }
   }, [tab, products.length, fetchProducts]);
+
+  // Hydrate selectedProduct from URL ID on refresh
+  useEffect(() => {
+    if (tab === "detail" && urlId && !selectedProduct && products.length > 0) {
+      const p = products.find(x => (x._id || x.id) === urlId);
+      if (p) setSelectedProduct(p);
+    }
+  }, [tab, urlId, selectedProduct, products]);
 
   // Fetch orders — only if not already loaded and on orders tab
   useEffect(() => {
@@ -141,7 +150,12 @@ export default function Dashboard() {
     }
     setTab(t); setSelectedProduct(null); setPageKey(k => k + 1); 
   };
-  const viewProduct = (p) => { setSelectedProduct(p); setTab("detail"); setPageKey(k => k + 1); };
+  const viewProduct = (p) => { 
+    const id = p._id || p.id;
+    navigate(`/dashboard/product/${id}`);
+    setSelectedProduct(p); 
+    setPageKey(k => k + 1); 
+  };
   const handleSearch = (q) => { 
     if (tab === "marketplace") {
       setGlobalMarketSearch(q);
@@ -159,7 +173,7 @@ export default function Dashboard() {
   };
 
   // Cart helpers
-  const addToCart = (p, count = 1) => {
+  const addToCart = (p, count = 1, attr = {}) => {
     if (!user) {
       alert("Please sign up first to add items to your cart.");
       navigate("/signup");
@@ -167,19 +181,20 @@ export default function Dashboard() {
     }
     
     const pId = p._id || p.id;
-    const exCheck = cart.find(x => (x._id || x.id) === pId);
+    // Uniqueness in cart now depends on ID + Selected Color
+    const exCheck = cart.find(x => (x._id || x.id) === pId && x.selectedColor === attr.color);
     let shouldNavigate = true;
     if (exCheck && exCheck.qty + count > p.stock) shouldNavigate = false;
     else if (!exCheck && p.stock <= 0) shouldNavigate = false;
 
     setCart(prev => {
-      const ex  = prev.find(x => (x._id || x.id) === pId);
+      const ex  = prev.find(x => (x._id || x.id) === pId && x.selectedColor === attr.color);
       if (ex) {
         if (ex.qty + count > p.stock) {
           addNotif({ title: "Stock Limit Reached", time: "Just now", type: "error" });
           return prev;
         }
-        return prev.map(x => (x._id || x.id) === pId ? { ...x, qty: x.qty + count } : x);
+        return prev.map(x => ((x._id || x.id) === pId && x.selectedColor === attr.color) ? { ...x, qty: x.qty + count } : x);
       }
       if (p.stock <= 0) {
         addNotif({ title: "Product Out of Stock", time: "Just now", type: "error" });
@@ -187,18 +202,18 @@ export default function Dashboard() {
       }
       if (count > p.stock) {
         addNotif({ title: "Stock Limit Reached", time: "Just now", type: "error" });
-        return [...prev, { ...p, qty: p.stock }];
+        return [...prev, { ...p, qty: p.stock, selectedColor: attr.color }];
       }
-      return [...prev, { ...p, qty: count }];
+      return [...prev, { ...p, qty: count, selectedColor: attr.color }];
     });
 
     if (shouldNavigate) switchTab("cart");
   };
-  const removeFromCart = (id)       => setCart(prev => prev.filter(p => (p._id || p.id) !== id));
-  const updateQty      = (id, qty)  => { 
-    if (qty < 1) return removeFromCart(id); 
+  const removeFromCart = (id, color) => setCart(prev => prev.filter(p => !((p._id || p.id) === id && p.selectedColor === color)));
+  const updateQty      = (id, qty, color)  => { 
+    if (qty < 1) return removeFromCart(id, color); 
     setCart(prev => prev.map(p => {
-      if ((p._id || p.id) === id) {
+      if ((p._id || p.id) === id && p.selectedColor === color) {
         if (qty > p.stock) {
           addNotif({ title: "Stock Limit Reached", time: "Just now", type: "error" });
           return p;

@@ -1,4 +1,6 @@
 import Order from "../models/Order.js";
+import Product from "../models/Product.js";
+
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -33,6 +35,14 @@ export const addOrderItems = async (req, res) => {
     });
 
     const createdOrder = await order.save();
+
+    // Decrement stock for each item
+    for (const item of orderItems) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stock: -item.qty }
+      });
+    }
+
     res.status(201).json({ success: true, data: createdOrder });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -129,8 +139,14 @@ export const cancelOrder = async (req, res) => {
     }
 
     order.paymentStatus = "Cancelled";
-    // If you have an `isCancelled` flag or `status` you'd update it here too.
     
+    // Increment stock back if order is cancelled
+    for (const item of order.orderItems) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stock: item.qty }
+      });
+    }
+
     const updatedOrder = await order.save();
     res.json({ success: true, data: updatedOrder });
   } catch (error) {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { P, BADGE_COLORS, pct } from "../dashboard/DashboardConstants";
+import { P, BADGE_COLORS, pct, COLOR_MAP } from "../dashboard/DashboardConstants";
 import { Icon } from "../dashboard/DashboardIcons";
 import { Stars, ProductThumb } from "../dashboard/DashboardUI";
 
@@ -51,10 +51,18 @@ export default function ProductCard({ product: p, onView, onAddToCart, wishliste
             <img 
               src={p.images[0].startsWith("http") ? p.images[0] : `http://localhost:5000${p.images[0]}`} 
               alt={p.name} 
-              style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s ease", transform: hovered ? "scale(1.08)" : "scale(1)" }} 
+              style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s ease", transform: (hovered && p.stock > 0) ? "scale(1.08)" : "scale(1)", filter: p.stock <= 0 ? "grayscale(0.5)" : "none" }} 
             />
           ) : (
-            <div style={{ transition: "transform 0.6s ease", transform: hovered ? "scale(1.08)" : "scale(1)" }}><ProductThumb cat={p.cat} size={48} /></div>
+            <div style={{ transition: "transform 0.6s ease", transform: (hovered && p.stock > 0) ? "scale(1.08)" : "scale(1)" }}><ProductThumb cat={p.cat} size={48} /></div>
+          )}
+
+          {p.stock <= 0 && (
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 5, backdropFilter: "blur(2px)" }}>
+               <span style={{ background: P.white, color: "#ef4444", fontWeight: 900, fontSize: 11, padding: "6px 14px", borderRadius: 100, boxShadow: "0 4px 12px rgba(0,0,0,0.1)", letterSpacing: "0.05em", border: "1.5px solid #ef4444" }}>
+                 OUT OF STOCK
+               </span>
+            </div>
           )}
 
           {/* Floating Badges */}
@@ -104,6 +112,16 @@ export default function ProductCard({ product: p, onView, onAddToCart, wishliste
               <span style={{ margin: "0 4px", opacity: 0.3 }}>•</span>
               <span style={{ fontSize: 11 }}>by <b style={{ color: P.navy }}>{p.vendor?.storeName || p.vendor?.name || "Official Hub"}</b></span>
             </div>
+
+            {/* Color preview dots */}
+            {p.colors && p.colors.length > 0 && (
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                {p.colors.slice(0, 5).map(c => (
+                  <div key={c.name} title={c.name} style={{ width: 10, height: 10, borderRadius: "50%", background: c.hex, border: "1.5px solid #fff", boxShadow: "0 2px 6px rgba(0,0,0,0.1)" }} />
+                ))}
+                {p.colors.length > 5 && <span style={{ fontSize: 9, color: P.muted, fontWeight: 800 }}>+{p.colors.length - 5}</span>}
+              </div>
+            )}
           </div>
 
           {/* Footer Area */}
@@ -116,17 +134,17 @@ export default function ProductCard({ product: p, onView, onAddToCart, wishliste
               onClick={handleAdd}
               disabled={p.stock <= 0}
               style={{
-                background: P.navy, color: P.white, 
+                background: p.stock <= 0 ? P.mist : P.navy, color: p.stock <= 0 ? P.muted : P.white, 
                 fontSize: 13, fontWeight: 800, borderRadius: 12, border: "none",
-                cursor: "pointer", transition: "all .2s ease",
+                cursor: p.stock <= 0 ? "not-allowed" : "pointer", transition: "all .2s ease",
                 padding: "10px 20px", display: "flex", alignItems: "center", gap: 8,
-                boxShadow: "0 4px 14px rgba(40, 43, 74, 0.2)"
+                boxShadow: p.stock <= 0 ? "none" : "0 4px 14px rgba(40, 43, 74, 0.2)"
               }}
-              onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
-              onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+              onMouseEnter={e => p.stock > 0 && (e.currentTarget.style.transform = "scale(1.05)")}
+              onMouseLeave={e => p.stock > 0 && (e.currentTarget.style.transform = "scale(1)")}
             >
-              {Icon.cart}
-              <span>{added ? "Added" : "Add to Cart"}</span>
+              {p.stock > 0 ? Icon.cart : <span style={{fontSize: 14}}>●</span>}
+              <span>{p.stock <= 0 ? "Out of Stock" : (added ? "Added" : "Add to Cart")}</span>
             </button>
           </div>
         </div>

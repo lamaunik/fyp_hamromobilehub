@@ -29,6 +29,7 @@ export default function App() {
         {/* User dashboard / Public browsing */}
         <Route path="/dashboard" element={<Navigate to="/dashboard/home" replace />} />
         <Route path="/dashboard/:tab" element={<Dashboard />} />
+        <Route path="/dashboard/product/:id" element={<Dashboard />} />
 
         {/* Vendor dashboard — only role "vendor" */}
         <Route path="/vendor/dashboard" element={<Navigate to="/vendor/dashboard/overview" replace />} />

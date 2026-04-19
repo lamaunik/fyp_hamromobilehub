@@ -63,7 +63,7 @@ export default function DashboardSidebar({ tab, setTab, open, cartCount, wishCou
         <p style={{ fontSize: 9, fontWeight: 800, color: P.muted, letterSpacing: ".12em", textTransform: "uppercase", padding: "6px 12px 4px" }}>Navigation</p>
 
         {nav.map((item, i) => {
-          const active = tab === item.id;
+          const active = tab === item.id || (item.id === "products" && tab === "detail");
           return (
             <button
               key={item.id}
